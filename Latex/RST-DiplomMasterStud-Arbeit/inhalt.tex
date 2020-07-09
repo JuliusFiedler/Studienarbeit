@@ -1,0 +1,183 @@
+\chapter{Erläuterungen zur Klasse ArbeitRST}
+
+% Ab hier arabische Seitenzählung und heading Seitenstil
+\pagestyle{scrheadings}
+\pagenumbering{arabic}
+
+In den folgenden Abschnitten werden einige Erläuterungen zur \LaTeX-Dokumentenklasse \texttt{ArbeitRST.cls} gegeben werden. Diese basiert auf der Klasse \texttt{scrbook} aus dem KOMA-Script-Paket und kann daher mit Hilfe der Methoden aus diesem Paket modifiziert werden. Für nähere Informationen dazu sei auf die KOMA-Script-Anleitung\footnote{Diese kann unter der URL \url{http://www.ctan.org/pkg/koma-script} heruntergeladen werden.} und die Website
+\begin{center}
+	\url{http://www.komascript.de/}
+\end{center}
+verwiesen. 
+
+Die wesentlichsten Änderungen gegenüber der ursprünglichen Klasse bestehen in einer angepassten Titelseite und der hinzugefügten Selbstständigkeitserklärung.
+
+
+
+% ====================================================
+\section{Informationen zu schriftlichen Arbeiten am RST}
+Informieren Sie sich in der für Sie relevanten Prüfungsordnung über die \emph{Anzahl der geforderten Exemplare} die eingereicht werden müssen. Bitte beachten Sie, dass jedes dieser Exemplar die \emph{Aufgabenstellung} enthalten muss. Lassen Sie diese bitte beim Binden zwischen der Titelseite und der Selbstständigkeitserklärung einfügen. Eines der Exemplare muss dabei das \emph{originale}, vom Vorsitzenden des Prüfungsausschusses und dem verantwortlichen Hochschullehrer unterzeichnete, Dokument enthalten, bei den restlichen genügen Kopien. Bitte beachten Sie, dass die Arbeit \emph{einseitig} ausgedruckt werden muss. Ausschlaggebend für die fristgemäße Einreichung ist die \emph{Bestätigung des Prüfungsamtes}. Informieren Sie sich daher im \emph{Vorfeld} über die Öffnungszeiten am Abgabetag. Sollte das Prüfungsamt geschlossen haben, ist es in der Regel möglich mit den Mitarbeitern eine individuelle Vereinbarung zu treffen.
+
+
+% ====================================================
+\section{Die Titelseite}
+Die Titelseite kann über die in Tabelle \ref{tab:titel} angegebenen Befehle angepasst werden.
+\begin{table}[htbp]
+\caption{Befehle zum Anpassen der Titelseite}
+\label{tab:titel}
+\begin{tabular}{lp{12cm}}
+Befehl & Bedeutung\\
+\toprule
+\verb|\author| & legt den Namen des Autors der Arbeit fest\\
+\verb|\geburtsdatum| & legt das Geburtsdatum des Autors fest\\
+\verb|\geburtsort| & legt das Geburtsort des Autors fest\\
+\verb|\title| & legt den Titel der Arbeit fest\\
+\verb|\subtitle| & legt den Untertitel der Arbeit fest\\
+\verb|\betreuer| & fügt einen Betreuer hinzu\\
+\verb|\date| & legt das Einreichungsdatum der Arbeit fest -- \newline wird dieser Befehl nicht aufgerufen wird standardmäßig das zum Kompilationszeitpunkt eingestellte Systemdatum verwendet.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+% ====================================================
+\section{Die Selbstständigkeitserklärung}
+In der Selbstständigkeitserklärung werden automatisch der Typ der Arbeit, ihr Titel sowie der Name des Autors übernommen. Der Ort kann über den Befehl \verb|\selbstort| geändert werden, wobei standardmäßig "`Dresden"' verwendet wird. Das Datum ist standardmäßig identisch zum Einreichungsdatum, kann aber mit dem Befehl \verb|\selbstdatum| geändert werden.
+
+
+
+% ====================================================
+\section{Kurzfassung}
+Eine Kurzfassung der Arbeit kann mit dem Befehl \verb|\kurzfassung{deutsch}{englisch}| eingefügt werden. Das erste Argument entspricht dabei der deutschen, das zweite der englischen Version.
+
+
+
+% ====================================================
+\section{Auswahl des Typs der Arbeit}
+Zur Auswahl des Typs der Arbeit steht die Klassenoption \texttt{arbeit} zur Verfügung. Mit dieser können sie zwischen Diplom-, Master- und Studienarbeit sowie dem Bericht zum Forschungspraktikum auswählen:
+\begin{table}[hbtp]%
+\caption{Auswahl des Typs der Arbeit mittels Klassenoptionen}
+\centering
+\begin{tabular}{cc}
+Diplomarbeit & \verb|\documentclass[arbeit=diplom]{ArbeitRST}|\\
+Masterarbeit & \verb|\documentclass[arbeit=master]{ArbeitRST}|\\
+Studienarbeit & \verb|\documentclass[arbeit=studie]{ArbeitRST}|\\
+Bericht zum Forschungspraktikum & \verb|\documentclass[arbeit=forsch]{ArbeitRST}|
+\end{tabular}
+\label{}
+\end{table}
+
+
+
+% ====================================================
+\section{Eingebundene Pakete}
+In der Dokumentenklasse werden bereits einige \LaTeX-Pakete geladenen. Davon sind die zum Verfassen einer Arbeit möglicherweise relevanten in der Tabelle \ref{tab:pakete} aufgeführt. 
+\begin{table}[htbp]%
+\centering
+\caption{Auswahl eingebundener Pakete}
+\label{tab:pakete}
+\begin{tabular}{p{3.6cm}p{11.4cm}}
+amsmath, amssymb, \newline amsfonts, amsthm & Pakete zum Satz mathematischer Formeln, Dokumentation finden sie unter \newline\url{http://www.ams.org/publications/authors/tex/amslatex},\newline besonders empfehlenswert ist der "`Short Math Guide for \LaTeX"'\\
+booktabs & ermöglicht das Setzen "`schöner"' Tabellen, Dokumentation unter \url{http://ctan.org/pkg/booktabs}\\
+cite & verbessert einige Aspekte des Zitierens, Dokumentation unter \newline\url{http://ctan.org/pkg/cite}\\
+caption, subcaption & Pakete zum Anpassen der Unter- und Überschriften von Tabellen, Grafiken etc., Dokumentation unter \newline\url{http://ctan.org/pkg/caption} \newline\url{http://ctan.org/pkg/subcaption}
+\end{tabular}
+\end{table}\\
+Neben diesen Paketen wird das Paket \verb|hyperref| (\url{http://ctan.org/pkg/hyperref}) zur farbigen Hervorhebung von Verweisen, Links etc.\ eingebunden. Bitte deaktivieren Sie diese Markierungen vor dem Ausdrucken mit Hilfe des Befehls
+\begin{center}
+\verb|\hypersetup{hidelinks}|.
+\end{center}
+
+
+
+% ====================================================
+\section{Zusätzliche Makros}
+In die Dokumentenklasse \texttt{ArbeitRST} wurden einige Makros aufgenommen, die sich bei der Arbeit mit \LaTeX{} als nützlich erwiesen haben.
+\begin{table}[htbp]
+\centering
+\caption{Zusätzliche Makros und Umgebungen}
+\begin{tabular}{ccp{9cm}}
+Syntax & Ausgabe & Beschreibung\\
+\toprule
+\texttt{\textbackslash vect\{a\}} & $\vect{a}$ & Umschaltung auf fette Schriftart im Mathemodus-- oft für Vektoren genutzt\\[2ex]
+\texttt{\textbackslash diag(a,\textbackslash ldots,z)} & $\diag(a,\ldots,z)$ & Nützlich zur Definition von Diagonalmatrizen\\[2ex]
+\texttt{\textbackslash diff[n]\{q\}\{t\}} & $\diff[n]{q}{t}$ & Ableitungen darstellen\\[2ex]
+\texttt{\textbackslash partiell[n]\{q\}\{t\}} & $\partiell[n]{q}{t}$ & partielle Ableitungen darstellen\\[2ex]
+\texttt{\textbackslash dr} &$\dr$ &Aufrechtes d für Integrale ($\int f(t) \dr t$)\\[2ex]
+\texttt{\textbackslash Reals} & $\Reals$ & Körper der reellen Zahlen\\[2ex]
+\texttt{\textbackslash Compl} & $\Compl$ & Körper der komplexen Zahlen\\[2ex]
+\texttt{\textbackslash Real(a)} & $\Real(a)$ & Realteil von $a$\\[2ex]
+\texttt{\textbackslash Imag(a)} & $\Imag(a)$ & Imaginärteil von $a$\\[2ex]
+\texttt{\textbackslash norm\{a\}} & $\norm{a}$ & Norm von $a$\\[2ex]
+\texttt{\textbackslash abs\{a\}} & $\abs{a}$ & Betrag von $a$\\[2ex]
+\texttt{\textbackslash skalprod\{a\}\{b\}} & $\skalprod{a}{b}$ & Skalarprodukt von $a$ und $b$\\[2ex]
+\texttt{\textbackslash grad(a)} & $\grad(a)$ & Gradient von $a$\\[2ex]
+\texttt{\textbackslash div(a)} & $\div(a)$ & Divergenz von $a$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Neben diesen Makros wurden Umgebungen zum Erzeugen von Definitionen (\verb|definition|), Beispielen (\verb|beispiel|), Lemmata (\verb|lemma|) und Bemerkungen (\verb|bemerkung|) definiert.
+
+\begin{table}[htbp]%
+\centering
+\caption{Beispiele der vordefinierten Umgebungen}
+\begin{tabular}{p{8cm}p{7cm}}
+Syntax & Ausgabe\\
+\toprule
+\begin{verbatim}
+\begin{definition}[Beispiel]
+Beispiel für eine Definitionsumgebung
+\end{definition}
+\end{verbatim}
+&
+\begin{definition}[Beispiel]
+Beispiel für eine Definitionsumgebung
+\end{definition}
+\\
+\begin{verbatim}
+\begin{beispiel}[Beispiel]
+Beispiel für eine Beispielumgebung
+\end{beispiel}
+\end{verbatim}
+&
+\begin{beispiel}[Beispiel]
+Beispiel für eine Beispielumgebung
+\end{beispiel}
+\\
+\begin{verbatim}
+\begin{lemma}[Beispiel]
+Beispiel für eine Lemmaumgebung
+\end{lemma}
+\end{verbatim}
+&
+\begin{lemma}[Beispiel]
+Beispiel für eine Lemmaumgebung
+\end{lemma}
+\\
+\begin{verbatim}
+\begin{bemerkung}[Beispiel]
+Beispiel für eine Bemerkungsumgebung
+\end{bemerkung}
+\end{verbatim}
+&
+\begin{bemerkung}[Beispiel]
+Beispiel für eine Bemerkungsumgebung
+\end{bemerkung}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+% ====================================================
+\section{Weitere Informationen}
+Da \LaTeX\ seine Funktionalität im wesentlichen durch frei verfügbare Pakete erhält, ist es günstig eine Distribution zu installieren, die bereits die wesentlichen Pakete enthält und das Hinzufügen weiterer Pakete vereinfacht. Für Windows existiert beispielsweise MiKTeX (\url{http://miktex.org/}) und für Linux TeX Live (\url{http://www.tug.org/texlive/}). Zum Erstellen von \LaTeX-Dokumenten unter Windows hat sich das Programm TeXnicCenter (\url{http://www.texniccenter.org/}), vor allem in Verbindung mit dem Sumatra PDF-Betrachter (\url{http://blog.kowalczyk.info/software/sumatrapdf}), als sehr nützlich erwiesen. Unter Linux gilt dasselbe für das Programm Kile (\url{http://kile.sourceforge.net/}). Zum Erstellen und Verwalten von Bibtex-Dateien wurden gute Erfahrungen mit JabRef (\url{http://jabref.sourceforge.net/}) gemacht. Es existieren zahlreiche Bücher zum Umgang mit \LaTeX, von denen an dieser Stelle nur \cite{MittelbachGoosens05} aufgeführt wird.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ArbeitRST"
+%%% End:

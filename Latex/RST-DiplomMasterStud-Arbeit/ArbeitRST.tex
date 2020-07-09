@@ -1,0 +1,482 @@
+\documentclass[arbeit=master,oneside,BCOR=12mm]{ArbeitRST}
+% Die Option BCOR legt den Rand für die Bindekorrektur links fest
+% (verschiebt das ganze Dokument nach rechts auf dem Papier, damit
+% Platz zum Binden ist
+
+% bib-Datei mit den Literaturangaben
+% ==================================
+\addbibresource{Literatur-Arbeit.bib}
+
+% Paket zum Erzeugen von Blindtext 
+% ================================
+% (ist nur für dieses Beispieldokument sinnvoll)
+\usepackage{blindtext}
+
+
+% Zwei Parameter zum Verändern des Layouts
+% ========================================
+% \parindent -> Legt fest, mit welcher Einrückung jeder neue
+%               Absatz beginnen soll
+% \parskip -> Legt fest, wieviel vertikaler Abstand zwischen zwei
+%             Absätzen liegen soll
+%
+% Tipp: Entweder parindent auf Null und parskip auf einen Wert
+% ungleich Null (z.B. 2ex) oder umgekehrt. Beide Werte ungleich
+% Null macht satztechnisch keinen Sinn. 1ex = Breite des 
+% Buchstabens x
+\setlength{\parindent}{0ex}
+\setlength{\parskip}{2ex}
+
+
+% Einige Einstellungen für das hyperref-Paket
+% =========================================== 
+% Hiermit können Links, Gleichungsnummern etc. farbig dargestellt
+% werden was die Navigation im elektronischen Dokument vereinfacht. An
+% dieser Stelle können Sie die Farbgebung anpassen. Druckversion bitte
+% ohne farbige Links erstellen, siehe Option unten!
+\hypersetup{
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={RST Vorlage}, % title
+    pdfauthor={Author},     % author
+    pdfsubject={Subject},   % subject of the document
+    pdfcreator={Creator},   % creator of the document
+    pdfproducer={Producer}, % producer of the document
+    pdfkeywords={keyword1} {key2} {key3}, % list of keywords
+    pdfnewwindow=true,      % links in new window
+    colorlinks=true,        % false: boxed links; true: colored links
+    linkcolor=blue,         % color of internal links (change box color with linkbordercolor)
+    citecolor=green,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+
+% Entfernt die farbigen Markierungen - bitte Druckversion mit dieser Option kompilieren
+%\hypersetup{hidelinks}
+
+
+
+% =================================================================
+\begin{document}
+
+% Titelseite
+% ==========
+
+% Name des Verfassers
+\author{Martin P. Mustermann}
+
+% Geburtsort
+\geburtsort{Dresden}
+
+% Geburtsdatum
+\geburtsdatum{1. Januar 1912}
+
+% Titel der Arbeit
+\title{Über den Einfluss hochfrequenter mechanischer Oszillationen auf das Schaltverhalten supraleitender PID-Regler auf Quantenbasis}
+
+% Untertitel
+\subtitle{Eine Fallstudie unter besonderer Berücksichtigung stochastischer Einflüsse}
+
+% Angabe der Betreuer
+\betreuer{Betreuer 1}
+\betreuer{Betreuer 2}
+
+% Datum der Einreichung
+\date{2. Februar 2222}
+
+
+% Zunächst für das Vorgeplänkel römische Seitenzahlen und einfacher Seitenstil
+% ============================================================================
+\pagenumbering{Roman}
+\pagestyle{plain}
+
+
+% Titelseite erstellen
+\maketitle
+
+
+% Selbstständigkeitserklärung
+% ===========================
+
+% Ort der Selbstständigkeitserklärung (Standard: Dresden)
+\selbstort{Pirna}
+
+% Datum der Selbstständigkeitserklärung (Standard: aktuelles Systemdatum)
+\selbstdatum{1. Januar 2016}
+
+% Selbstständigkeitserklärung erstellen
+\selbststaendigkeitserklaerung
+
+
+% Kurzfassung / Abstract
+% ======================
+\kurzfassung{An dieser Stelle fügen Sie bitte eine deutsche Kurzfassung ein.}{Please insert the English abstract here.}
+
+
+% Inhaltsverzeichnis
+% ==================
+\tableofcontents
+
+% Ggf. Symbolverzeichnis
+% ======================
+\input{symbolverzeichnis}
+
+% Ggf. Abbildungsverzeichnis
+% ==========================
+\listoffigures
+
+
+% Ggf. Tabellenverzeichnis
+% ========================
+\listoftables
+
+
+% ========================
+% Beginn Inhalt der Arbeit
+% ========================
+
+% Inhalt kann entweder in separate LaTeX-Dateien ausgelagert werden
+% (hier: inhalt.tex) und dann mittels \input{} geladen werden...
+% Darauf achten, dass pagenumbering und pagestyle richtig gesetzt werden
+% (siehe Einträge in inhalt.tex)
+\input{inhalt}
+
+
+% ...oder man schreibt direkt in dieser Datei (weniger übersichtlich)
+\chapter{Einige Informationen zu \LaTeX}
+
+\section{Generalles zu Schriftgrößen, Hervorhebungen und Abständen}
+Im Gegensatz zu WYSIWAG-Programmen wie Microsoft Word oder LibreOffice muss sich der Nutzer nicht um die explizite Festlegung der Schriftgrößen kümmern. Für das Dokument wird eine Basisschriftgröße definiert -- im hier vorliegenden Fall 12\,pt --, und alle anderen Größen von Überschriften etc.\,werden entsprechend gültiger und anerkannter Schriftsatzregeln automatisch festgelegt. Nur ausnahmsweise sollte die Schriftgröße manuell festgelegt werden. Hierzu gibt es die Makros \texttt{\textbackslash tiny}, \texttt{\textbackslash footnotesize}, \texttt{\textbackslash small}, \texttt{\textbackslash normalsize}, \texttt{\textbackslash large}, \texttt{\textbackslash Large}, \texttt{\textbackslash huge} und \texttt{\textbackslash Huge}.
+
+Hervorhebungen sollte man nicht durch fette Buchstaben oder Unterstreichungen realisieren, sondern durch \emph{kursiv setzen}. Dies geschieht mit dem Befehl \texttt{\textbackslash emph\{Text der kursiv gesetzt werden soll\}}. 
+
+Einen Absatz beendet man in \LaTeX mit einer Leerzeile und nicht, was häufig falsch gemacht wird, mit einem Doppelbackslash \texttt{\textbackslash \textbackslash}:
+
+\begin{minipage}[t]{0.5\linewidth}
+Korrekter \LaTeX-Code:
+\begin{verbatim}
+Dies ist der erste Absatz.
+
+Hier beginnt der zweite Absatz.
+\end{verbatim}
+\end{minipage}
+\begin{minipage}[t]{0.5\linewidth}
+Falscher \LaTeX-Code:
+\begin{verbatim}
+Dies ist der erste Absatz.\\
+Hier beginnt der zweite Absatz.
+\end{verbatim}
+oder auch falsch:
+\begin{verbatim}
+Dies ist der erste Absatz.\\
+
+Hier beginnt der zweite Absatz.
+\end{verbatim}
+\end{minipage}
+
+Im kompilierten Dokument wird ein neuer Absatz entweder durch eine Einrückung in der ersten Zeile, oder durch einen vertikalen Abstand zum vorherigen Absatz kenntlich gemacht. Dieses Verhalten steuert man mit den Schaltern \texttt{\textbackslash parindent} und \texttt{\textbackslash parskip} am Beginn des Dokuments. Der Parameter \texttt{\textbackslash parindent} legt fest, mit welcher Einrückung jeder neue Absatz beginnen soll, der Parameter \texttt{\textbackslash parskip} legt fest, wieviel vertikaler Abstand zwischen zwei Absätzen liegen soll. Einer der beiden Werte sollte ungleich Null gesetzt sein, z.B.~auf \texttt{2ex}\footnote{1ex = Breite des Buchstabens x}. Beide Werte ungleich Nullzu setzen macht satztechnisch keinen Sinn. Dieses Dokument ist mit
+\begin{verbatim}
+\setlength{\parindent}{0ex}
+\setlength{\parskip}{2ex}
+\end{verbatim}
+gesetzt worden.
+
+Auf die Absatzgestaltung ist auch bei Formeln zu achten, je nachdem, ob nach einer Formel ein neuer Absatz beginnt oder nicht:
+
+\begin{minipage}[t]{0.45\linewidth}
+Nach der Formel beginnt neuer Absatz:
+\begin{verbatim}
+Man erhält letztendlich
+\begin{equation}
+a^2 + b^2 = c^2.
+\end{equation}
+
+Nun wird der Abstand zur Quelle
+betrachtet.
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\linewidth}
+Nach der Formel geht der Satz weiter:
+\begin{verbatim}
+Es ergibt sich die Gleichung
+\begin{equation}
+a^2 + b^2 = c^2
+\end{equation}
+in der $a$, $b$ und $c$ die
+Seiten des Dreiecks sind.
+\end{verbatim}
+\end{minipage}
+
+
+\fbox{\parbox{\textwidth}{\begin{minipage}[t]{0.45\linewidth}
+\parskip4ex
+Man erhält letztendlich
+\begin{equation}
+a^2 + b^2 = c^2.
+\end{equation}
+
+Nun wird der Abstand zur Quelle betrachtet.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\linewidth}
+\parskip4ex
+Es ergibt sich die Gleichung
+\begin{equation}
+a^2 + b^2 = c^2
+\end{equation}
+in der $a$, $b$ und $c$ die Seiten des Dreiecks sind.
+\end{minipage}}}
+
+
+\section{Etwas Mathematik}
+\LaTeX{} eignet sich in besonderem Maße zum Setzen von mathematischen Formeln. Eine einzelne Formel erhalten Sie mit der \texttt{equation}-Umgebung:
+\begin{equation}\label{eq:exp}
+1 + \mathrm{e}^{i\pi} = 0.
+\end{equation}
+Bitte beachten Sie, dass Formeln Teil des Satzes sind und somit mit den entsprechenden Satzzeichen versehen werden müssen\footnote{Dies ist ein langer Fussnotentext, um zu testen, wie es mit der Einrückung aussieht bei mehrzeiligen Fussnoten. Da kann es zu unschönem Aussehen kommen.}.
+
+In der Regel genügt es, für eine Gleichung nur dann eine Nummer zu vergeben, wenn Sie später auch auf diese verweisen. Um auf die Nummer einer Gleichung zugreifen zu können verwenden Sie den Befehl \texttt{\textbackslash eqref}: 
+\begin{center}
+\ldots wie in Gl.\ \eqref{eq:exp} gezeigt\ldots	.
+\end{center}
+Möchten Sie verhindern, dass eine Gleichung nummiert wird, verwenden Sie die \texttt{equation*}-Umgebung:
+\begin{equation*}
+E + F - K = 2.
+\end{equation*}
+Mathematische Ausdrücke im Text werden durch Dollarzeichen abgegrenzt, z.B.: "`Es gilt stets $x \approx \sin(x)$, man kann also davon ausgehen, dass $|x| < 10$"'.
+
+Für Gleichungssysteme bietet sich die \texttt{align}- bzw. \texttt{align*}-Umgebung an, wobei bei letzterer keine Gleichungsnummern ausgegeben wird:
+\begin{align}\label{eq:align}
+\partiell{u}{x} &= \partiell{v}{y}\\
+\partiell{u}{y} &= -\partiell{v}{x}.
+\end{align}
+Alternativ können Sie auch eine $\texttt{aligned}$-Umgebung verwenden:
+\begin{equation}
+\begin{aligned}
+\partiell{u}{x} &= \partiell{v}{y}\\
+\partiell{u}{y} &= -\partiell{v}{x}.
+\end{aligned}
+\end{equation}
+Mit Hilfe der \texttt{subequations}-Umgebung lassen sich die Nummern der einzelnen Gleichungen eines Systems vereinheitlichen:
+\begin{subequations}
+\begin{align}
+\partiell{h}{t} + \partiell{(vh)}{x} &= 0\\
+\partiell{v}{t} + \partiell{}{x}\left(gh + \frac{u^2}{2}\right) &= 0.
+\end{align}
+\end{subequations}
+Die \texttt{subequations}-Umgebung funktioniert auch zusammen mit mehreren einzelnen Gleichungen:
+\begin{subequations}
+\begin{equation}
+\partiell{h}{t} + \partiell{(vh)}{x} = 0
+\end{equation}
+und
+\begin{equation}
+\partiell{v}{t} + \partiell{}{x}\left(gh + \frac{u^2}{2}\right) = 0.
+\end{equation}
+\end{subequations}
+
+Mit dem \texttt{intertext}-Befehl kann man auch innerhalb von \texttt{align}-Umgebungen Anmerkungen zwischen den Zeilen einfügen, ohne dass die Formelausrichtung verloren geht:
+\begin{subequations}
+\begin{align}
+\partiell{h}{t} + \partiell{(vh)}{x} &= 0
+\intertext{Es gilt außerdem:}
+\partiell{v}{t} + \partiell{}{x}\left(gh + \frac{u^2}{2}\right) &= 0.
+\end{align}
+\end{subequations}
+
+Für wichtige mathematische Funktionen gibt es in \LaTeX~vordefinierte Makros, zum Beispiel \texttt{$\backslash$sin} für $\sin$ (anstelle der Ausgabe von $sin$):
+\begin{verbatim}
+\sin, \cos, \tan, \cot, \arcsin, \arccos, \arctan, 
+\log, \ln, \sinh, \cosh, \tanh, \coth
+\end{verbatim}
+
+Weitere Details können diesem Dokument entnommen werden: \url{ftp://ftp.ams.org/ams/doc/amsmath/short-math-guide.pdf} bzw.~der Gesamtdokumentation des Paketes \texttt{amsmath}: \url{ftp://ftp.ams.org/ams/doc/amsmath/amsldoc.pdf}.
+
+
+\chapter{Verwaltung und Zitation von Literatur}
+Die Literaturverwaltung und Referenzierung von verwendeter Literatur ist in \LaTeX~komfortabel möglich. Diese Vorlage verwendet das neue \texttt{biblatex}/ \texttt{biber}-System. Bitte verwenden Sie \emph{nicht} das veraltete \texttt{bibtex}!
+
+Es wird zunächst eine Datei aufgebaut, die die Literaturquellen sammelt. Diese Datei muss die Dateiendung \texttt{.bib} haben, also z.B.~\texttt{Literatur-Arbeit.bib}. Jedem Eintrag wird dabei ein Kürzel zugewiesen. Auf die Literaturstelle wird dann innerhalb Ihres \LaTeX-Dokuments mit dem \texttt{\textbackslash cite}-Befehl verwiesen. Also z.B.~so: \texttt{\textbackslash cite\{FLMR95ijc\}} liefert \cite{FLMR95ijc}.
+
+Informationen zum Aufbau der \texttt{.bib}-Datei finden sich hier: \url{https://verbosus.com/bibtex-style-examples.html}. In der Regel werden die Eintragstypen \texttt{book}, \texttt{article} und \texttt{inbook} benötigt.
+
+Damit beim Kompilieren der \texttt{LaTeX}-Datei eine korrekte Verarbeitung der Literatur erfolgt, muss am Beginn des Dokuments
+\begin{verbatim}
+\addbibresource{Literatur-Arbeit.bib}
+\end{verbatim}
+und am Ende
+\begin{verbatim}
+\printbibliography
+\end{verbatim}
+eingefügt werden, so wie in dieser Vorlage schon geschehen. Zur Erstellung des Gesamtdokuments sind dann folgende Kommandos erforderlich:
+\begin{verbatim}
+pdflatex ArbeitRST.tex
+biber ArbeitRST
+pdflatex ArbeitRST.tex
+pdflatex ArbeitRST.tex
+\end{verbatim}
+
+\textbf{Achtung!} Wenn Sie ihren Text in einer \LaTeX -Entwicklungsumgebung schreiben, müssen Sie das dortige Kommando zur Literaturerstellung ggf.~anpassen!
+
+Details zur Nutzung und Konfiguration von \texttt{biblatex}: \url{https://de.sharelatex.com/learn/Bibliography_management_with_biblatex}.
+
+Hinweise zu deutschsprachigen Anpassungen: \url{www.nagel-net.de/Latex/DOKU/DTK-2_2008-biblatex-Teil1.pdf}.
+
+Ein Programm zur komfortablen, plattformunabhängigen Verwaltung von \texttt{bib}-Dateien ist JabRef: \url{http://www.jabref.org/}.
+
+
+
+\chapter[kurzer Titel]{Ausführlicher Kapiteltitel, der wirklich viel zu lang für das Inhaltsverzeichnis in dieser Dokumentvorlage ist}
+
+\fbox{\parbox{\textwidth}{\bfseries In diesem Kapitel sind einige Abbildungen verstreut, um den Umgang mit Grafiken zu demonstrieren. Der restliche Text ist Blindtext.}}
+
+
+\Blindtext[2][1]
+
+\section{Unterabschnitt 1}
+
+\Blindtext[2][2]
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\textwidth]{bild}
+\caption{Ein Hochleistungsschnittstellenboard wie es typisch in regelungstechnischen Echtzeitanwendungen ist, um höchsten technologischen Anforderungen im Rahmen der Industrie 4.0 gerecht zu werden.}
+\label{fig:Bild}
+\end{figure}
+
+
+\subsection{Unter-unterabschnitt 1}
+
+\blindmathtrue
+\Blindtext[2][4]
+
+\begin{figure}[ht]
+\begin{subfigure}[c]{0.5\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{bild}
+\subcaption{Fall mit Synchronisation.}
+\end{subfigure}
+\begin{subfigure}[c]{0.5\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{bild}
+\subcaption{Fall ohne Synchronisation.}
+\end{subfigure}
+\caption{Zwei verschiedene Anwendungsfälle für das Hochleistungsschnittstellenboard.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\subsection{Unter-unterabschnitt 2}
+
+\blindmathfalse
+\Blindtext[3][1]
+
+\begin{figure}[ht]
+\begin{subfigure}[c]{0.5\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{bild}
+\subcaption{Fall mit Synchronisation.}
+\end{subfigure}
+\begin{subfigure}[c]{0.5\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{bild}
+\subcaption{Fall ohne Synchronisation.}
+\end{subfigure}
+\begin{subfigure}[c]{0.5\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{bild}
+\subcaption{Fall mit unterkritischer partieller Synchronisation.}
+\end{subfigure}
+\begin{subfigure}[c]{0.5\textwidth}
+\centering
+\includegraphics[width=0.7\textwidth]{bild}
+\subcaption{Fall mit überkritischer partieller Synchronisation.}
+\end{subfigure}
+\caption{Vier verschiedene Anwendungsfälle für das Hochleistungsschnittstellenboard, die die unterschiedliche Leistungsfähigkeit demonstrieren.}
+\end{figure}
+
+\Blindtext[3][2]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ab hier nur Text zum Füllen und damit Erzeugen eines langen
+%% Inhaltsverzeichnisses
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Füllkapitel 1}
+\section{Fullabschnitt 1}
+\subsection{Füllunterabschnitt 11}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 12}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 13}
+\Blindtext[1][1]
+
+
+\section{Fullabschnitt 2}
+\subsection{Füllunterabschnitt 21}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 22}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 3}
+\Blindtext[1][1]
+
+
+\section{Fullabschnitt 3}
+\subsection{Füllunterabschnitt 31}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 32}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 33}
+\Blindtext[1][1]
+
+
+\section{Fullabschnitt 4}
+\subsection{Füllunterabschnitt 41}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 42}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 43}
+\Blindtext[1][1]
+
+
+\section{Fullabschnitt 5}
+\subsection{Füllunterabschnitt 51}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 52}
+\Blindtext[1][1]
+\subsection{Füllunterabschnitt 53}
+\Blindtext[1][1]
+
+
+
+
+
+% ==================================
+% Literaturverzeichnis
+% ==================================
+
+% Ein Literatureintrag, der nicht referenziert wird, aber im Verzeichnis erscheinen soll
+\nocite{Mik57de}
+
+% Literaturverzeichnis ausgeben
+\printbibliography
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
