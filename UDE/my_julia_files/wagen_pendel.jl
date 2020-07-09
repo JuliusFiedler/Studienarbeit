@@ -15,6 +15,7 @@ using DiffEqFlux, Flux
 using Plots
 gr()
 println("-------------------------------------------------------------------")
+
 function wp(du, u, p, t)
     g, s2 = p
     du[1] = u[3]
@@ -24,24 +25,31 @@ function wp(du, u, p, t)
 end
 function wp_fric(du, u, p, t)
     g, s2 = p
-    d = [0.1, 0.2]
     du[1] = u[3]
     du[2] = u[4]
-    du[3] = -g/s2*sin(u[1]) -d[1]*u[3] -tanh(10*u[3])
+    du[3] = -g/s2*sin(u[1]) -d[1]*u[3] -d[2]*tanh(10*u[3])
     du[4] = 0
 end
+fric = true
 
+if fric
+    system = wp_fric
+else
+    system = wp
+end
 
 # Define the experimental parameter
+d = [0.3, 0.5] #friction parameters
 tspan = (0.0f0,3.0f0)
-u0 = Float32[1,1,0.5,0.5]
+u0 = Float32[1,1,0.5,0]
 u02 = Float32[-1,0,-0.5,-0.1]
 # u0 = Float32[1,1,0,0]
 p_ = Float32[9.81, 0.26890449]
 dt = 0.1
-prob = ODEProblem(wp, u0, tspan, p_)
+
+prob = ODEProblem(system, u0, tspan, p_)
 solution = solve(prob, DP5(), abstol=1e-12, reltol=1e-12, saveat = dt)
-prob2 = ODEProblem(wp, u02, tspan, p_)
+prob2 = ODEProblem(system, u02, tspan, p_)
 solution2 = solve(prob2, DP5(), abstol=1e-12, reltol=1e-12, saveat = dt)
 display(plot(solution2))
 
@@ -63,6 +71,15 @@ display(plot(abs.(tsdata-noisy_data)', title = "ideal - noisy data"))
 ann = FastChain(FastDense(4, 32, tanh),FastDense(32, 32, tanh), FastDense(32, 4))
 p = initial_params(ann)
 
+function dudt_fric(u, p,t)
+
+    z = ann(u,p)
+    [u[3] + z[1],
+    u[4] + z[2],
+    -p_[1]/p_[2]*sin(u[1]) + z[3],
+    z[4]]
+end
+
 function dudt_(u, p,t)
 
     z = ann(u,p)
@@ -80,7 +97,11 @@ function dudt_2(u, p,t)
     z[4]]
 end
 
-dudt = dudt_
+if fric
+    dudt=dudt_fric
+else
+    dudt = dudt_2
+end
 
 prob_nn = ODEProblem(dudt, u0, tspan, p)
 s = concrete_solve(prob_nn, Tsit5(), u0, p, saveat = solution.t)
@@ -146,6 +167,9 @@ display(plot(DX'.-DX_'))
 if dudt == dudt_
     L = [Float32.(zeros(size(X[1,:])))'; Float32.(zeros(size(X[1,:])))'; -p_[1]/p_[2]*sin.(X[1,:])'; Float32.(zeros(size(X[1,:])))']
 end
+if fric
+    L = [Float32.(zeros(size(X[1,:])))'; Float32.(zeros(size(X[1,:])))'; (-d[1]*X[3,:] -tanh.(10*X[3,:]))'; Float32.(zeros(size(X[1,:])))']
+end
 if dudt == dudt_2
     L = [X[3,:]'; X[4,:]'; -p_[1]/p_[2]*sin.(X[1,:])'; Float32.(zeros(size(X[1,:])))']
 end
@@ -156,9 +180,19 @@ display(plot!(L̂'))
 
 display(scatter(abs.(L-L̂)', yaxis = :log))
 
-# CSV.write("L.csv", DataFrame(L̂'))
-# CSV.write("X.csv", DataFrame(X'))
-
+if fric
+    CSV.write("L_fric.csv", DataFrame(L̂'))
+    CSV.write("X_fric.csv", DataFrame(X'))
+else
+    if dudt == dudt_
+        CSV.write("L_pn.csv", DataFrame(L̂'))
+        CSV.write("X_pn.csv", DataFrame(X'))
+    end
+    if dudt == dudt_2
+        CSV.write("L_wopn.csv", DataFrame(L̂'))
+        CSV.write("X_wopn.csv", DataFrame(X'))
+    end
+end
 
 # -----------------------------------------------------------------------
 
@@ -185,7 +219,8 @@ for i ∈ 1:order
 end
 
 # And some other stuff
-h = [cos.(u)...; sin.(u)...; polys...]
+# tanh.(10*u)...;
+h = [cos.(u)...; sin.(u)...;tanh.(10*u)...; polys...]
 basis = Basis(h, u)
 
 # print(polys)
@@ -195,28 +230,15 @@ opt = SR3()
 # opt = STRRidge()
 
 # Create the thresholds which should be used in the search process
-λ = exp10.(-6:0.1:2)
+λ = exp10.(-2:0.1:1)
 
 # print("\n",λ)
 # Target function to choose the results from; x = L0 of coefficients and L2-Error of the model
 f_target(x, w) = iszero(x[1]) ? Inf : norm(w.*x, 2)
 
-# Test on original data and without further knowledge
-# Ψ = SInDy(X[:, :], DX[:, :], basis, λ, opt = opt, maxiter = 10000, f_target = f_target) # Fail
-# print("Test on original data and without further knowledge")
-# println(Ψ)
-# print_equations(Ψ)
-
-
-# Test on ideal derivative data ( not available )
-# Ψ = SInDy(X[:, 5:end], L[:, 5:end], basis, λ, opt = opt, maxiter = 10000, f_target = f_target) # Succeed
-# print("Test on ideal derivative data ( not available ) \n")
-# println(Ψ)
-# print_equations(Ψ)
-# p̂ = parameters(Ψ)
-# print("parameters: ", p̂, "\n")
 
 # Test on uode derivative data
+print("Sindy:\n")
 Ψ = SInDy(X[:, 2:end], L̂[:, 2:end], basis, λ,  opt = opt, maxiter = 10000, normalize = true, denoise = true, f_target = f_target) # Succeed
 print("Test on uode derivative data \n")
 println(Ψ)
@@ -243,35 +265,54 @@ unknown_eq = ODEFunction(unknown_sys)
 
 # Build a ODE for the estimated system
 
-if dudt == dudt_
-    function approx(du, u, p, t)
 
-        z = unknown_eq(u, p, t)
-        du[1] = u[3] + z[1]
-        du[2] = u[4] + z[2]
-        du[3] = z[3]
-        du[4] = z[4]
+function approx(du, u, p, t)
+
+    z = unknown_eq(u, p, t)
+    du[1] = u[3] + z[1]
+    du[2] = u[4] + z[2]
+    du[3] = z[3]
+    du[4] = z[4]
+end
+
+function approx_fric(du, u, p, t)
+
+    z = unknown_eq(u, p, t)
+    du[1] = u[3] + z[1]
+    du[2] = u[4] + z[2]
+    du[3] = -p_[1]/p_[2]*sin(u[1]) + z[3]
+    du[4] = z[4]
+end
+
+function approx2(du, u, p, t)
+
+    z = unknown_eq(u, p, t)
+    du[1] = z[1]
+    du[2] = z[2]
+    du[3] = z[3]
+    du[4] = z[4]
+end
+
+if fric
+    app = approx_fric
+else
+    if dudt == dudt_
+        app = approx
+    end
+    if dudt == dudt_2
+        app = approx2
     end
 end
-if dudt == dudt_2
-    function approx2(du, u, p, t)
 
-        z = unknown_eq(u, p, t)
-        du[1] = z[1]
-        du[2] = z[2]
-        du[3] = z[3]
-        du[4] = z[4]
-    end
-end
 # Create the approximated problem and solution
 ps = p̂
 print("approximated problem parameters:\n", ps, "\n")
-a_prob = ODEProblem(approx, u0, tspan, ps)
+a_prob = ODEProblem(app, u0, tspan, ps)
 a_solution = solve(a_prob, DP5(), saveat = dt)
 
 # Plot+#
-print("solution:\n", solution, "\n")
-print("approx solution:\n", a_solution, "\n")
+# print("solution:\n", solution, "\n")
+# print("approx solution:\n", a_solution, "\n")
 # print(solution[1,:], solution[2,:])
 display(plot(solution, title = "solution und approx solution"))
 display(plot!(a_solution, linestyle= :dash))
@@ -282,11 +323,11 @@ display(plot!(solution[2,:].-a_solution[2,:],label="y"))
 
 # Look at long term prediction
 t_long = (0.0, 10.0)
-a_prob = ODEProblem(approx, u0, t_long, ps)
+a_prob = ODEProblem(app, u0, t_long, ps)
 a_solution = solve(a_prob, Tsit5()) # Using higher tolerances here results in exit of julia
 display(plot(a_solution))
 
-prob_true2 = ODEProblem(wp, u0, t_long, p_)
+prob_true2 = ODEProblem(system, u0, t_long, p_)
 solution_long = solve(prob_true2, Tsit5(), saveat = a_solution.t)
 display(plot!(solution_long))
 
@@ -325,10 +366,12 @@ p3 = scatter(solution, color = [c1 c2 c3 c4], label = ["ϕ data" "x data" "̇ϕ 
 
 display(plot!(p3,solution_long, color = [c1 c2 c3 c4], linestyle = :dot, lw=5, label = ["True ϕ(t)" "True x(t)" "True ̇ϕ(t)" "True ̇x(t)"]))
 display(plot!(p3,a_solution, color = [c1 c2 c3 c4], lw=1, label = ["Estimated ϕ(t)" "Estimated x(t)" "Estimated ̇ϕ(t)" "Estimated ̇x(t)" ]))
-display(plot!(p3,[2.99,3.01],[0.0,maximum(hcat(Array(solution),Array(a_solution)))],lw=2,color=:black))
+display(plot!(p3,[2.99,3.01],[0.0,maximum(hcat(Array(solution),Array(a_solution)))],lw=2,color=:black, legend = :bottomright))
 annotate!([(1.5,9,text("Training \nData", 10, :center, :top, :black, "Helvetica"))])
 l = @layout [grid(1,2)
              grid(1,1)]
-display(plot(p1,p2,p3,layout = l))
+# plot(p3)
+# savefig("C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/Studienarbeit/Latex/RST-DiplomMasterStud-Arbeit/images/ude_fric_viskos_d1_03.png")
 
-# savefig("sindy_extrapolation.pdf")
+
+display(plot(p1,p2,p3,layout = l))

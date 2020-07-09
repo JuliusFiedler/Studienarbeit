@@ -178,17 +178,95 @@
 
 
 \subsection{8.7.20} 
-sindy bei wp kann koeff nicht mehr schätzen grund unklar\\
 überlegung NN in julia und sindy in python machen, export erledigt\\
 trotzdem keine identifikation in python möglich, grund: zu wenig daten (datenfeld mit 31 daten Autflösung viel zu gering)\\
 bei erhöhung der auflösung wird trainingszeit enorm groß
 NN approximiert den verlauf der ableitungen	\\
 sindy mal mit anderen anfangswerten trainieren
 \subsection{9.7.20}
-\subsubsection{reprodutierbarkeit udesindy}
-\subsubsection{ude reibung}
-\subsubsection{Pysindy reibung}
+ude keine option für multiple trajectories / threshhold???
+\subsubsection{ude + sindy}
+definitorische Gleichungen bekannt\\
+dt=0.1\\
+sindy did not converge
+\begin{align}
+du_1 &= cos(u_3) * p_1\\
+du_2 &= sin(u_3) * p_2\\
+du_3 &= sin(u_1) * p_3 + p_4 * u_1\\
+du_4 &= sin(u_3) * p_5
+\end{align}
+parameters: Float32[0.050624948, 0.006272168, -20.755184, -13.720979, -0.01513608]
+\includegraphics[width=1\textwidth]{images/ude_ident_with_prior_knowledge}
+im Vergleich: nur den Sindy Part in PySindy ausgelagert ergibt: (dieser Vergleich ist nicht sinnvoll? pysindy kennt ja die def. gl nicht)
+\begin{align*}
+phi' &= 65170415.755 xdot + -72812822.138 sin(xdot) + 2647179.524 cos(xdot)\\
+x' &= 51018334.340 xdot + -57002163.483 sin(xdot) + 2072882.755 cos(xdot)\\
+phidot' &= -3.002 phi + -6.328 x + 2682545588.568 xdot + -33.032 sin(phi) \\&+ -1.358 sin(x) + -0.208 sin(phidot) + -2997205703.337 sin(xdot) \\&+ -0.020 cos(phi) + -6.583 cos(x) + 109008747.059 cos(xdot)\\
+xdot' &= 0.320 x + -18300414.600 xdot + 20447317.167 sin(xdot) + 0.344 cos(x) \\&+ -743815.199 cos(xdot)
+\end{align*}
 
+
+
+
+keine Gleichungen bekannt\\
+dt=0.1\\
+sindy did not converge
+\begin{align}
+du_1 &= p_1 * u_3\\
+du_2 &= sin(u_2) * p_2\\
+du_3 &= sin(u_1) * p_3 + p_4 * u_1\\
+du_4 &= cos(u_1) * p_5
+\end{align}
+parameters: Float32[0.997858, 0.20674846, -18.494001, -15.788721, 0.040644586]\\
+\includegraphics[width=1\textwidth]{images/ude_ident_without_prior_knowledge}
+im Vergleich: nur den Sindy Part in PySindy ausgelagert ergibt:
+\begin{align*}
+phi' &= 1.111 phi + 0.648 x + 1.002 phidot + -503701656.178 xdot + -1.228 sin(phi) \\&+ 562779966.638 sin(xdot) + -0.050 cos(phi) + 0.676 cos(x) + -20465608.922 cos(xdot)\\
+x' &= 0.833 phi + -0.031 x + 450669011.982 xdot + -0.967 sin(phi) \\&+ -503527393.951 sin(xdot) + 0.157 cos(phi) + -0.051 cos(x) + 18310968.307 cos(xdot)\\
+phidot' &= -2.551 phi + -4.834 x + -3252316739.183 xdot + -33.509 sin(phi) \\&+ -0.458 sin(x) + 3633781720.861 sin(xdot) + -5.066 cos(x) + -132146405.440 cos(xdot)\\
+xdot' &= 0.674 phi + -184783222.592 xdot + -0.759 sin(phi) + 206455836.816 sin(xdot) + \\&-7507657.694 cos(xdot)
+\end{align*}
+
+\subsubsection{ude reibung}
+tanh wie erwartet problematisch, vmtl sinnvoll tanh vorzugeben\\
+viskose+ haftreibung:
+\begin{align*}
+du_1 &= sin(u_3) * p_1\\
+du_2 &= cos(u_1) * p_2 + cos(u_3) * p_3\\
+du_3 &= p_4 * u_3\\
+du_4 &= sin(u_3) * p_5
+\end{align*}
+parameters: Float32[-0.032978103, 0.020778582, 0.02180107, -0.30371103, -0.026243187]
+\includegraphics[width=1\textwidth]{images/ude_fric_order_4}
+
+nur viskose reibung, order 2:\\
+\begin{align*}
+d_1&=0.3\\
+d_{1, ident}&= 0.2981498
+\end{align*}
+\includegraphics[width=1\textwidth]{images/ude_fric_viskos_d1_03}
+
+
+\subsubsection{Pysindy reibung}
+Ansatz: Sindy für Differenz von Realem Modell mit Reibung und theoretischem Modell verwenden, siehe Bsp:\\
+\begin{figure}
+\begin{subfigure}[c]{0.5\textwidth}
+\includegraphics[width=1\textwidth]{images/pysindy_fric_visk2}
+\end{subfigure}
+\begin{subfigure}[c]{0.5\textwidth}
+\includegraphics[width=1\textwidth]{images/pysindy_fric_visk1}
+\end{subfigure}
+\caption{nur viskose Reibung}
+\end{figure}
+keine Identifikation feststellbar\\
+vermutung: aus Differenz geht keine exp funktion hervor, es fehlt die info über das vorherige System
+idee: prior system knowledge integrieren indem man das bekannte teilsystem aus library funktion zur verfügung stellt
+
+
+\section{errors}
+Ude:\\
+$AssertionError: length(b) == length(variables(b)) in unknown_sys:$\\
+wenn $\lambda$ so gewählt, dass ganze Zeilen rausfallen
 % ==================================
 % Literaturverzeichnis
 % ==================================
