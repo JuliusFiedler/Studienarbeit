@@ -20,6 +20,6 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\nonumberline ude reibung}{XII}{section*.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\nonumberline Pysindy reibung}{XIII}{section*.8}
+\contentsline {subsubsection}{\nonumberline Pysindy reibung}{XIII}{section*.10}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.2}errors}{XIII}{section.1.2}
+\contentsline {section}{\numberline {1.2}errors}{XV}{section.1.2}

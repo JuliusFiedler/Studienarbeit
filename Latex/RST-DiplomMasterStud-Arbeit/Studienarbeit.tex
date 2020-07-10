@@ -244,7 +244,25 @@ nur viskose reibung, order 2:\\
 d_1&=0.3\\
 d_{1, ident}&= 0.2981498
 \end{align*}
+
+\begin{figure}
 \includegraphics[width=1\textwidth]{images/ude_fric_viskos_d1_03}
+\caption{ude fric viskos d1 03}
+\end{figure}
+
+viskose + haftreibung: order 1, tanh vorgegeben:\\
+\begin{align*}
+du_1 &= cos(u_1) * p_1\\
+du_2 &= sin(u_3) * p_2\\
+du_3 &= tanh(10u_3) * p_3 + p_4 * u_3\\
+du_4 &= tanh(10u_3) * p_5
+\end{align*}
+parameters: Float32[0.018757716, -0.011911368, -0.26272112, -0.35348737, -0.005909097]
+
+\begin{figure}
+\includegraphics[width=1\textwidth]{images/ude_fric_viskos_d1_03_d2_05}
+\caption{ude fric viskos und haft d1 03 d2 05}
+\end{figure}
 
 
 \subsubsection{Pysindy reibung}
