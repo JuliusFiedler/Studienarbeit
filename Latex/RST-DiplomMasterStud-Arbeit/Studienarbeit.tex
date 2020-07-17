@@ -279,12 +279,55 @@ Ansatz: Sindy für Differenz von Realem Modell mit Reibung und theoretischem Mod
 keine Identifikation feststellbar\\
 vermutung: aus Differenz geht keine exp funktion hervor, es fehlt die info über das vorherige System
 idee: prior system knowledge integrieren indem man das bekannte teilsystem aus library funktion zur verfügung stellt
+\section{Sindy}
+Erzeugen der Library\\
+Zeitverläufe X in Library functions auswerten (geg: x[], y[], library berechnet ident, x, y, x*y, x**2 usw an jedem zeitpunkt des arrays)
+\subsection{Vergleich Sindy in Python und Julia}
+System: Volterra\\
+Zeitspanne: 3s\\
+Schrittweite: 0.1s\\
+Julia:\\
+\begin{align*}
+\dot{x} &= -0.057677828 y^2 + 0.9879066 x\\
+\dot{y} &= -1.5857016 y
+\end{align*}
+Python:\\
+\begin{align*}
+\dot{x} &= 0.973 x\\
+\dot{y} &= -2.103 y + 1.561 xy
+\end{align*}
 
+Zeitspanne: 3s\\
+Schrittweite: 0.01s\\
+Julia:\\
+\begin{align*}
+\dot{x} &= -0.0028148904 y^2 + 1.2928892 x - 0.8812496 xy\\
+\dot{y} &= -1.5789621 y
+\end{align*}
+Python:\\
+\begin{align*}
+\dot{x} &= 1.293 x + -0.909 xy\\
+\dot{y} &= -1.821 y + 0.837 xy
+\end{align*}
+
+Zeitspanne: 3s\\
+Schrittweite: 0.001s\\
+Julia:\\
+\begin{align*}
+\dot{x} &= 1.29908 x -0.9018026 xy\\
+\dot{y} &= -0.3144052 -0.1010906 y^2 -0.4039814 y -1.0950719 xy
+\end{align*}
+Python:\\
+\begin{align*}
+\dot{x} &= 1.299 x + -0.901 x y\\
+\dot{y} &= -1.802 y + 0.803 x y
+\end{align*}
 
 \section{errors}
 Ude:\\
 $AssertionError: length(b) == length(variables(b)) in unknown_sys:$\\
-wenn $\lambda$ so gewählt, dass ganze Zeilen rausfallen
+wenn $\lambda$ so gewählt, dass ganze Zeilen rausfallen\\
+debug julia: %$Juno.@enter SInDy(X[:, :], DX[:, :], basis, λ, opt = opt, maxiter = 10000, f_target = f_target)
 % ==================================
 % Literaturverzeichnis
 % ==================================
