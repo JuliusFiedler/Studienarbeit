@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  6 JUL 2020 13:12
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  24 JUL 2020 16:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1065,9 +1065,9 @@ Package biblatex Info: Automatic encoding selection.
 \openout3 = `ArbeitRST.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file 'ArbeitRST.bbl' not found.
+Package biblatex Info: ... file 'ArbeitRST.bbl' found.
 
-No file ArbeitRST.bbl.
+(./ArbeitRST.bbl)
 Package biblatex Info: Reference section=0 on input line 63.
 Package biblatex Info: Reference segment=0 on input line 63.
 LaTeX Info: Redefining \microtypecontext on input line 63.
@@ -1080,7 +1080,7 @@ Package microtype Info: Using default expansion set `basictext'.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
-(f:/texlive/2013/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+ (f:/texlive/2013/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
@@ -1871,10 +1871,10 @@ Package logreq Info: Writing requests to 'ArbeitRST.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 17345 strings out of 493308
- 280181 string characters out of 6141367
+ 17349 strings out of 493308
+ 280250 string characters out of 6141367
  802963 words of memory out of 5000000
- 20241 multiletter control sequences out of 15000+600000
+ 20243 multiletter control sequences out of 15000+600000
  114027 words of font info for 170 fonts, out of 8000000 for 9000
  961 hyphenation exceptions out of 8191
  52i,15n,73p,1043b,1802s stack positions out of 5000i,500n,10000p,200000b,80000s

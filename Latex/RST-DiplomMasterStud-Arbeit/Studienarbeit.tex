@@ -149,7 +149,7 @@
 
 %\input{inhalt}
 
-
+\pagenumbering{arabic}
 % ...oder man schreibt direkt in dieser Datei (weniger übersichtlich)
 \chapter{Notizen}
 
@@ -330,21 +330,29 @@ Wählt man beispielsweise für $\theta_1$ die Sinusfunktion und für $\theta_2$ 
 		\mid & \mid & & \mid & \mid & & \mid
 	\end{bmatrix},	
 \end{align}
-wobei die Rechenoperationen alle Elementweise zu lesen sind. \\
+wobei die Rechenoperationen alle elementweise zu lesen sind. \\
 Gesucht sind nun Linearkombinationen von Bibliotheksfunktionen, sodass gilt
 \begin{equation}
 f_i(x) = \Theta(x^T)\xi_i.
 \end{equation}
-Fasst man alle $\xi_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}$ zusammen, so ergibt sich die zu lösende Gleichung zu 
+Fasst man alle $\xi_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}$ zusammen, so ergibt sich das zu lösende Problem zu 
 \begin{equation}
-\dot{X} \approx \Theta(X)\Xi
+\dot{X} \approx \Theta(X)\Xi.
+\end{equation}
+In der Praxis sollte dieses Gleichungssystem überbestimmt sein. Das bedeutet, dass die Anzahl der Messzeitpunkte $m$ (die Anzahl der Zeilen) größer ist als die Anzahl der Einträge in $\Xi\in\mathbb{R}^{L\times n}$ (Anzahl der Unbekannten). Um das SINDy-Problem zu lösen, wird die Methode der kleinsten Quadrate angewendet. Durch aufstellen der Pseudo-Inversen ergibt sich 
+\begin{equation}
+\Xi = \left(\Theta(X)^T\Theta(X)\right)^{-1}\Theta(X)^T\dot{X} %stimmt das  auch für Matrizen?
+\end{equation}
+Im Programm implementiert: mit
+\begin{equation}
+\Xi_\text{neu} = \left(\Theta(X)^T\Theta(X) + I \right)^{-1} \left(\Theta(X)^T\dot{X} + \Xi_{\text{alt}} \right)
+\end{equation}
+iterieren und am Ende
+\begin{equation}
+\dot{X}[:,i] = \Theta_k(X) \xi_i
 \end{equation}
 
 
-
-Benötigt werden die Zeitverläufe aller Zustände $x(t)\in\mathbb{R}^n$
-Erzeugen der Library\\
-Zeitverläufe X in Library functions auswerten (geg: x[], y[], library berechnet ident, x, y, x*y, x**2 usw an jedem zeitpunkt des arrays)\\
 initial guess: Solves the equation $a x = b$ by computing a vector $x$ that
     minimizes the squared Euclidean 2-norm $\| b - a x \|^2_2$.
     The equation may be under-, well-, or over-determined (i.e., the
@@ -354,7 +362,7 @@ initial guess: Solves the equation $a x = b$ by computing a vector $x$ that
     is the "exact" solution of the equation.
 
 \subsection{Vergleich Sindy in Python und Julia}
-System: Volterra (julia : normalize true, maxiter 10000)\\
+System: Volterra (julia : normalize true, maxiter 10000, falsche ableitungen)\\
 Zeitspanne: 3s\\
 Schrittweite: 0.1s\\
 Julia:\\
