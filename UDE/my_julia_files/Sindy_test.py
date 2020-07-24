@@ -35,7 +35,7 @@ plt.plot(tt, X)
 
 
 # %%
-DX = pd.read_csv('DX.csv', sep=',',header=None)
+DX = pd.read_csv('x_dot.csv', sep=',',header=None)
 DX = np.array(DX.values)
 DX = np.delete(DX, 0, axis= 0)
 DX = np.array(DX, dtype=np.float64)
@@ -81,7 +81,7 @@ model = ps.SINDy(
     feature_names=["x", "y"]
 )
 dt= t_end/(X.shape[0]-1)
-model.fit(X, x_dot=DX, t=dt, multiple_trajectories=False)
+model.fit(X, x_dot=DX, t=dt, multiple_trajectories=False) # x_dot=DX,
 model.print()
 
 

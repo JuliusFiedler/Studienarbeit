@@ -11,7 +11,8 @@
 % ================================
 % (ist nur für dieses Beispieldokument sinnvoll)
 \usepackage{blindtext}
-
+\usepackage{physics}
+\usepackage{amsmath}
 
 
 % Zwei Parameter zum Verändern des Layouts
@@ -27,6 +28,7 @@
 % Buchstabens x
 \setlength{\parindent}{0ex}
 \setlength{\parskip}{2ex}
+
 
 
 % Einige Einstellungen für das hyperref-Paket
@@ -280,10 +282,79 @@ keine Identifikation feststellbar\\
 vermutung: aus Differenz geht keine exp funktion hervor, es fehlt die info über das vorherige System
 idee: prior system knowledge integrieren indem man das bekannte teilsystem aus library funktion zur verfügung stellt
 \section{Sindy}
+\subsection{Funktionsweise der Methode}
+Sparse Identification of Nonlinear Dynamics (SINDy) ist eine Methode, um aus Messdaten eines Systems dessen Systemdifferentialgleichungen zu schätzen.\\
+Sei $x(t)\in\mathbb{R}^n$ der Zustandsvektor mit $x(t) = [x_1(t), x_2(t), ... , x_n(t)]$. Gesucht ist die Funktion der zeitlichen Ableitung des Zustandes $\dv{x(t)}{t} = f(x(t))$, welche auch nichtlinear sein kann. %d/dt gut so?
+Die zugrundeliegende Überlegung der Methode ist, dass die Funktion $f$ in einem geeigneten Raum an Basisfunktionen oft \textit{dünn besetzt} ist. Betrachtet man beispielsweise die Funktion
+\begin{equation}
+\dv{x}{t} = f(x) = \begin{bmatrix} f_1(x)\\ f_2(x)\\ \end{bmatrix}
+=\begin{bmatrix} 1+2x_1+x_1x_2^2 \\ x_1^3-3x_2\\ \end{bmatrix}
+\end{equation}
+so ist leicht zu erkennen, dass $f$ in Bezug auf die Basis von Polynomen aus zwei Variablen (z.B. $f_1(x)=\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}a_{ij}x_1^ix_2^j$) dünn besetzt ist. Nur eine sehr geringe Zahl der Koeffizienten $a_{ij}$ ist ungleich null.
+SINDy versucht nun mittels Regression diejenigen Monome auszuwählen, die die Funktion $f$ am besten repräsentieren können.\\
+Für die Anwendung von SINDy benötigt man die Messdaten aller Zustandsgrößen zu den Zeitpunkten $t_1, t_2, ..., t_m)$. Zusätzlich müssen die zeitlichen Ableitungen der Zustände an den gegebenen Zeitpunkten gegeben sein, entweder durch direkte Messung oder durch numerische Approximation. Die Daten werden wie folgt angeordnet: 
+\begin{align}
+X &= \begin{bmatrix}
+		x_1(t_1) & x_2(t_1) & \dots & x_n(t_1) \\
+		x_1(t_2) & x_2(t_2) & \dots & x_n(t_2) \\
+		\vdots   & \vdots   & 		& \vdots \\ 
+		x_1(t_m) & x_2(t_m) & \dots & x_n(t_m)
+	\end{bmatrix} \in \mathbb{R}^{m\times n},
+	\\
+	\dot{X} &= \begin{bmatrix} 
+		\dot{x_1}(t_1) & \dot{x_2}(t_1) & \dots & \dot{x_n}(t_1) \\
+		\dot{x_1}(t_2) & \dot{x_2}(t_2) & \dots & \dot{x_n}(t_2) \\
+		\vdots 		   & \vdots 		& 		& \vdots \\
+		\dot{x_1}(t_m) & \dot{x_2}(t_m) & \dots & \dot{x_n}(t_m)
+	\end{bmatrix}  \in \mathbb{R}^{m\times n}.
+\end{align}
+Nun muss man die Bibliothek $\Theta$ an Funktionen konstruieren, durch welche $f$ dargestellt werden soll. Hier ist es günstig, wenn man bereits weiß, welche Funktionsklassen in $f$ vorkommen, um die Bibliothek geeignet auszulegen.
+Die Spalten der Bibliotheksmatrix repräsentieren die gewählten Ansatzfunktionen, angewendet auf die Datenmatrix $X$ 
+\begin{equation}
+\Theta(X) = \begin{bmatrix}
+		\mid & \mid & & \mid \\
+		\theta_1(X) & \theta_2(X) & \dots & \theta_\ell(X) \\
+		\mid & \mid & & \mid 
+	\end{bmatrix}\in\mathbb{R}^{m\times L}.
+\end{equation} 
+Wählt man beispielsweise für $\theta_1$ die Sinusfunktion und für $\theta_2$ Monome zweiten Grades so ergeben sich 
+\begin{align}
+\theta_1(X) &= \begin{bmatrix}
+		\mid 	  & \mid     		  &          & \mid             \\
+		\sin(x_1(t)) & \sin(x_2(t))   & \dots    & \sin(x_n(t)) \\
+		\mid      & \mid     		  &          & \mid              
+	\end{bmatrix},\\
+\theta_2(X) &= \begin{bmatrix}
+		\mid & \mid & & \mid & \mid & & \mid \\
+		x_1(t)^2 & x_1(t)x_2(t) & \dots & x_2(t)^2 & x_2(t)x_3(t) & \dots & x_n^2(t) \\
+		\mid & \mid & & \mid & \mid & & \mid
+	\end{bmatrix},	
+\end{align}
+wobei die Rechenoperationen alle Elementweise zu lesen sind. \\
+Gesucht sind nun Linearkombinationen von Bibliotheksfunktionen, sodass gilt
+\begin{equation}
+f_i(x) = \Theta(x^T)\xi_i.
+\end{equation}
+Fasst man alle $\xi_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}$ zusammen, so ergibt sich die zu lösende Gleichung zu 
+\begin{equation}
+\dot{X} \approx \Theta(X)\Xi
+\end{equation}
+
+
+
+Benötigt werden die Zeitverläufe aller Zustände $x(t)\in\mathbb{R}^n$
 Erzeugen der Library\\
-Zeitverläufe X in Library functions auswerten (geg: x[], y[], library berechnet ident, x, y, x*y, x**2 usw an jedem zeitpunkt des arrays)
+Zeitverläufe X in Library functions auswerten (geg: x[], y[], library berechnet ident, x, y, x*y, x**2 usw an jedem zeitpunkt des arrays)\\
+initial guess: Solves the equation $a x = b$ by computing a vector $x$ that
+    minimizes the squared Euclidean 2-norm $\| b - a x \|^2_2$.
+    The equation may be under-, well-, or over-determined (i.e., the
+    number of linearly independent rows of $a$ can be less than, equal
+    to, or greater than its number of linearly independent columns).
+    If $a$ is square and of full rank, then $x$ (but for round-off error)
+    is the "exact" solution of the equation.
+
 \subsection{Vergleich Sindy in Python und Julia}
-System: Volterra\\
+System: Volterra (julia : normalize true, maxiter 10000)\\
 Zeitspanne: 3s\\
 Schrittweite: 0.1s\\
 Julia:\\
@@ -327,7 +398,10 @@ Python:\\
 Ude:\\
 $AssertionError: length(b) == length(variables(b)) in unknown_sys:$\\
 wenn $\lambda$ so gewählt, dass ganze Zeilen rausfallen\\
-debug julia: %$Juno.@enter SInDy(X[:, :], DX[:, :], basis, λ, opt = opt, maxiter = 10000, f_target = f_target)
+nützliche Befehle: %$Juno.@enter SInDy(X[:, :], DX[:, :], basis, λ, opt = opt, maxiter = 30, normalize = false, f_target = f_target)
+%inv(A'*A)*A'Y
+%inv([A[:,2] A[:,4]]'*[A[:,2] A[:,4]])*[A[:,2] A[:,4]]'*Y[:,1]
+%inv([A[:,3] A[:,4]]'*[A[:,3] A[:,4]])*[A[:,3] A[:,4]]'*Y[:,2]
 % ==================================
 % Literaturverzeichnis
 % ==================================

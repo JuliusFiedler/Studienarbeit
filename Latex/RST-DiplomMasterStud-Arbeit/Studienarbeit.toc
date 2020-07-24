@@ -24,6 +24,8 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1.2}Sindy}{XV}{section.1.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {1.2.1}Vergleich Sindy in Python und Julia}{XV}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.1}Funktionsweise der Methode}{XV}{subsection.1.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.3}errors}{XVI}{section.1.3}
+\contentsline {subsection}{\numberline {1.2.2}Vergleich Sindy in Python und Julia}{XVII}{subsection.1.2.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.3}errors}{XVIII}{section.1.3}
