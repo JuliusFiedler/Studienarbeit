@@ -9,7 +9,7 @@ using DiffEqFlux, Flux
 using Plots
 using CSV
 using DataFrames
-gr()
+# gr()
 
 print("---------------------------------------------------------------------")
 function calc_centered_difference(x_, dt=0.1)
@@ -36,6 +36,7 @@ p_ = Float32[1.3, 0.9, 0.8, 1.8]
 prob = ODEProblem(lotka, u0,tspan, p_)
 dt = .1
 solution = solve(prob, Vern7(), abstol=1e-12, reltol=1e-12, saveat = dt)
+NN = false
 
 X = solution
 DX = Array(solution(solution.t, Val{1}))
@@ -56,9 +57,67 @@ CSV.write("X.csv", DataFrame(X'))
 CSV.write("DX_.csv", DataFrame(DX_'))
 CSV.write("x_dot.csv", DataFrame(x_dot'))
 
+if NN
+    function dudt2(u, p,t)
+        x, y = u
+        z = ann(u,p)
+        [ z[1],
+         z[2]]
+    end
+    prob_nn = ODEProblem(dudt2,u0, tspan, p)
+    tsdata = Array(solution)
+    # Add noise to the data
+    noisy_data = tsdata + Float32(1e-5)*randn(eltype(tsdata), size(tsdata))
+    ann = FastChain(FastDense(2, 32, tanh),FastDense(32, 32, tanh), FastDense(32, 2))
+    p = initial_params(ann)
+    function predict(θ)
+        Array(concrete_solve(prob_nn, Vern7(), u0, θ, saveat = X.t,
+                             abstol=1e-6, reltol=1e-6,
+                             sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP())))
+    end
+
+    # No regularisation right now
+    function loss(θ)
+        pred = predict(θ)
+        sum(abs2, noisy_data .- pred), pred # + 1e-5*sum(sum.(abs, params(ann)))
+    end
+
+    loss(p)
+
+    const losses = []
+    callback(θ,l,pred) = begin
+        push!(losses, l)
+        if length(losses)%50==0
+            println(losses[end])
+        end
+        false
+    end
+
+    res1 = DiffEqFlux.sciml_train(loss, p, ADAM(0.01), cb=callback, maxiters = 100)
+    res2 = DiffEqFlux.sciml_train(loss, res1.minimizer, BFGS(initial_stepnorm=0.01), cb=callback, maxiters = 10000)
+    # print(res2.minimizer)
+    # Plot the losses
+    display(plot(losses, yaxis = :log, xaxis = :log, xlabel = "Iterations", ylabel = "Loss"))
+
+    # Plot the data and the approximation
+    NNsolution = predict(res2.minimizer)
+
+    # Trained on noisy data vs real solution
+    tsdata = Array(X)
+    display(plot(solution.t, NNsolution', title= "NNsolution"))
+    display(plot!(solution.t, tsdata'))
+    display(plot(solution.t, tsdata'.-NNsolution', title = "Fehler in X"))
+    L = ann(X,res2.minimizer)
+    display(plot(x_dot', title = "Zentraldifferenz"))
+    display(plot!(L',title = "NN Ableitung"))
+    display(plot(x_dot'-L', title = "Fehler in Ableitung"))
+    CSV.write("L.csv", DataFrame(L'))
+end
+
+
 @variables u[1:2]
 # Lots of polynomials
-order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
+order = 3 # order soll sein: Summe aller Exponenten in jedem Monom
 polys = Operation[1]
 for i ∈ 1:order
     push!(polys, u[1]^i)
@@ -90,7 +149,27 @@ opt = SR3()
 f_target(x, w) = iszero(x[1]) ? Inf : norm(w.*x, 2)
 print("Sindy\n")
 Ψ = SInDy(X[:, :], x_dot[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
-print("Test on original data and without further knowledge")
+println(Ψ)
+print_equations(Ψ)
+p̂ = parameters(Ψ)
+print("parameters: ", p̂, "\n")
+
+if NN
+    print("Sindy NN\n")
+    Ψ = SInDy(X[:, :], L[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+    println(Ψ)
+    print_equations(Ψ)
+    p̂ = parameters(Ψ)
+    print("parameters: ", p̂, "\n")
+end
+X_high_res = Array(concrete_solve(prob_nn, Vern7(), u0, res2.minimizer, saveat = 0.0001,
+                     abstol=1e-6, reltol=1e-6,
+                     sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP())))
+CSV.write("X_hr.csv", DataFrame(X_high_res'))
+L_high_res = ann(X_high_res,res2.minimizer)
+CSV.write("L_hr.csv", DataFrame(L_high_res'))
+print("Sindy NN_hr\n")
+Ψ = SInDy(X_high_res[:, :], L_high_res[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
 println(Ψ)
 print_equations(Ψ)
 p̂ = parameters(Ψ)

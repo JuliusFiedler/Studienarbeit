@@ -68,7 +68,7 @@ custom_library = ps.CustomLibrary(
     library_functions=library_functions, function_names=library_function_names
 )
 differentiation_method = ps.FiniteDifference(order=2)
-feature_library = ps.PolynomialLibrary(degree=2)
+feature_library = ps.PolynomialLibrary(degree=3)
 # feature_library = custom_library
 optimizer = ps.SR3(threshold=0.2)
 
