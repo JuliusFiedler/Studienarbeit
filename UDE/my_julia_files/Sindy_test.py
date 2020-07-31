@@ -35,7 +35,7 @@ plt.plot(tt, X)
 
 
 # %%
-DX = pd.read_csv('x_dot.csv', sep=',',header=None)
+DX = pd.read_csv('DX_.csv', sep=',',header=None)
 DX = np.array(DX.values)
 DX = np.delete(DX, 0, axis= 0)
 DX = np.array(DX, dtype=np.float64)
@@ -47,6 +47,14 @@ for x in DX:
 print(DX.shape)
 plt.plot(tt, DX)
 
+# %%
+a = 1.3
+c = -1.8
+DX_K = DX
+DX_K[:, 0] = DX[:, 0] - a*X[:, 0]    
+DX_K[:, 1] = DX[:, 1] - c*X[:, 1]  
+print(DX_K.shape)
+plt.plot(tt, DX_K)
 
 # %%
 library_functions = [
@@ -68,7 +76,7 @@ custom_library = ps.CustomLibrary(
     library_functions=library_functions, function_names=library_function_names
 )
 differentiation_method = ps.FiniteDifference(order=2)
-feature_library = ps.PolynomialLibrary(degree=3)
+feature_library = ps.PolynomialLibrary(degree=2)
 # feature_library = custom_library
 optimizer = ps.SR3(threshold=0.2)
 
@@ -81,7 +89,7 @@ model = ps.SINDy(
     feature_names=["x", "y"]
 )
 dt= t_end/(X.shape[0]-1)
-model.fit(X, x_dot=DX, t=dt, multiple_trajectories=False) # x_dot=DX,
+model.fit(X, x_dot=DX_K, t=dt, multiple_trajectories=False) # x_dot=DX,
 model.print()
 
 

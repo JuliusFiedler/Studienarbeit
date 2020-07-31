@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  24 JUL 2020 16:44
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  31 JUL 2020 13:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2356,7 +2356,7 @@ Package babel Info: Redefining ngerman shorthand "|
 (babel)             in language  on input line 156.
 Package babel Info: Redefining ngerman shorthand "~
 (babel)             in language  on input line 156.
-<images/arctan_1x_order_100.png, id=102, 433.62pt x 289.08pt>
+<images/arctan_1x_order_100.png, id=103, 433.62pt x 289.08pt>
 File: images/arctan_1x_order_100.png Graphic file (type png)
 
 <use images/arctan_1x_order_100.png>
@@ -2364,7 +2364,7 @@ Package pdftex.def Info: images/arctan_1x_order_100.png used on input line 161.
 
 (pdftex.def)             Requested size: 221.32182pt x 147.54794pt.
 
-<images/arctan_10x_order_100.png, id=104, 433.62pt x 289.08pt>
+<images/arctan_10x_order_100.png, id=105, 433.62pt x 289.08pt>
 File: images/arctan_10x_order_100.png Graphic file (type png)
 
 <use images/arctan_10x_order_100.png>
@@ -2372,14 +2372,14 @@ Package pdftex.def Info: images/arctan_10x_order_100.png used on input line 166
 .
 (pdftex.def)             Requested size: 221.32182pt x 147.54794pt.
 
-<images/tanh_1x_order_100.png, id=105, 433.62pt x 289.08pt>
+<images/tanh_1x_order_100.png, id=106, 433.62pt x 289.08pt>
 File: images/tanh_1x_order_100.png Graphic file (type png)
 
 <use images/tanh_1x_order_100.png>
 Package pdftex.def Info: images/tanh_1x_order_100.png used on input line 171.
 (pdftex.def)             Requested size: 221.32182pt x 147.54794pt.
 
-<images/tanh_10x_order_100.png, id=106, 433.62pt x 289.08pt>
+<images/tanh_10x_order_100.png, id=107, 433.62pt x 289.08pt>
 File: images/tanh_10x_order_100.png Graphic file (type png)
 
 <use images/tanh_10x_order_100.png>
@@ -2417,7 +2417,7 @@ Package babel Info: Redefining ngerman shorthand "|
 Package babel Info: Redefining ngerman shorthand "~
 (babel)             in language  on input line 188.
 
-<images/ude_ident_with_prior_knowledge.png, id=116, 602.25pt x 401.5pt>
+<images/ude_ident_with_prior_knowledge.png, id=117, 602.25pt x 401.5pt>
 File: images/ude_ident_with_prior_knowledge.png Graphic file (type png)
 
 <use images/ude_ident_with_prior_knowledge.png>
@@ -2433,7 +2433,7 @@ Package babel Info: Redefining ngerman shorthand "|
 Package babel Info: Redefining ngerman shorthand "~
 (babel)             in language  on input line 208.
  [3 <./images/ude_ident_with_prior_knowledge.png>]
-<images/ude_ident_without_prior_knowledge.png, id=130, 602.25pt x 401.5pt>
+<images/ude_ident_without_prior_knowledge.png, id=131, 602.25pt x 401.5pt>
 File: images/ude_ident_without_prior_knowledge.png Graphic file (type png)
 
 <use images/ude_ident_without_prior_knowledge.png>
@@ -2454,7 +2454,7 @@ Package babel Info: Redefining ngerman shorthand "|
 Package babel Info: Redefining ngerman shorthand "~
 (babel)             in language  on input line 230.
 [4 <./images/ude_ident_without_prior_knowledge.png>]
-<images/ude_fric_order_4.png, id=140, 602.25pt x 401.5pt>
+<images/ude_fric_order_4.png, id=141, 602.25pt x 401.5pt>
 File: images/ude_fric_order_4.png Graphic file (type png)
 
 <use images/ude_fric_order_4.png>
@@ -2474,7 +2474,7 @@ Package babel Info: Redefining ngerman shorthand "|
 Package babel Info: Redefining ngerman shorthand "~
 (babel)             in language  on input line 245.
 [5 <./images/ude_fric_order_4.png>]
-<images/ude_fric_viskos_d1_03.png, id=146, 602.25pt x 401.5pt>
+<images/ude_fric_viskos_d1_03.png, id=147, 602.25pt x 401.5pt>
 File: images/ude_fric_viskos_d1_03.png Graphic file (type png)
 
 <use images/ude_fric_viskos_d1_03.png>
@@ -2486,7 +2486,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 255--256
 
  []
 
-<images/ude_fric_viskos_d1_03_d2_05.png, id=147, 602.25pt x 401.5pt>
+<images/ude_fric_viskos_d1_03_d2_05.png, id=148, 602.25pt x 401.5pt>
 File: images/ude_fric_viskos_d1_03_d2_05.png Graphic file (type png)
 
 <use images/ude_fric_viskos_d1_03_d2_05.png>
@@ -2494,14 +2494,14 @@ Package pdftex.def Info: images/ude_fric_viskos_d1_03_d2_05.png used on input l
 ine 265.
 (pdftex.def)             Requested size: 442.64366pt x 295.10814pt.
 
-<images/pysindy_fric_visk2.png, id=148, 505.89pt x 650.43pt>
+<images/pysindy_fric_visk2.png, id=149, 505.89pt x 650.43pt>
 File: images/pysindy_fric_visk2.png Graphic file (type png)
 
 <use images/pysindy_fric_visk2.png>
 Package pdftex.def Info: images/pysindy_fric_visk2.png used on input line 274.
 (pdftex.def)             Requested size: 221.32182pt x 284.56242pt.
 
-<images/pysindy_fric_visk1.png, id=149, 505.89pt x 650.43pt>
+<images/pysindy_fric_visk1.png, id=150, 505.89pt x 650.43pt>
 File: images/pysindy_fric_visk1.png Graphic file (type png)
 
 <use images/pysindy_fric_visk1.png>
@@ -2560,70 +2560,42 @@ Package babel Info: Redefining ngerman shorthand "|
 (babel)             in language  on input line 364.
 Package babel Info: Redefining ngerman shorthand "~
 (babel)             in language  on input line 364.
-
-Underfull \hbox (badness 10000) in paragraph at lines 365--369
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 372--374
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 379--382
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 385--387
-
- []
-
 Package babel Info: Redefining ngerman shorthand "|
-(babel)             in language  on input line 390.
+(babel)             in language  on input line 396.
 Package babel Info: Redefining ngerman shorthand "~
-(babel)             in language  on input line 390.
+(babel)             in language  on input line 396.
 Package babel Info: Redefining ngerman shorthand "|
-(babel)             in language  on input line 390.
+(babel)             in language  on input line 396.
 Package babel Info: Redefining ngerman shorthand "~
-(babel)             in language  on input line 390.
-[10]
-Underfull \hbox (badness 10000) in paragraph at lines 392--395
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 398--400
-
- []
-
+(babel)             in language  on input line 396.
+ [10]
 Package babel Info: Redefining ngerman shorthand "|
-(babel)             in language  on input line 405.
+(babel)             in language  on input line 422.
 Package babel Info: Redefining ngerman shorthand "~
-(babel)             in language  on input line 405.
-
-LaTeX Warning: Citation 'Mik57de' undefined on input line 418.
+(babel)             in language  on input line 422.
 
 
-LaTeX Warning: Empty bibliography on input line 421.
+LaTeX Warning: Citation 'Mik57de' undefined on input line 435.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 423.
+
+LaTeX Warning: Empty bibliography on input line 438.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 440.
 Package babel Info: Redefining ngerman shorthand "|
-(babel)             in language  on input line 423.
+(babel)             in language  on input line 440.
 Package babel Info: Redefining ngerman shorthand "~
-(babel)             in language  on input line 423.
+(babel)             in language  on input line 440.
 Package babel Info: Redefining ngerman shorthand "|
-(babel)             in language  on input line 423.
+(babel)             in language  on input line 440.
 Package babel Info: Redefining ngerman shorthand "~
-(babel)             in language  on input line 423.
+(babel)             in language  on input line 440.
 [11]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 423.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 440.
  (./Studienarbeit.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 423.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 423.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 440.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 440.
 Package rerunfilecheck Info: File `Studienarbeit.out' has not changed.
-(rerunfilecheck)             Checksum: 90BC48C93ED6A7B6511FA95680C8FB4D;658.
+(rerunfilecheck)             Checksum: D1CC0F98731BF6EDC97B964C5994D15E;710.
 
 
 LaTeX Warning: There were undefined references.
@@ -2638,11 +2610,11 @@ Package logreq Info: Writing requests to 'Studienarbeit.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 22691 strings out of 493308
- 392285 string characters out of 6141367
+ 22696 strings out of 493308
+ 392342 string characters out of 6141367
  897739 words of memory out of 5000000
  25671 multiletter control sequences out of 15000+600000
- 56278 words of font info for 65 fonts, out of 8000000 for 9000
+ 56460 words of font info for 67 fonts, out of 8000000 for 9000
  961 hyphenation exceptions out of 8191
  53i,15n,73p,10434b,1511s stack positions out of 5000i,500n,10000p,200000b,80000s
 {f:/texlive/2013/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{f:/texlive/2013/tex
@@ -2657,10 +2629,10 @@ nts/type1/public/lm/lmr8.pfb><f:/texlive/2013/texmf-dist/fonts/type1/public/lm/
 lmri12.pfb><f:/texlive/2013/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><f:/tex
 live/2013/texmf-dist/fonts/type1/public/lm/lmsy8.pfb><f:/texlive/2013/texmf-dis
 t/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Studienarbeit.pdf (18 pages, 582449 bytes).
+Output written on Studienarbeit.pdf (18 pages, 585659 bytes).
 PDF statistics:
- 251 PDF objects out of 1000 (max. 8388607)
- 201 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 500000)
+ 253 PDF objects out of 1000 (max. 8388607)
+ 203 compressed objects within 3 object streams
+ 58 named destinations out of 1000 (max. 500000)
  15504 words of extra memory for PDF output out of 17280 (max. 10000000)
 

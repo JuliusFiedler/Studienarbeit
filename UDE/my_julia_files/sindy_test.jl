@@ -117,7 +117,7 @@ end
 
 @variables u[1:2]
 # Lots of polynomials
-order = 3 # order soll sein: Summe aller Exponenten in jedem Monom
+order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
 polys = Operation[1]
 for i ∈ 1:order
     push!(polys, u[1]^i)

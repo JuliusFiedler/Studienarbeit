@@ -348,9 +348,9 @@ Im Programm implementiert: mit
 \Xi_\text{neu} = \left(\Theta(X)^T\Theta(X) + I \right)^{-1} \left(\Theta(X)^T\dot{X} + \Xi_{\text{alt}} \right)
 \end{equation}
 iterieren und am Ende
-\begin{equation}
-\dot{X}[:,i] = \Theta_k(X) \xi_i
-\end{equation}
+%\begin{equation}
+%\dot{X}[:,i] = \Theta_k(X) \xi_i
+%\end{equation}
 
 
 initial guess: Solves the equation $a x = b$ by computing a vector $x$ that
@@ -361,47 +361,64 @@ initial guess: Solves the equation $a x = b$ by computing a vector $x$ that
     If $a$ is square and of full rank, then $x$ (but for round-off error)
     is the "exact" solution of the equation.
 
-\subsection{Vergleich Sindy in Python und Julia}
-System: Volterra (julia : normalize true, maxiter 10000, falsche ableitungen)\\
-Zeitspanne: 3s\\
-Schrittweite: 0.1s\\
-Julia:\\
-\begin{align*}
-\dot{x} &= -0.057677828 y^2 + 0.9879066 x\\
-\dot{y} &= -1.5857016 y
-\end{align*}
-Python:\\
-\begin{align*}
-\dot{x} &= 0.973 x\\
-\dot{y} &= -2.103 y + 1.561 xy
-\end{align*}
+\subsection{Vergleich von SINDY-Implementierungen in Python (PySindy) und Julia (DiffEqLibrary)}
+System: Volterra DGL
+\begin{align}
+\dot{x} &= \alpha x +\beta xy\\
+\dot{y} &= \gamma y + \delta xy 
+\end{align}
+mit $[\alpha, \beta, \gamma, \delta] = [1.3, -0.9, -1.8, 0.8]$\\
+Zeitspanne 3s\\
+Schrittweite 0.1s\\
+Polynomial Library Order 2\\
+nicht normalisiert\\
+maximale Iterationen: 30\\
+Threshold 0.2\\
+Datenerzeugung durch Lösen der DGL mittels DGL-Solver, Verwendung der exakt gleichen Datensätze in beiden Algorithmen\\
+Fall 1: exakte Ableitungen bekannt\\
+\begin{tabular}[h]{c|c|c|c}
+Parameter 	& Nominal 	& DiffEq		& PySindy 	\\\hline
+$\alpha$ 	&  	 1.3	& 	1.291		&	1.300		\\\hline
+$\beta$ 	&  	-0.9	& 	-0.850		&	-0.900		\\\hline
+$\gamma$ 	&  	 -1.8	& 	-1.801		&	-1.800		\\\hline
+$\delta$ 	&  	0.8		& 	0.753		&	0.800		\\
+\end{tabular}
 
-Zeitspanne: 3s\\
-Schrittweite: 0.01s\\
-Julia:\\
-\begin{align*}
-\dot{x} &= -0.0028148904 y^2 + 1.2928892 x - 0.8812496 xy\\
-\dot{y} &= -1.5789621 y
-\end{align*}
-Python:\\
-\begin{align*}
-\dot{x} &= 1.293 x + -0.909 xy\\
-\dot{y} &= -1.821 y + 0.837 xy
-\end{align*}
+Fall 2: Zentraldifferenz für Ableitungen verwendet\\
+\begin{tabular}[h]{c|c|c|c}
+Parameter 	& Nominal 	& DiffEq		& PySindy 	\\\hline
+$\alpha$ 	&  	 1.3	& 	1.301		&	1.302		\\\hline
+$\beta$ 	&  	-0.9	& 	-0.683		&	-0.903		\\\hline
+$\gamma$ 	&  	 -1.8	& 	-1.816		&	-1.802		\\\hline
+$\delta$ 	&  	0.8		& 	0.614		&	0.798		\\
+\end{tabular}
 
-Zeitspanne: 3s\\
-Schrittweite: 0.001s\\
-Julia:\\
-\begin{align*}
-\dot{x} &= 1.29908 x -0.9018026 xy\\
-\dot{y} &= -0.3144052 -0.1010906 y^2 -0.4039814 y -1.0950719 xy
-\end{align*}
-Python:\\
-\begin{align*}
-\dot{x} &= 1.299 x + -0.901 x y\\
-\dot{y} &= -1.802 y + 0.803 x y
-\end{align*}
+Fall 3: Ableitungen durch Neuronales Netz gelernt, gleiche Auflösung\\
+\begin{tabular}[h]{c|c|c|c}
+Parameter 	& Nominal 	& DiffEq		& PySindy 	\\\hline
+$\alpha$ 	&  	 1.3	& 	1.438		&	1.289		\\\hline
+$\beta$ 	&  	-0.9	& 	-0.226		&	-0.868		\\\hline
+$\gamma$ 	&  	 -1.8	& 	-1.814		&	-1.780		\\\hline
+$\delta$ 	&  	0.8		& 	0.386		&	0.721		\\
+\end{tabular}
 
+Fall 4: Ableitungen durch Neuronales Netz gelernt, Schrittweite 0.01s (NN auf wenig Daten trainiert, viele Daten abgerufen)\\
+\begin{tabular}[h]{c|c|c|c}
+Parameter 	& Nominal 	& DiffEq		& PySindy 	\\\hline
+$\alpha$ 	&  	 1.3	& 	1.471		&	1.294		\\\hline
+$\beta$ 	&  	-0.9	& 	-0.353		&	-0.887		\\\hline
+$\gamma$ 	&  	 -1.8	& 	-1.818		&	-1.786		\\\hline
+$\delta$ 	&  	0.8		& 	0.473		&	0.744		\\
+\end{tabular}
+
+Fall 5: Ableitungen durch Neuronales Netz gelernt, Schrittweite 0.001s (NN auf wenig Daten trainiert, viele Daten abgerufen)\\
+\begin{tabular}[h]{c|c|c|c}
+Parameter 	& Nominal 	& DiffEq		& PySindy 	\\\hline
+$\alpha$ 	&  	 1.3	& 	1.477		&	1.294		\\\hline
+$\beta$ 	&  	-0.9	& 	-0.367		&	-0.889		\\\hline
+$\gamma$ 	&  	 -1.8	& 	-1.820		&	-1.786		\\\hline
+$\delta$ 	&  	0.8		& 	0.480		&	0.748		\\
+\end{tabular}
 \section{errors}
 Ude:\\
 $AssertionError: length(b) == length(variables(b)) in unknown_sys:$\\
