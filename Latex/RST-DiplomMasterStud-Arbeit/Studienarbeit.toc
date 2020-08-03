@@ -28,4 +28,4 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {1.2.2}Vergleich von SINDY-Implementierungen in Python (PySindy) und Julia (DiffEqLibrary)}{10}{subsection.1.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1.3}errors}{11}{section.1.3}
+\contentsline {section}{\numberline {1.3}errors}{12}{section.1.3}

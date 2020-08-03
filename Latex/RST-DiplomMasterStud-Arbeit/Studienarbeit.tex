@@ -419,11 +419,34 @@ $\beta$ 	&  	-0.9	& 	-0.367		&	-0.889		\\\hline
 $\gamma$ 	&  	 -1.8	& 	-1.820		&	-1.786		\\\hline
 $\delta$ 	&  	0.8		& 	0.480		&	0.748		\\
 \end{tabular}
+
+\begin{table}[htbp]
+
+\begin{tabular}[h]{l|c|c|c}
+											& DiffEq		& PySindy 			& PySindy mit nur 1 Iteration		\\\hline
+Exakte Ableitung bekannt					& 	$0.041$		&	$5\cdot10^{-7}$	& 	$5\cdot10^{-7}$	\\\hline
+Ableitung über Zentraldifferenz 			& 	$0.167$		&	$0.002$			&	$0.002$			\\\hline
+Ableitung durch NN, sample interval 0.1s	& 	$0.347$		&	$0.046$			&	$0.046$			\\\hline
+Ableitung durch NN, sample interval 0.01s	& 	$0.251$		&	$0.028$			&	$0.028$			\\\hline
+Ableitung durch NN, sample interval 0.001s	& 	$0.241$		&	$0.026$			&	$0.026$			\\
+\end{tabular}
+\caption{RMS des relativen Fehlers der Parameterschätzung, Lotka-Volterra-System}
+\end{table}
+
+%\caption{\label{tab1}RMS des relativen Fehlers der Parameterschätzung}
+
+
+anzahl der iterationen in pysindy relevant, wenn ident mit vorwissen, bei zentraldiff und lin term bekannt und $maxiter = 1$ kommt lin term hinzu, bei $maxiter = 2$ nicht\\
+bei test mit NN fällt auf, dass sindy ergebnisse stark schwanken weil NN teilweise schlecht \\
+problem bei relativem Fehler: wenn$ p_nom = 0$ und $p_ident != 0$ wie darstellen?\\
+$\Xi_{alt}$ aus PySindy zu streichen macht den algorithmus kaputt
+
+
 \section{errors}
 Ude:\\
 $AssertionError: length(b) == length(variables(b)) in unknown_sys:$\\
 wenn $\lambda$ so gewählt, dass ganze Zeilen rausfallen\\
-nützliche Befehle: %$Juno.@enter SInDy(X[:, :], DX[:, :], basis, λ, opt = opt, maxiter = 30, normalize = false, f_target = f_target)
+nützliche Befehle: %$Juno.@enter SInDy(X[:, :], DX_[:, :], basis, λ, opt = opt, maxiter = 30, normalize = false, f_target = f_target)
 %inv(A'*A)*A'Y
 %inv([A[:,2] A[:,4]]'*[A[:,2] A[:,4]])*[A[:,2] A[:,4]]'*Y[:,1]
 %inv([A[:,3] A[:,4]]'*[A[:,3] A[:,4]])*[A[:,3] A[:,4]]'*Y[:,2]

@@ -15,7 +15,7 @@ import random
 import pandas as pd
 
 # %%
-
+system = 1 # 1 = volterra, 2= lorenz
 
 # %%
 def read(name):
@@ -35,19 +35,26 @@ def read(name):
 
 # %%
 X = read('X.csv')
-DX = read('x_dot.csv')
-DX_nom = read('DX_.csv')
+x_dot = read('x_dot.csv')
+DX_ = read('DX_.csv')#
+L = read('L.csv')
+X_high_res_0_01 = read('X_hr_0_01.csv')
+L_high_res_0_01 = read('L_hr_0_01.csv')
+X_high_res_0_001 = read('X_hr_0_001.csv')
+L_high_res_0_001 = read('L_hr_0_001.csv')
 t_end = 3
 tt = np.linspace(0, t_end, X.shape[0])
-p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
+if system == 1:
+    p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
+
 
 # %%
 a = 1.3
 c = -1.8
 
-DX_K = np.copy(DX)
-DX_K[:, 0] = DX[:, 0] - a*X[:, 0]    
-DX_K[:, 1] = DX[:, 1] - c*X[:, 1]  
+DX_K = np.copy(x_dot)
+DX_K[:, 0] = x_dot[:, 0] - a*X[:, 0]    
+DX_K[:, 1] = x_dot[:, 1] - c*X[:, 1]  
 print(DX_K.shape)
 plt.plot(tt, DX_K)
 
@@ -84,12 +91,59 @@ model = ps.SINDy(
     feature_names=["x", "y"]
 )
 dt= t_end/(X.shape[0]-1)
-# model.fit(X, x_dot=DX_nom, t=dt, multiple_trajectories=False)
-# p_nom = np.copy(model.coefficients())
-print(p_nom)
-model.fit(X, x_dot=DX, t=dt, multiple_trajectories=False) # x_dot=DX,
+print("nominal")
+model.fit(X, x_dot=DX_, t=dt, multiple_trajectories=False) 
 model.print()
-p_ident = model.coefficients()
+p_ident_nominal = model.coefficients()
+
+print("Zentral")
+model.fit(X, x_dot=x_dot, t=dt, multiple_trajectories=False) 
+model.print()
+p_ident_zentral = model.coefficients()
+
+print("NN 0.1s")
+model.fit(X, x_dot=L, t=dt, multiple_trajectories=False) 
+model.print()
+p_ident_NN_0_1 = model.coefficients()
+
+print("NN 0.01s")
+model.fit(X_high_res_0_01, x_dot=L_high_res_0_01, t=dt, multiple_trajectories=False) 
+model.print()
+p_ident_NN_0_01 = model.coefficients()
+
+print("NN 0.001s")
+model.fit(X_high_res_0_001, x_dot=L_high_res_0_001, t=dt, multiple_trajectories=False) 
+model.print()
+p_ident_NN_0_001 = model.coefficients()
+
+
+# %%
+def calc_relative_error(p_n, p_i):
+    s = 0
+    i = 0
+    for x in p_n:
+        for y in range(len(x)):
+            for z in range(len(p_n)):
+                if p_n[z][y]!=0:
+                    i += 1
+                    s += ((p_n[z][y] - p_i[z][y]) / p_n[z][y])**2
+    return np.sqrt(s/i)
+
+# %%
+print("RMS relative error Nominalableitung:")
+print(calc_relative_error(p_nom, p_ident_nominal))
+
+print("RMS relative error Zentraldifferenz:")
+print(calc_relative_error(p_nom, p_ident_zentral))
+
+print("RMS relative error NN Sample interval = 0.1s :")
+print(calc_relative_error(p_nom, p_ident_NN_0_1))
+
+print("RMS relative error NN Sample interval = 0.01s :")
+print(calc_relative_error(p_nom, p_ident_NN_0_01))
+
+print("RMS relative error NN Sample interval = 0.001s :")
+print(calc_relative_error(p_nom, p_ident_NN_0_001))
 
 # %%
 t_test = np.linspace(0, 3, X.shape[0])
