@@ -25,14 +25,15 @@ function calc_centered_difference(x_, dt=0.1)
 end
 function lotka(du, u, p, t)
     α, β, γ, δ = p
-    du[1] = α*u[1] - β*u[2]*u[1]
-    du[2] = γ*u[1]*u[2]  - δ*u[2]
+    du[1] = α*u[1] + β*u[2]*u[1]
+    du[2] = γ*u[1]*u[2]  + δ*u[2]
 end
 
+# Datenerzeugung-------------------------------------------------------
 # Define the experimental parameter
 tspan = (0.0f0,3.0f0)
 u0 = Float32[0.44249296,4.6280594]
-p_ = Float32[1.3, 0.9, 0.8, 1.8]
+p_ = Float32[1.3, -0.9, 0.8, -1.8]
 prob = ODEProblem(lotka, u0,tspan, p_)
 dt = .1
 solution = solve(prob, Vern7(), abstol=1e-12, reltol=1e-12, saveat = dt)
@@ -52,10 +53,10 @@ display(plot!(DX_', label = "exakte Ableitung", title = "Ableitungen"))
 display(plot(DX'.-DX_', title = "Fehler komische Ableitung vs exakte Ableitung"))
 display(plot(x_dot'.-DX_', title = "Fehler Zentraldifferenz vs exakte Ableitung"))
 
-CSV.write("DX.csv", DataFrame(DX'))
+# CSV.write("DX.csv", DataFrame(DX')) #Quatsch
 CSV.write("X.csv", DataFrame(X'))
-CSV.write("DX_.csv", DataFrame(DX_'))
-CSV.write("x_dot.csv", DataFrame(x_dot'))
+CSV.write("DX_.csv", DataFrame(DX_')) # exakt
+CSV.write("x_dot.csv", DataFrame(x_dot')) #Zentraldifferenz
 
 if NN
     function dudt2(u, p,t)
@@ -114,7 +115,7 @@ if NN
     CSV.write("L.csv", DataFrame(L'))
 end
 
-
+# SINDy -------------------------------------------------------------
 @variables u[1:2]
 # Lots of polynomials
 order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
@@ -123,54 +124,78 @@ for i ∈ 1:order
     push!(polys, u[1]^i)
     push!(polys, u[2]^i)
     for j ∈ 1:(order-i)
-        # if i != j
-            # push!(polys, u[1]^i*u[2]^j)
-            # push!(polys, u[2]^i*u[1]^i)
         push!(polys, u[1]^i*u[2]^j)
-            # push!(polys, u[2]^i*u[1]^i)
-            # push!(polys, u[1]^j*u[2]^i)
-        #end
     end
 end
-# print(polys,"\n")
-# And some other stuff
-# h = [cos.(u)...; sin.(u)...; polys...]
 h = [polys...]
 basis = Basis(h, u)
-# print(polys)
 
 # Create an optimizer for the SINDY problem
 opt = SR3()
 # Create the thresholds which should be used in the search process
 λ = (0.2:0.2)
 # λ = exp10.(-6:0.1:2)
-# print("\n",λ)
 # Target function to choose the results from; x = L0 of coefficients and L2-Error of the model
 f_target(x, w) = iszero(x[1]) ? Inf : norm(w.*x, 2)
-print("Sindy\n")
-Ψ = SInDy(X[:, :], x_dot[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
-println(Ψ)
-print_equations(Ψ)
-p̂ = parameters(Ψ)
-print("parameters: ", p̂, "\n")
 
-if NN
-    print("Sindy NN\n")
-    Ψ = SInDy(X[:, :], L[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
-    println(Ψ)
-    print_equations(Ψ)
-    p̂ = parameters(Ψ)
-    print("parameters: ", p̂, "\n")
-end
-X_high_res = Array(concrete_solve(prob_nn, Vern7(), u0, res2.minimizer, saveat = 0.0001,
+print("Sindy zentral\n")
+Ψ_zentral = SInDy(X[:, :], x_dot[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+println(Ψ_zentral)
+print_equations(Ψ_zentral)
+p̂ = parameters(Ψ_zentral)
+print("parameters: ", p̂, "\n")
+p_ident_zentral = Ψ_zentral.coeff
+
+print("Sindy NN_0_1\n")
+Ψ_NN_0_1 = SInDy(X[:, :], L[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+println(Ψ_NN_0_1)
+print_equations(Ψ_NN_0_1)
+p̂ = parameters(Ψ_NN_0_1)
+print("parameters: ", p̂, "\n")
+p_ident_NN_0_1 = Ψ_NN_0_1.coeff
+
+print("Sindy high_res_0_01\n")
+X_high_res_0_01 = Array(concrete_solve(prob_nn, Vern7(), u0, res2.minimizer, saveat = 0.01,
                      abstol=1e-6, reltol=1e-6,
                      sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP())))
-CSV.write("X_hr.csv", DataFrame(X_high_res'))
-L_high_res = ann(X_high_res,res2.minimizer)
-CSV.write("L_hr.csv", DataFrame(L_high_res'))
-print("Sindy NN_hr\n")
-Ψ = SInDy(X_high_res[:, :], L_high_res[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
-println(Ψ)
-print_equations(Ψ)
-p̂ = parameters(Ψ)
+L_high_res_0_01 = ann(X_high_res,res2.minimizer)
+CSV.write("X_hr_0_01.csv", DataFrame(X_high_res_0_01'))
+CSV.write("L_hr_0_01.csv", DataFrame(L_high_res_0_01'))
+Ψ_high_res_0_01 = SInDy(X_high_res_0_01[:, :], L_high_res_0_01[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+println(Ψ_high_res_0_01)
+print_equations(Ψ_high_res_0_01)
+p̂ = parameters(Ψ_high_res_0_01)
 print("parameters: ", p̂, "\n")
+p_ident_high_res_0_01 = Ψ_high_res_0_01.coeff
+
+print("Sindy high_res_0_001\n")
+X_high_res_0_001 = Array(concrete_solve(prob_nn, Vern7(), u0, res2.minimizer, saveat = 0.001,
+                     abstol=1e-6, reltol=1e-6,
+                     sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP())))
+L_high_res_0_001 = ann(X_high_res,res2.minimizer)
+CSV.write("X_hr_0_001.csv", DataFrame(X_high_res_0_001'))
+CSV.write("L_hr_0_001.csv", DataFrame(L_high_res_0_001'))
+Ψ_high_res_0_001 = SInDy(X_high_res_0_001[:, :], L_high_res_0_001[:, :], basis, λ, opt = opt, maxiter = 30, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+println(Ψ_high_res_0_001)
+print_equations(Ψ_high_res_0_001)
+p̂ = parameters(Ψ_high_res_0_001)
+print("parameters: ", p̂, "\n")
+p_ident_high_res_0_001 = Ψ_high_res_0_001.coeff
+
+# Auswertung --------------------------------------------------
+p_nom = Array{Float32}([0 0; p_[1] 0; 0 p_[4]; p_[2] p_[3]; 0 0; 0 0])
+p_k_nom = Array{Float32}([0 0; 0 0; 0 0; p_[2] p_[3]; 0 0; 0 0])
+
+function calc_relative_error(p_n, p_i)
+    s = 0
+    i = 0
+    for a ∈ (1:length(p_n))
+        if p_n[a] != 0
+            i += 1
+            s += ((p_n[a] - p_i[a]) / p_n[a])^2
+        end
+    end
+    return sqrt(s/i)
+end
+
+calc_relative_error(p_nom, Ψ.coeff)

@@ -14,43 +14,38 @@ import pickle
 import random
 import pandas as pd
 
+# %%
+
 
 # %%
-X = pd.read_csv('X.csv', sep=',',header=None)
-# print(X.values)
-X = np.array(X.values)
-# print(X)
-X = np.delete(X, 0, axis= 0)
-X = np.array(X, dtype=np.float64)
-# print(X)
-for x in X:
-    for y in range(len(x)):
-        for z in range(len(X)):
-            X[z][y] = float(X[z][y])
-# print(X)
-print(X.shape)
+def read(name):
+    A = pd.read_csv(name, sep=',',header=None)
+    A = np.array(A.values)
+    A = np.delete(A, 0, axis= 0)
+    A = np.array(A, dtype=np.float64)
+    for x in A:
+        for y in range(len(x)):
+            for z in range(len(A)):
+                A[z][y] = float(A[z][y])
+    print(A.shape)
+    t_end = 3
+    tt = np.linspace(0, t_end, A.shape[0])
+    plt.plot(tt, A)
+    return A
+
+# %%
+X = read('X.csv')
+DX = read('x_dot.csv')
+DX_nom = read('DX_.csv')
 t_end = 3
 tt = np.linspace(0, t_end, X.shape[0])
-plt.plot(tt, X)
-
-
-# %%
-DX = pd.read_csv('DX_.csv', sep=',',header=None)
-DX = np.array(DX.values)
-DX = np.delete(DX, 0, axis= 0)
-DX = np.array(DX, dtype=np.float64)
-for x in DX:
-    for y in range(len(x)):
-        for z in range(len(DX)):
-            DX[z][y] = float(DX[z][y])
-# print(DX)
-print(DX.shape)
-plt.plot(tt, DX)
+p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
 
 # %%
 a = 1.3
 c = -1.8
-DX_K = DX
+
+DX_K = np.copy(DX)
 DX_K[:, 0] = DX[:, 0] - a*X[:, 0]    
 DX_K[:, 1] = DX[:, 1] - c*X[:, 1]  
 print(DX_K.shape)
@@ -89,9 +84,12 @@ model = ps.SINDy(
     feature_names=["x", "y"]
 )
 dt= t_end/(X.shape[0]-1)
-model.fit(X, x_dot=DX_K, t=dt, multiple_trajectories=False) # x_dot=DX,
+# model.fit(X, x_dot=DX_nom, t=dt, multiple_trajectories=False)
+# p_nom = np.copy(model.coefficients())
+print(p_nom)
+model.fit(X, x_dot=DX, t=dt, multiple_trajectories=False) # x_dot=DX,
 model.print()
-
+p_ident = model.coefficients()
 
 # %%
 t_test = np.linspace(0, 3, X.shape[0])
