@@ -423,13 +423,13 @@ $\delta$ 	&  	0.8		& 	0.480		&	0.748		\\
 \begin{table}[htbp]
 
 \begin{tabular}[h]{l|c|c|c}
-											& DiffEq		& PySindy 			& PySindy mit nur 1 Iteration		\\\hline
-Exakte Ableitung bekannt					& 	$0.041$		&	$5\cdot10^{-7}$	& 	$5\cdot10^{-7}$	\\\hline
-Ableitung über Zentraldifferenz 			& 	$0.167$		&	$0.002$			&	$0.002$			\\\hline
-Ableitung durch NN, sample interval 0.1s	& 	$0.347$		&	$0.046$			&	$0.046$			\\\hline
-Ableitung durch NN, sample interval 0.01s	& 	$0.251$		&	$0.028$			&	$0.028$			\\\hline
-Ableitung durch NN, sample interval 0.001s	& 	$0.241$		&	$0.026$			&	$0.026$			\\
-\end{tabular}
+											& DiffEq		& PySindy 			& Sindy naiv		\\\hline
+Exakte Ableitung bekannt					& 	$0.040883$		&	$5.013162\cdot10^{-7}$	& 	$2.608947\cdot10^{-6}$	\\\hline
+Ableitung über Zentraldifferenz 			& 	$0.167287$		&	$0.002317$			&	$0.002318$			\\\hline
+Ableitung durch NN, sample interval 0.1s	& 	$0.212189$		&	$0.025098$			&	$0.025101$			\\\hline
+Ableitung durch NN, sample interval 0.01s	& 	$0.135958$		&	$0.012395$			&	$0.012304$			\\\hline
+Ableitung durch NN, sample interval 0.001s	& 	$0.126144$		&	$0.010833$			&	$0.010838$			\\
+\end{tabular}													 
 \caption{RMS des relativen Fehlers der Parameterschätzung, Lotka-Volterra-System}
 \end{table}
 
@@ -439,8 +439,10 @@ Ableitung durch NN, sample interval 0.001s	& 	$0.241$		&	$0.026$			&	$0.026$			\
 anzahl der iterationen in pysindy relevant, wenn ident mit vorwissen, bei zentraldiff und lin term bekannt und $maxiter = 1$ kommt lin term hinzu, bei $maxiter = 2$ nicht\\
 bei test mit NN fällt auf, dass sindy ergebnisse stark schwanken weil NN teilweise schlecht \\
 problem bei relativem Fehler: wenn$ p_nom = 0$ und $p_ident != 0$ wie darstellen?\\
-$\Xi_{alt}$ aus PySindy zu streichen macht den algorithmus kaputt
-
+$\Xi_{alt}$ aus PySindy zu streichen macht den algorithmus kaputt\\
+sindy naiv ist ein ganz klein bissl schlechter als PySindy\\
+naiv ein wenig schlechter als pysindy?\\
+abtastrate für zb lorenz von großer bedeutung für identifizierbarkeit, wie vergleichbar machen?\\
 
 \section{errors}
 Ude:\\
