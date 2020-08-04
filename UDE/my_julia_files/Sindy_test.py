@@ -15,8 +15,8 @@ import random
 import pandas as pd
 
 # %%
-system = 2 # 1 = volterra, 2= lorenz
-NN = False
+system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
+NN = True
 if (system == 1):
     sys_name = "volterra"
     p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
@@ -29,7 +29,14 @@ elif (system == 2):
                         [0, 0, 0, -8/3, 0, 1, 0, 0, 0, 0]])
     feature_library = ps.PolynomialLibrary(degree=2)
     feature_names=["x", "y", "z"]
-    
+elif (system == 3):
+    sys_name = "roessler"
+    p_nom = np.array(   [[0.0, 0.0, -1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                        [ 0.0, 1.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                        [ 0.1, 0.0, 0.0, -5.3, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]])
+    feature_library = ps.PolynomialLibrary(degree=2)
+    feature_names=["x", "y", "z"]
+
 # %%
 def read(name):
     A = pd.read_csv(name, sep=',',header=None)
@@ -73,7 +80,7 @@ tt = np.linspace(0, t_end, X.shape[0])
 
 # %%
 differentiation_method = ps.FiniteDifference(order=2)
-optimizer = ps.SR3(threshold=0.2)
+optimizer = ps.SR3(threshold=0.05)
 
 
 # %%
@@ -113,33 +120,40 @@ if NN:
 
 
 # %%
-def calc_relative_error(p_n, p_i):
+def calc_param_ident_error(p_n, p_i):
     s = 0
     i = 0
+    k = 0
+    t = 0
     for x in p_n:
         for y in range(len(x)):
             for z in range(len(p_n)):
                 if p_n[z][y]!=0:
                     i += 1
                     s += ((p_n[z][y] - p_i[z][y]) / p_n[z][y])**2
-    return np.sqrt(s/i)
+                else:
+                    msg = ", allerdings zu viele Parameter identifiziert"
+                    k += 1
+                t += (p_n[z][y] - p_i[z][y])**2
+    print("   RMS absoluter Fehler: " + str(np.sqrt(t/(i+k))))
+    print("   RMS relativer Fehler: " + str(np.sqrt(s/i) + " "+ msg))
 
 # %%
-print("RMS relative error Nominalableitung:")
-print(calc_relative_error(p_nom, p_ident_nominal))
+print("\nNominalableitung:")
+calc_param_ident_error(p_nom, p_ident_nominal)
 
-print("RMS relative error Zentraldifferenz:")
-print(calc_relative_error(p_nom, p_ident_zentral))
+print("\nZentraldifferenz:")
+calc_param_ident_error(p_nom, p_ident_zentral)
 
 if NN:
-    print("RMS relative error NN Sample interval = 0.1s :")
-    print(calc_relative_error(p_nom, p_ident_NN_0_1))
+    print("\nNN Sample interval = 0.1s :")
+    calc_param_ident_error(p_nom, p_ident_NN_0_1)
 
-    print("RMS relative error NN Sample interval = 0.01s :")
-    print(calc_relative_error(p_nom, p_ident_NN_0_01))
+    print("\nNN Sample interval = 0.01s :")
+    calc_param_ident_error(p_nom, p_ident_NN_0_01)
 
-    print("RMS relative error NN Sample interval = 0.001s :")
-    print(calc_relative_error(p_nom, p_ident_NN_0_001))
+    print("\nNN Sample interval = 0.001s :")
+    calc_param_ident_error(p_nom, p_ident_NN_0_001)
 
 # # %%
 # t_test = np.linspace(0, 3, X.shape[0])
