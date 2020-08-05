@@ -5,7 +5,7 @@ import pandas as pd
 
 # %%
 folder = 'C:\\Users\\Julius\\Documents\\Studium_Elektrotechnik\\Studienarbeit\\github\\Studienarbeit\\Latex\\RST-DiplomMasterStud-Arbeit\\images\\'
-sys_name = "lorenz"
+sys_name = "volterra"
 csv_name = folder + 'errors_' + sys_name 
 
 # %%

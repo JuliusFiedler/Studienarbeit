@@ -15,8 +15,8 @@ import random
 import pandas as pd
 
 # %%
-system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
-NN = False
+system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
+NN = True
 if (system == 1):
     sys_name = "volterra"
     p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
@@ -164,7 +164,7 @@ if NN:
 # %%
 def export_to_csv(l=5):
     p_ident = [p_ident_nominal, p_ident_zentral, p_ident_NN_0_1, p_ident_NN_0_01, p_ident_NN_0_001]
-    heads = ["nominal", "zentral", "NN 0.1", "NN 0.01", "NN 0.001"]
+    heads = ["nominal", "zentral", "NN", "NN x10", "NN x100"]
     row_head = [sys_name]
     row_abs = ['PySINDy abs. Fehler']
     row_rel = ['PySINDy rel. Fehler']

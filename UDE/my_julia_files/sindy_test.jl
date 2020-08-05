@@ -46,7 +46,7 @@ function roessler(du, u, p, t)
 end
 print("---------------------------------------------------------------------")
 # Define the experimental parameter
-system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
 tspan = (0.0f0,3.0f0)
 dt = .1
 train = false
@@ -55,11 +55,12 @@ maxiter = 30
 NN_th = 0.1
 th = 0.2
 if (system == 1) # volterra
+    dt=.01
     sys = lotka
     order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
     u0 = Float32[0.44249296,4.6280594]
     p_ = Float32[1.3, -0.9, 0.8, -1.8]
-    p_nom = Array{Float32}([0 0; p_[1] 0; 0 p_[4]; p_[2] p_[3]; 0 0; 0 0])
+    p_nom = Array{Float32}([0.0 0.0; p_[1] 0.0; 0.0 p_[4]; 0.0 0.0; p_[2] p_[3]; 0.0 0.0])
     p_k_nom = Array{Float32}([0 0; 0 0; 0 0; p_[2] p_[3]; 0 0; 0 0])
     n = 2 # Anzahl Zustände für Konstruktion NN
     name = "volterra"
