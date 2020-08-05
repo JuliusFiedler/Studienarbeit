@@ -1,7 +1,7 @@
 roessler,nominal,zentral,NN,NN x10
 PySINDy abs. Fehler,0.0,0.00059,7.08376,0.37128
-PySINDy rel. Fehler,0.0,0.00082*,34.4256*,3.71507*
 DiffEq abs. Fehler,0.0004,0.05572,7.08713,0.40965
-DiffEq rel. Fehler,0.0022,0.20196*,34.41761*,3.9332*
 SINDy naiv abs. Fehler,0.0,0.00059,7.08376,0.37118
+PySINDy rel. Fehler,0.0,0.00082*,34.4256*,3.71507*
+DiffEq rel. Fehler,0.0022,0.20196*,34.41761*,3.9332*
 SINDy naiv rel. Fehler,0.0,0.00082,34.4256*,3.71507*

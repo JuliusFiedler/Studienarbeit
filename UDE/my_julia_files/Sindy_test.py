@@ -15,7 +15,7 @@ import random
 import pandas as pd
 
 # %%
-system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
 NN = True
 if (system == 1):
     sys_name = "volterra"
@@ -61,8 +61,8 @@ if NN:
     L = read('L_' + sys_name + '.csv')
     X_high_res_0_01 = read('X_hr_0_01_' + sys_name + '.csv')
     L_high_res_0_01 = read('L_hr_0_01_' + sys_name + '.csv')
-    X_high_res_0_001 = read('X_hr_0_001_' + sys_name + '.csv')
-    L_high_res_0_001 = read('L_hr_0_001_' + sys_name + '.csv')
+    # X_high_res_0_001 = read('X_hr_0_001_' + sys_name + '.csv')
+    # L_high_res_0_001 = read('L_hr_0_001_' + sys_name + '.csv')
 t_end = 3
 tt = np.linspace(0, t_end, X.shape[0])
     
@@ -113,10 +113,10 @@ if NN:
     model.print()
     p_ident_NN_0_01 = model.coefficients()
 
-    print("NN 0.001s")
-    model.fit(X_high_res_0_001, x_dot=L_high_res_0_001, t=dt, multiple_trajectories=False) 
-    model.print()
-    p_ident_NN_0_001 = model.coefficients()
+    # print("NN 0.001s")
+    # model.fit(X_high_res_0_001, x_dot=L_high_res_0_001, t=dt, multiple_trajectories=False) 
+    # model.print()
+    # p_ident_NN_0_001 = model.coefficients()
 
 
 # %%
@@ -158,8 +158,8 @@ if NN:
     print("\nNN Sample interval = 0.01s :")
     calc_param_ident_error(p_nom, p_ident_NN_0_01)
 
-    print("\nNN Sample interval = 0.001s :")
-    calc_param_ident_error(p_nom, p_ident_NN_0_001)
+    # print("\nNN Sample interval = 0.001s :")
+    # calc_param_ident_error(p_nom, p_ident_NN_0_001)
 
 # %%
 def export_to_csv(l=5):

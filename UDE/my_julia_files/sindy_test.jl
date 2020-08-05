@@ -46,7 +46,7 @@ function roessler(du, u, p, t)
 end
 print("---------------------------------------------------------------------")
 # Define the experimental parameter
-system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
 tspan = (0.0f0,3.0f0)
 dt = .1
 train = false
@@ -55,7 +55,6 @@ maxiter = 30
 NN_th = 0.1
 th = 0.2
 if (system == 1) # volterra
-    dt=.01
     sys = lotka
     order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
     u0 = Float32[0.44249296,4.6280594]
@@ -202,14 +201,14 @@ if NN
     println("\nmaximaler relativer Fehler der Ableitung des NN: ", max_error)
     display(plot(DX_'-L', title = "Fehler in Ableitung durch NN"))
 
-    X_high_res_0_01 = Array(concrete_solve(prob_nn, Vern7(), u0, NN_params, saveat = 0.01,
+    X_high_res_0_01 = Array(concrete_solve(prob_nn, Vern7(), u0, NN_params, saveat = dt/10,
                          abstol=1e-6, reltol=1e-6,
                          sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP())))
     L_high_res_0_01 = ann(X_high_res_0_01, NN_params)
     CSV.write(string("X_hr_0_01_",name,".csv"), DataFrame(X_high_res_0_01'))
     CSV.write(string("L_hr_0_01_",name,".csv"), DataFrame(L_high_res_0_01'))
 
-    X_high_res_0_001 = Array(concrete_solve(prob_nn, Vern7(), u0, NN_params, saveat = 0.001,
+    X_high_res_0_001 = Array(concrete_solve(prob_nn, Vern7(), u0, NN_params, saveat = dt/100,
                          abstol=1e-6, reltol=1e-6,
                          sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP())))
     L_high_res_0_001 = ann(X_high_res_0_001, NN_params)
@@ -244,7 +243,7 @@ f_target(x, w) = iszero(x[1]) ? Inf : norm(w.*x, 2)
 
 println("System: ", name)
 print("Sindy nominal\n")
-Ψ_nominal = SInDy(X[:, :], DX_[:, :], basis, λ, opt = opt, maxiter = maxiter, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+Ψ_nominal = SInDy(X[:, :], DX_[:, :], basis, λ, opt = opt, maxiter = maxiter, normalize = false, convergence_error = exp10(-10)) #
 # println(Ψ_nominal)
 print_equations(Ψ_nominal)
 p̂ = parameters(Ψ_nominal)
@@ -252,7 +251,7 @@ print("parameters: ", p̂, "\n")
 p_ident_nominal = Ψ_nominal.coeff
 
 print("Sindy zentral\n")
-Ψ_zentral = SInDy(X[:, :], x_dot[:, :], basis, λ, opt = opt, maxiter = maxiter, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+Ψ_zentral = SInDy(X[:, :], x_dot[:, :], basis, λ, opt = opt, maxiter = maxiter, normalize = false, convergence_error = exp10(-10)) #
 # println(Ψ_zentral)
 print_equations(Ψ_zentral)
 p̂ = parameters(Ψ_zentral)
@@ -261,7 +260,7 @@ p_ident_zentral = Ψ_zentral.coeff
 
 if NN
     print("Sindy NN_0_1\n")
-    Ψ_NN_0_1 = SInDy(X[:, :], L[:, :], basis, λ, opt = opt, maxiter = maxiter, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+    Ψ_NN_0_1 = SInDy(X[:, :], L[:, :], basis, λ, opt = opt, maxiter = maxiter, normalize = false, convergence_error = exp10(-10)) #
     # println(Ψ_NN_0_1)
     print_equations(Ψ_NN_0_1)
     p̂ = parameters(Ψ_NN_0_1)
@@ -269,7 +268,7 @@ if NN
     p_ident_NN_0_1 = Ψ_NN_0_1.coeff
 
     print("Sindy high_res_0_01\n")
-    Ψ_high_res_0_01 = SInDy(X_high_res_0_01[:, :], L_high_res_0_01[:, :], basis, λ, opt = opt, maxiter = maxiter, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+    Ψ_high_res_0_01 = SInDy(X_high_res_0_01[:, :], L_high_res_0_01[:, :], basis, λ, opt = opt, maxiter = maxiter, normalize = false, convergence_error = exp10(-10)) #
     # println(Ψ_high_res_0_01)
     print_equations(Ψ_high_res_0_01)
     p̂ = parameters(Ψ_high_res_0_01)
@@ -277,7 +276,7 @@ if NN
     p_ident_high_res_0_01 = Ψ_high_res_0_01.coeff
 
     print("Sindy high_res_0_001\n")
-    Ψ_high_res_0_001 = SInDy(X_high_res_0_001[:, :], L_high_res_0_001[:, :], basis, λ, opt = opt, maxiter = maxiter, f_target = f_target, normalize = false, convergence_error = exp10(-10)) #
+    Ψ_high_res_0_001 = SInDy(X_high_res_0_001[:, :], L_high_res_0_001[:, :], basis, λ, opt = opt, maxiter = maxiter, normalize = false, convergence_error = exp10(-10)) #
     # println(Ψ_high_res_0_001)
     print_equations(Ψ_high_res_0_001)
     p̂ = parameters(Ψ_high_res_0_001)
