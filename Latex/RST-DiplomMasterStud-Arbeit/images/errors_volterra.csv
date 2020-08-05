@@ -1,0 +1,7 @@
+volterra,nominal,zentral,NN 0.1,NN 0.01,NN 0.001
+PySINDy abs. Fehler,0.0,0.00141,0.0121,0.00591,0.00516
+PySINDy rel. Fehler,0.0,0.00232,0.0251,0.0124,0.01083
+DiffEq abs. Fehler,0.4777,0.43727,0.42433,0.44731,0.45056
+DiffEq rel. Fehler,0.70712*,0.70712*,0.70714*,0.70738*,0.70744*
+SINDy naiv abs. Fehler,0.4916,0.49179,0.48409,0.4884,0.48888
+SINDy naiv rel. Fehler,0.70711*,0.70711*,0.70711*,0.70711*,0.70711*

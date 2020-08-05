@@ -50,7 +50,7 @@ system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
 tspan = (0.0f0,3.0f0)
 dt = .1
 train = false
-NN = false
+NN = true
 maxiter = 30
 NN_th = 0.1
 th = 0.2
@@ -186,7 +186,7 @@ if NN
         max_error, = findmax(broadcast(abs, (DX_'-L')./DX_'))
         if max_error > NN_th
             println("max error = ", max_error)
-            # error("Neural Network not acurate enough!, Retrain!")
+            @warn("Neural Network not acurate enough!, Retrain!")
         end
         CSV.write(string("L_",name,".csv"), DataFrame(L'))
         CSV.write(string("ann_",name,".csv"), DataFrame(res2.minimizer'))
@@ -384,6 +384,7 @@ if NN
 end
 # Auswertung --------------------------------------------------
 function calc_param_ident_error(p_n, p_i)
+    digits = 5
     s = 0
     i = 0
     t = 0
@@ -393,12 +394,15 @@ function calc_param_ident_error(p_n, p_i)
             i += 1
             s += ((p_n[a] - p_i[a]) / p_n[a])^2
         elseif p_i[a] != 0
-            msg = ", allerdings zu viele Parameter identifiziert"
+            msg = "*"
         end
         t += (p_n[a] - p_i[a])^2
     end
-    println("   RMS absoluter Fehler: ", sqrt(t/length(p_n)))
-    println("   RMS relativer Fehler: ", sqrt(s/i)," ", msg)
+    rel_error = round(sqrt(s/i), digits=digits)
+    abs_error = round(sqrt(t/length(p_n)), digits=digits)
+    println("   RMS absoluter Fehler: ", abs_error)
+    println("   RMS relativer Fehler: ", rel_error, msg)
+    return [abs_error, string(rel_error, msg)]
 end
 println("System: ", name)
 println("\nOG Sindy")
@@ -435,4 +439,31 @@ if NN
 
     println("\nNN Sample interval = 0.001s :")
     calc_param_ident_error(p_nom, p_naive_ident_high_res_0_001)
+end
+
+
+function export_to_csv(l = 5)
+
+    p_ident =   [p_ident_nominal, p_ident_zentral, p_ident_NN_0_1, p_ident_high_res_0_01, p_ident_high_res_0_001,
+                p_naive_ident_nominal, p_naive_ident_zentral, p_naive_ident_NN_0_1, p_naive_ident_high_res_0_01, p_naive_ident_high_res_0_001]
+    row_DiffEq_abs = Array{String}(undef, 1, l+1)
+    row_DiffEq_rel = Array{String}(undef, 1, l+1)
+    row_naive_abs = Array{String}(undef, 1, l+1)
+    row_naive_rel = Array{String}(undef, 1, l+1)
+    row_DiffEq_abs[1] = "DiffEq abs. Fehler"
+    row_DiffEq_rel[1] = "DiffEq rel. Fehler"
+    row_naive_abs[1] = "SINDy naiv abs. Fehler"
+    row_naive_rel[1] = "SINDy naiv rel. Fehler"
+    for i ∈ (1:l)
+        row_DiffEq_abs[i+1] = string(calc_param_ident_error(p_nom, p_ident[i])[1])
+        row_DiffEq_rel[i+1] = string(calc_param_ident_error(p_nom, p_ident[i])[2])
+        row_naive_abs[i+1] = string(calc_param_ident_error(p_nom, p_ident[i+5])[1])
+        row_naive_rel[i+1] = string(calc_param_ident_error(p_nom, p_ident[i+5])[2])
+    end
+    rows = [row_DiffEq_abs;
+            row_DiffEq_rel;
+            row_naive_abs;
+            row_naive_rel]
+    folder = "C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/Studienarbeit/Latex/RST-DiplomMasterStud-Arbeit/images/"
+    CSV.write(string(folder, "errors_", name, ".csv"), DataFrame(rows), append= true)
 end

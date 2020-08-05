@@ -1,0 +1,7 @@
+lorenz,nominal,zentral
+PySINDy abs. Fehler,0.0,0.03154
+PySINDy rel. Fehler,0.0,0.0109*
+DiffEq abs. Fehler,3.0e-5,0.27847
+DiffEq rel. Fehler,3.0e-5,0.04201*
+SINDy naiv abs. Fehler,0.0,0.0312
+SINDy naiv rel. Fehler,0.0,0.0109

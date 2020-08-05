@@ -1,0 +1,75 @@
+nach Sindy high_res_0_001
+
+
+Assertion failed: jl_is_method_instance(mi), file /cygdrive/d/buildbot/worker/package_win64/build/src/codegen.cpp, line 3322
+
+signal (22): SIGABRT
+in expression starting at C:\Users\Julius\Documents\Studium_Elektrotechnik\Studienarbeit\github\Studienarbeit\UDE\my_julia_files\sindy_test.jl:261
+crt_sig_handler at /cygdrive/d/buildbot/worker/package_win64/build/src\signals-win.c:92
+raise at C:\WINDOWS\System32\msvcrt.dll (unknown line)
+abort at C:\WINDOWS\System32\msvcrt.dll (unknown line)
+assert at C:\WINDOWS\System32\msvcrt.dll (unknown line)
+emit_invoke at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:3322
+emit_expr at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:4139
+emit_ssaval_assign at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:3851
+emit_stmtpos at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:4044 [inlined]
+emit_function at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:6671
+jl_compile_linfo at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:1257
+emit_invoke at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:3323
+emit_expr at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:4139
+emit_ssaval_assign at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:3851
+emit_stmtpos at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:4044 [inlined]
+emit_function at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:6671
+jl_compile_linfo at /cygdrive/d/buildbot/worker/package_win64/build/src\codegen.cpp:1257
+jl_compile_method_internal at /cygdrive/d/buildbot/worker/package_win64/build/src\gf.c:1890
+_jl_invoke at /cygdrive/d/buildbot/worker/package_win64/build/src\gf.c:2154 [inlined]
+jl_apply_generic at /cygdrive/d/buildbot/worker/package_win64/build/src\gf.c:2323
+_build_and_inject_function at C:\Users\Julius\.julia\packages\ModelingToolkit\wMXcc\src\build_function.jl:140
+#_build_function#253 at C:\Users\Julius\.julia\packages\ModelingToolkit\wMXcc\src\build_function.jl:344
+_build_function##kw at C:\Users\Julius\.julia\packages\ModelingToolkit\wMXcc\src\build_function.jl:172 [inlined]
+#build_function#239 at C:\Users\Julius\.julia\packages\ModelingToolkit\wMXcc\src\build_function.jl:61 [inlined]
+build_function##kw at C:\Users\Julius\.julia\packages\ModelingToolkit\wMXcc\src\build_function.jl:61 [inlined]
+update! at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\basis.jl:101
+unique! at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\basis.jl:286
+push! at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\basis.jl:130
+derive_parameterized_eqs at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\sindy\results.jl:104
+#SparseIdentificationResult#55 at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\sindy\results.jl:80
+Type##kw at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\sindy\results.jl:72 [inlined]
+#SInDy#63 at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\sindy\sindy.jl:206
+SInDy##kw at C:\Users\Julius\.julia\packages\DataDrivenDiffEq\3pCDm\src\sindy\sindy.jl:162
+unknown function (ip: 000000006B869195)
+jl_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\julia.h:1700 [inlined]
+do_call at /cygdrive/d/buildbot/worker/package_win64/build/src\interpreter.c:369
+eval_value at /cygdrive/d/buildbot/worker/package_win64/build/src\interpreter.c:458
+eval_stmt_value at /cygdrive/d/buildbot/worker/package_win64/build/src\interpreter.c:409 [inlined]
+eval_body at /cygdrive/d/buildbot/worker/package_win64/build/src\interpreter.c:799
+jl_interpret_toplevel_thunk at /cygdrive/d/buildbot/worker/package_win64/build/src\interpreter.c:911
+jl_toplevel_eval_flex at /cygdrive/d/buildbot/worker/package_win64/build/src\toplevel.c:819
+jl_parse_eval_all at /cygdrive/d/buildbot/worker/package_win64/build/src\ast.c:872
+include_string at .\loading.jl:1080
+#220 at C:\Users\Julius\.julia\packages\Atom\8MnXm\src\eval.jl:174
+withpath at C:\Users\Julius\.julia\packages\CodeTools\kosGY\src\utils.jl:30
+withpath at C:\Users\Julius\.julia\packages\Atom\8MnXm\src\eval.jl:9
+#219 at C:\Users\Julius\.julia\packages\Atom\8MnXm\src\eval.jl:171 [inlined]
+with_logstate at .\logging.jl:398
+with_logger at .\logging.jl:505 [inlined]
+#218 at C:\Users\Julius\.julia\packages\Atom\8MnXm\src\eval.jl:170 [inlined]
+hideprompt at C:\Users\Julius\.julia\packages\Atom\8MnXm\src\repl.jl:127
+macro expansion at C:\Users\Julius\.julia\packages\Media\ItEPc\src\dynamic.jl:24 [inlined]
+evalall at C:\Users\Julius\.julia\packages\Atom\8MnXm\src\eval.jl:160
+jl_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\julia.h:1700 [inlined]
+do_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\builtins.c:643
+jl_f__apply at /cygdrive/d/buildbot/worker/package_win64/build/src\builtins.c:657 [inlined]
+jl_f__apply_latest at /cygdrive/d/buildbot/worker/package_win64/build/src\builtins.c:693
+#invokelatest#1 at .\essentials.jl:712
+jl_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\julia.h:1700 [inlined]
+do_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\builtins.c:643
+invokelatest at .\essentials.jl:711
+jl_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\julia.h:1700 [inlined]
+do_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\builtins.c:643
+macro expansion at C:\Users\Julius\.julia\packages\Atom\8MnXm\src\eval.jl:41 [inlined]
+#188 at .\task.jl:358
+unknown function (ip: 000000001994C263)
+jl_apply at /cygdrive/d/buildbot/worker/package_win64/build/src\julia.h:1700 [inlined]
+start_task at /cygdrive/d/buildbot/worker/package_win64/build/src\task.c:687
+Allocations: 1003613740 (Pool: 1003399182; Big: 214558); GC: 1788

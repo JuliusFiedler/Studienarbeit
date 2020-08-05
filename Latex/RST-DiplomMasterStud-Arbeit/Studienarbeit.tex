@@ -13,6 +13,7 @@
 \usepackage{blindtext}
 \usepackage{physics}
 \usepackage{amsmath}
+\usepackage{csvsimple}
 
 
 % Zwei Parameter zum Verändern des Layouts
@@ -433,8 +434,9 @@ Ableitung durch NN, sample interval 0.001s	& 	$0.126144$		&	$0.010833$			&	$0.01
 \caption{RMS des relativen Fehlers der Parameterschätzung, Lotka-Volterra-System}
 \end{table}
 
-%\caption{\label{tab1}RMS des relativen Fehlers der Parameterschätzung}
-
+\csvautotabular{images/errors_volterra.csv}
+\csvautotabular{images/errors_lorenz.csv}
+\csvautotabular{images/errors_roessler.csv}
 
 anzahl der iterationen in pysindy relevant, wenn ident mit vorwissen, bei zentraldiff und lin term bekannt und $maxiter = 1$ kommt lin term hinzu, bei $maxiter = 2$ nicht\\
 bei test mit NN fällt auf, dass sindy ergebnisse stark schwanken weil NN teilweise schlecht \\
@@ -444,8 +446,9 @@ sindy naiv ist ein ganz klein bissl schlechter als PySindy\\
 naiv ein wenig schlechter als pysindy?\\
 abtastrate für zb lorenz von großer bedeutung für identifizierbarkeit, wie vergleichbar machen?\\
 fehler in zentraldiff/NN festhalten, max oder durchschnitt?\\
-sindy naiv: nach 2. mkq mit ausgewählten spalten nochmal alle coeff nullsetzen?\\
+sindy naiv: nach 2. mkq mit ausgewählten spalten nochmal alle coeff nullsetzen? in pysindy wird das nicht gemacht siehe roessler zentral $pi_zentral[2][8] = -6*10^{-5}$ wird aber nicht angezeigt\\
 sparse regression ansatz schwierig bei systemen mit kleinen parametern tb roessler\\
+
 \section{errors}
 Ude:\\
 $AssertionError: length(b) == length(variables(b)) in unknown_sys:$\\

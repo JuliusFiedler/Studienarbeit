@@ -371,7 +371,7 @@ annotate!([(1.5,9,text("Training \nData", 10, :center, :top, :black, "Helvetica"
 l = @layout [grid(1,2)
              grid(1,1)]
 plot(p3)
-savefig("C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/Studienarbeit/Latex/RST-DiplomMasterStud-Arbeit/images/ude_fric_viskos_d1_03_d2_05.png")
+# savefig("C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/Studienarbeit/Latex/RST-DiplomMasterStud-Arbeit/images/ude_fric_viskos_d1_03_d2_05.png")
 
 
 display(plot(p1,p2,p3,layout = l))

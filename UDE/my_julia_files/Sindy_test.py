@@ -16,7 +16,7 @@ import pandas as pd
 
 # %%
 system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
-NN = True
+NN = False
 if (system == 1):
     sys_name = "volterra"
     p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
@@ -125,18 +125,24 @@ def calc_param_ident_error(p_n, p_i):
     i = 0
     k = 0
     t = 0
+    msg = ""
     for x in p_n:
         for y in range(len(x)):
             for z in range(len(p_n)):
                 if p_n[z][y]!=0:
                     i += 1
                     s += ((p_n[z][y] - p_i[z][y]) / p_n[z][y])**2
+                elif p_i[z][y] != 0:
+                    msg = "*"
+                    k += 1
                 else:
-                    msg = ", allerdings zu viele Parameter identifiziert"
                     k += 1
                 t += (p_n[z][y] - p_i[z][y])**2
-    print("   RMS absoluter Fehler: " + str(np.sqrt(t/(i+k))))
-    print("   RMS relativer Fehler: " + str(np.sqrt(s/i) + " "+ msg))
+    rel_error = round(np.sqrt(s/i), 5)
+    abs_error = round(np.sqrt(t/(i+k)), 5)
+    print("   RMS absoluter Fehler: " + str(abs_error))
+    print("   RMS relativer Fehler: " + str(rel_error) + msg)
+    return [str(abs_error), str(rel_error) + msg]
 
 # %%
 print("\nNominalableitung:")
@@ -155,63 +161,27 @@ if NN:
     print("\nNN Sample interval = 0.001s :")
     calc_param_ident_error(p_nom, p_ident_NN_0_001)
 
-# # %%
-# t_test = np.linspace(0, 3, X.shape[0])
-# random.seed(12)
-# x0_test = [0.44249296,4.6280594]
-# x_test = X
-# print('Model score: %f' % model.score(x_test, t=dt))
+# %%
+def export_to_csv(l=5):
+    p_ident = [p_ident_nominal, p_ident_zentral, p_ident_NN_0_1, p_ident_NN_0_01, p_ident_NN_0_001]
+    heads = ["nominal", "zentral", "NN 0.1", "NN 0.01", "NN 0.001"]
+    row_head = [sys_name]
+    row_abs = ['PySINDy abs. Fehler']
+    row_rel = ['PySINDy rel. Fehler']
+    for i in range(l):
+        row_head.append(heads[i])
+        row_abs.append(calc_param_ident_error(p_nom, p_ident[i])[0])
+        row_rel.append(calc_param_ident_error(p_nom, p_ident[i])[1])
+
+    folder = 'C:\\Users\\Julius\\Documents\\Studium_Elektrotechnik\\Studienarbeit\\github\\Studienarbeit\\Latex\\RST-DiplomMasterStud-Arbeit\\images\\'
+    with open(folder + 'errors_' + sys_name + '.csv', 'w', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',',
+                                quotechar=',', quoting=csv.QUOTE_MINIMAL)
+        spamwriter.writerow(row_head)
+        spamwriter.writerow(row_abs)
+        spamwriter.writerow(row_rel)
 
 
-# # %%
-# # Predict derivatives using the learned model
-# x_dot_test_predicted = model.predict(x_test)  
-
-# # Compute derivatives with a finite difference method, for comparison
-# x_dot_test_computed = model.differentiate(x_test, t=dt)
-# #t_test = np.linspace(0, 15, 3000)
 
 
-# fig, axs = plt.subplots(x_test.shape[1], 1, sharex=True, figsize=(7, 9))
-
-# for i in range(x_test.shape[1]):
-#     axs[i].plot(t_test, x_dot_test_computed[:, i],
-#                 'k', label='numerical derivative')
-#     axs[i].plot(t_test, x_dot_test_predicted[:, i],
-#                 'r--', label='model prediction')
-#     axs[i].legend()
-#     axs[i].set(xlabel='t', ylabel='$\dot x_{}$'.format(i))
-
-# fig.show()
-
-
-# # %%
-# # Evolve the new initial condition in time with the SINDy model
-
-# t_evolve = np.linspace(0, 5, 1000)
-# x_test_sim = model.simulate(x0_test, t_evolve)
-
-# fig, axs = plt.subplots(x_test.shape[1], 1, sharex=True, figsize=(7, 9))
-# for i in range(x_test.shape[1]):
-#     axs[i].plot(t_test, x_test[:, i], 'k', label='true simulation')
-#     axs[i].plot(t_evolve, x_test_sim[:, i], 'r--', label='model simulation')
-#     axs[i].legend()
-#     axs[i].set(xlabel='t', ylabel='$x_{}$'.format(i))
-
-# fig = plt.figure(figsize=(10, 4.5))
-# ax1 = fig.add_subplot(121, projection='3d')
-# ax1.plot(x_test[:, 0], x_test[:, 1],  'k')
-# ax1.set(xlabel='$x_0$', ylabel='$x_1$',
-#         zlabel='$x_2$', title='true simulation')
-
-# ax2 = fig.add_subplot(122, projection='3d')
-# ax2.plot(x_test_sim[:, 0], x_test_sim[:, 1], 'r--')
-# ax2.set(xlabel='$x_0$', ylabel='$x_1$',
-#         zlabel='$x_2$', title='model simulation')
-
-# fig.show()
-
-
-# # %%
-
-
+# %%
