@@ -12,6 +12,7 @@ using DataFrames
 using Sundials
 using DiffEqBase
 using Combinatorics
+using Random
 
 function calc_centered_difference(x_, dt=0.1)
     x = x_'
@@ -44,16 +45,25 @@ function roessler(du, u, p, t)
     du[2] = u[1] + α * u[2]
     du[3] = β + u[1] * u[3] - γ * u[3]
 end
+
+function wp(du, u, p, t)
+    g, s2 = p
+    du[1] = u[3]
+    du[2] = u[4]
+    du[3] = -g/s2*sin(u[1])
+    du[4] = 0
+end
 print("---------------------------------------------------------------------")
 # Define the experimental parameter
-system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 4 # 1 = volterra, 2 = lorenz, 3 = roessler
 tspan = (0.0f0,3.0f0)
 dt = .1
 train = false
-NN = true
+NN = false
 maxiter = 30
 NN_th = 0.1
 th = 0.2
+multiple_trajectories = false
 if (system == 1) # volterra
     sys = lotka
     order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
@@ -84,27 +94,71 @@ elseif (system == 3)#roessler
     n = 3
     name = "roessler"
     th = 0.05 # wenn parameter klein
+elseif system == 4 # wagen pendel
+    tspan = (0.0f0,5.0f0)
+    sys = wp
+    p_ = Float32[9.81, 0.26890449]
+    u0 = Float32[-3, 1, 3, 1]
+    order = 1
+    name = "wp"
+    n = 4
+    dt = 0.1
+    multiple_trajectories = true
 end
 
 # Datenerzeugung-------------------------------------------------------
-prob = ODEProblem(sys, u0, tspan, p_)
-solution = solve(prob, Vern7(), abstol=1e-12, reltol=1e-12, saveat = dt)
-X = solution
+function create_data(u0)
+    prob = ODEProblem(sys, u0, tspan, p_)
+    X = solve(prob, DP5(), abstol=1e-12, reltol=1e-12, saveat = dt)#für wp dp5, vorher stand hier Vern7
 
-if (system == 1)
-    DX_ =   [p_[1]*(X[1,:])'+p_[2]*(X[1,:].*X[2,:])';
-            p_[3]*(X[1,:].*X[2,:])'+p_[4]*(X[2,:])']
-elseif (system == 2)
-    DX_ =   [p_[1] * (-(X[1,:])' + (X[2,:])');
-            p_[2] * (X[1,:])' - (X[2,:])' - (X[1,:])' .* (X[3,:])';
-            -p_[3] * (X[3,:])' + (X[1,:])' .* (X[2,:])']
-elseif (system == 3)
-    DX_ =   [ -(X[2,:])' - (X[3,:])';
-            (X[1,:])' + p_[1] * (X[2,:])';
-            p_[2] .+ (X[1,:])' .* (X[3,:])' - p_[3] * (X[3,:])']
+
+    if (system == 1)
+        DX_ =   [p_[1]*(X[1,:])'+p_[2]*(X[1,:].*X[2,:])';
+                p_[3]*(X[1,:].*X[2,:])'+p_[4]*(X[2,:])']
+    elseif (system == 2)
+        DX_ =   [p_[1] * (-(X[1,:])' + (X[2,:])');
+                p_[2] * (X[1,:])' - (X[2,:])' - (X[1,:])' .* (X[3,:])';
+                -p_[3] * (X[3,:])' + (X[1,:])' .* (X[2,:])']
+    elseif (system == 3)
+        DX_ =   [ -(X[2,:])' - (X[3,:])';
+                (X[1,:])' + p_[1] * (X[2,:])';
+                p_[2] .+ (X[1,:])' .* (X[3,:])' - p_[3] * (X[3,:])']
+    elseif system == 4
+        DX_ = [ X[3,:]';
+                X[4,:]';
+                -p_[1]/p_[2]*sin.(X[1,:])';
+                Float32.(zeros(size(X[1,:])))']
+    end
+    x_dot = calc_centered_difference(X,dt)
+    return X, DX_, x_dot
 end
 
-x_dot = calc_centered_difference(X,dt)
+X, DX_, x_dot = create_data(u0)
+
+function mul_tra!(X, DX_, x_dot, u0)
+    min_u, = findmin(u0)
+    max_u, = findmax(u0)
+    len = length(u0)
+    no_tr = 10
+    A = similar(X)
+    A .= X
+    for i ∈ (1:no_tr)
+        Random.seed!(i)
+        u0_ = rand(Float32, len) .*(max_u - min_u) .+ min_u
+        X_, DX__, x_dot_ = create_data(u0_)
+        A_ = similar(X_)
+        A_ .= X_
+        A = cat(A, A_, dims = 2)
+        DX_ = cat(DX_, DX__, dims = 2)
+        x_dot = cat(x_dot, x_dot_, dims = 2)
+    end
+    X = A
+    return X, DX_, x_dot
+end
+
+if multiple_trajectories
+    X, DX_, x_dot = mul_tra!(X, DX_, x_dot, u0)
+end
 
 display(plot(DX_', label = "exakte Ableitung", title = "Ableitungen"))
 display(plot!(x_dot', label = "Zentraldifferenz", title = "Ableitungen"))
@@ -120,7 +174,7 @@ max_error = 0
 NN_params = []
 ann = FastChain(FastDense(n, 32, tanh),FastDense(32, 32, tanh), FastDense(32, n))
 
-tsdata = Array(solution)
+tsdata = Array(X)
 # Add noise to the data
 noisy_data = tsdata + Float32(1e-5)*randn(eltype(tsdata), size(tsdata))
 
@@ -137,6 +191,14 @@ elseif system ∈ (2:3)
         [z[1],
          z[2],
          z[3]]
+    end
+elseif system == 4
+    function dudt2(u, p, t)
+        z = ann(u,p)
+        [z[1],
+         z[2],
+         z[3],
+         z[4]]
     end
 end
 
@@ -177,9 +239,9 @@ if NN
 
         # Trained on noisy data vs real solution
         tsdata = Array(X)
-        display(plot(solution.t, NNsolution', title= "NNsolution"))
-        display(plot!(solution.t, tsdata', title = "solution"))
-        display(plot(solution.t, tsdata'.-NNsolution', title = "Fehler in X"))
+        display(plot(X.t, NNsolution', title= "NNsolution"))
+        display(plot!(X.t, tsdata', title = "solution"))
+        display(plot(X.t, tsdata'.-NNsolution', title = "Fehler in X"))
         L = ann(X,res2.minimizer)
         display(plot(DX_', title = "exakte Ableitung"))
         display(plot!(L',title = "NN Ableitung"))
@@ -231,6 +293,9 @@ for i ∈ (1:order)
 end
 
 h = [polys...]
+if system == 4
+    h= [sin.(u)..., cos.(u)..., polys...]
+end
 basis = Basis(h, u)
 
 # Create an optimizer for the SINDY problem
@@ -243,7 +308,7 @@ f_target(x, w) = iszero(x[1]) ? Inf : norm(w.*x, 2)
 
 println("System: ", name)
 print("Sindy nominal\n")
-Ψ_nominal = SInDy(X[:, :], DX_[:, :], basis, λ, opt = opt, maxiter = maxiter, normalize = false, convergence_error = exp10(-10)) #
+@time Ψ_nominal = SInDy(X[:, :], DX_[:, :], basis, λ, opt = opt, maxiter = maxiter, normalize = false, convergence_error = exp10(-10)) #
 # println(Ψ_nominal)
 print_equations(Ψ_nominal)
 p̂ = parameters(Ψ_nominal)
@@ -283,12 +348,15 @@ if NN
     print("parameters: ", p̂, "\n")
     p_ident_high_res_0_001 = Ψ_high_res_0_001.coeff
 end
+
+
 # Sindy so wie man es erwarten würde --------------------------
 # Matrizenformat hier wie in Python / bzw wie man es erwarten würde
 function sindy_naive(X, Ẋ, basis, λ = th)
     Θ = basis(X)' # Library eingesetzt
     Ẋ = Ẋ' # Ableitungen
-    Ξ = inv(Θ'*Θ)*Θ'*Ẋ # initial guess
+    # Ξ = inv(Θ'*Θ)*Θ'*Ẋ # initial guess
+    Ξ = Θ \ Ẋ
     for i ∈ (1:length(Ξ))
         Ξ[i] *= (abs(Ξ[i])<λ ? 0 : 1) # kleine coeff nullsetzen
     end
@@ -302,7 +370,8 @@ function sindy_naive(X, Ẋ, basis, λ = th)
         end
         Θ_select = Θ[:, a]
         Ẋ_select = Ẋ[:, i]
-        append!(Ξ_select, inv(Θ_select'*Θ_select)*Θ_select'*Ẋ_select)
+        # append!(Ξ_select, inv(Θ_select'*Θ_select)*Θ_select'*Ẋ_select)
+        append!(Ξ_select, Θ_select \ Ẋ_select)
     end
     count = 0
     for i ∈ (1:size(Ξ)[2])
@@ -357,7 +426,7 @@ function sindy_naive_I(X, Ẋ, basis, λ = 0.2)
 end
 println("System: ", name)
 println("\n Sindy naive nominal")
-Ψ_naive_nom = sindy_naive(X, DX_, basis)
+@time Ψ_naive_nom = sindy_naive(X, DX_, basis)
 print_equations(Ψ_naive_nom, show_parameter = true)
 p_naive_ident_nominal = Ψ_naive_nom.coeff
 
@@ -376,7 +445,7 @@ if NN
     Ψ_naive_NN_0_01 = sindy_naive(X_high_res_0_01, L_high_res_0_01, basis)
     print_equations(Ψ_naive_NN_0_01, show_parameter = true)
     p_naive_ident_high_res_0_01 = Ψ_naive_NN_0_01.coeff
-
+Chole
     println("\n Sindy naive NN 0.001s ")
     Ψ_naive_NN_0_001 = sindy_naive(X_high_res_0_001, L_high_res_0_001, basis)
     print_equations(Ψ_naive_NN_0_001, show_parameter = true)

@@ -83,7 +83,6 @@ function verkettung(f, d)
                 add_identity = i
             end
             push!(h, functions[i]...)
-
         else
             @warn("Type Error: Library corrupted")
         end
@@ -102,9 +101,7 @@ function verkettung(f, d)
     end
     return h
 end
-# h = [sin.(u)..., cos.(u)..., polys...]
+h = [sin.(u)..., cos.(u)..., polys...]
 basis = Basis(h, u)
 print(polys)
 print(h)
-
-delet

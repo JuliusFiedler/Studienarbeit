@@ -30,7 +30,7 @@ function wp_fric(du, u, p, t)
     du[3] = -g/s2*sin(u[1]) -d[1]*u[3] -d[2]*tanh(10*u[3])
     du[4] = 0
 end
-fric = true
+fric = false
 
 if fric
     system = wp_fric

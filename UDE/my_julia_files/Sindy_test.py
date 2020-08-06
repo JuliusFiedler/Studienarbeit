@@ -15,8 +15,8 @@ import random
 import pandas as pd
 
 # %%
-system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler
-NN = True
+system = 4 # 1 = volterra, 2 = lorenz, 3 = roessler
+NN = False
 if (system == 1):
     sys_name = "volterra"
     p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
@@ -36,6 +36,19 @@ elif (system == 3):
                         [ 0.1, 0.0, 0.0, -5.3, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]])
     feature_library = ps.PolynomialLibrary(degree=2)
     feature_names=["x", "y", "z"]
+elif system == 4:
+    sys_name = "wp"
+    library_functions = [
+        lambda x : x,
+        lambda x : np.sin(x),
+        lambda x : np.cos(x)    ]       
+    library_function_names = [
+        lambda x : x,
+        lambda x : 'sin(' + x + ')',
+        lambda x : 'cos(' + x + ')' ]
+    custom_library = ps.CustomLibrary(library_functions=library_functions, function_names=library_function_names)
+    feature_library = custom_library
+    feature_names=["phi", "x", "dphi","dx"]
 
 # %%
 def read(name):
