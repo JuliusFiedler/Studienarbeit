@@ -15,7 +15,7 @@ import random
 import pandas as pd
 
 # %%
-system = 4 # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
 NN = False
 if (system == 1):
     sys_name = "volterra"

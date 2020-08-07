@@ -64,15 +64,17 @@ maxiter = 30
 NN_th = 0.1
 th = 0.2
 multiple_trajectories = false
+prior_knowledge = false
 if (system == 1) # volterra
     sys = lotka
     order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
     u0 = Float32[0.44249296,4.6280594]
     p_ = Float32[1.3, -0.9, 0.8, -1.8]
     p_nom = Array{Float32}([0.0 0.0; p_[1] 0.0; 0.0 p_[4]; 0.0 0.0; p_[2] p_[3]; 0.0 0.0])
-    p_k_nom = Array{Float32}([0 0; 0 0; 0 0; p_[2] p_[3]; 0 0; 0 0])
+    p_k_nom = Array{Float32}([0 0; 0 0; 0 0; 0 0; p_[2] p_[3]; 0 0])
     n = 2 # Anzahl Zustände für Konstruktion NN
     name = "volterra"
+    prior_knowledge = false
 elseif (system == 2)#lorenz
     tspan = (0.0, 3.0)
     dt = 0.01 # 0.01 ok
@@ -98,12 +100,13 @@ elseif system == 4 # wagen pendel
     tspan = (0.0f0,5.0f0)
     sys = wp
     p_ = Float32[9.81, 0.26890449]
-    u0 = Float32[-3, 1, 3, 1]
+    # u0 = Float32[-3, 1, 3, 1]
+    u0 = Float32[1, 1, 0.5, 0]
     order = 1
     name = "wp"
     n = 4
     dt = 0.1
-    multiple_trajectories = true
+    multiple_trajectories = false
 end
 
 # Datenerzeugung-------------------------------------------------------
@@ -134,6 +137,26 @@ function create_data(u0)
 end
 
 X, DX_, x_dot = create_data(u0)
+
+function prior_k(X, DX_, x_dot, system)
+    if system == 1
+        a = 1.3
+        c = -1.8
+        DX_K = similar(DX_)
+        x_dot_K = similar(x_dot)
+        DX_K'[:, 1] = DX_'[:, 1] - a*X'[:, 1]
+        DX_K'[:, 2]= DX_'[:, 2] - c*X'[:, 2]
+        x_dot_K'[:, 1] = x_dot'[:, 1] - a*X'[:, 1]
+        x_dot_K'[:, 2]= x_dot'[:, 2] - c*X'[:, 2]
+    end
+    return DX_K, x_dot_K
+end
+
+
+if prior_knowledge
+    DX_, x_dot = prior_k(X, DX_, x_dot, system)
+    p_nom = p_k_nom
+end
 
 function mul_tra!(X, DX_, x_dot, u0)
     min_u, = findmin(u0)
@@ -393,7 +416,7 @@ function sindy_naive_I(X, Ẋ, basis, λ = 0.2)
     Θ = basis(X)' # Library eingesetzt
     Ẋ = Ẋ' # Ableitungen
     I = Diagonal(ones(eltype(Ẋ), size(Θ)[2]))
-    Ξ = inv(Θ' * Θ ) * Θ' * Ẋ # initial guess
+    Ξ = inv(Θ' * Θ + I) * Θ' * Ẋ # initial guess
     for i ∈ (1:length(Ξ))
         Ξ[i] *= (abs(Ξ[i])<λ ? 0 : 1) # kleine coeff nullsetzen
     end
@@ -408,8 +431,8 @@ function sindy_naive_I(X, Ẋ, basis, λ = 0.2)
         end
         Θ_select = Θ[:, a]
         Ẋ_select = Ẋ[:, i]
-        I = Diagonal(ones(eltype(Ẋ), size(Θ_select)[2]))
-        append!(Ξ_select, inv(Θ_select'*Θ_select +I)*Θ_select'*Ẋ_select)
+        # I = Diagonal(ones(eltype(Ẋ), size(Θ_select)[2]))
+        append!(Ξ_select, inv(Θ_select'*Θ_select )*Θ_select'*Ẋ_select)
     end
     count = 0
     for i ∈ (1:size(Ξ)[2])
