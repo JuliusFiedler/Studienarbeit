@@ -55,7 +55,7 @@ function wp(du, u, p, t)
 end
 print("---------------------------------------------------------------------")
 # Define the experimental parameter
-system = 4 # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
 tspan = (0.0f0,3.0f0)
 dt = .1
 train = false

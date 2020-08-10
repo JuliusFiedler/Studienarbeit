@@ -15,8 +15,14 @@ import random
 import pandas as pd
 
 # %%
-system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
-NN = False
+# System auswählen
+system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
+# NN auswerten?
+NN = True
+
+
+t_end = 3
+th = 0.2 # coef threshold
 if (system == 1):
     sys_name = "volterra"
     p_nom = np.array([[0, 1.3, 0, 0, -0.9, 0], [0, 0, -1.8, 0, 0.8, 0]])
@@ -36,8 +42,10 @@ elif (system == 3):
                         [ 0.1, 0.0, 0.0, -5.3, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]])
     feature_library = ps.PolynomialLibrary(degree=2)
     feature_names=["x", "y", "z"]
+    th = 0.05
 elif system == 4:
     sys_name = "wp"
+    t_end = 5
     library_functions = [
         lambda x : x,
         lambda x : np.sin(x),
@@ -49,8 +57,13 @@ elif system == 4:
     custom_library = ps.CustomLibrary(library_functions=library_functions, function_names=library_function_names)
     feature_library = custom_library
     feature_names=["phi", "x", "dphi","dx"]
+    p_nom = np.array([[  0.        ,   0.        ,   1,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
+       [  0.        ,   0.        ,   0.        ,   1,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
+       [  0.        ,   0.        ,   0.        ,   0.        , -9.81/0.26890449,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
+       [  0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ]])
 
 # %%
+# import csv file and convert to nice datatype
 def read(name):
     A = pd.read_csv(name, sep=',',header=None)
     A = np.array(A.values)
@@ -61,7 +74,7 @@ def read(name):
             for z in range(len(A)):
                 A[z][y] = float(A[z][y])
     print(A.shape)
-    t_end = 3
+    
     tt = np.linspace(0, t_end, A.shape[0])
     plt.plot(tt, A)
     return A
@@ -74,9 +87,9 @@ if NN:
     L = read('L_' + sys_name + '.csv')
     X_high_res_0_01 = read('X_hr_0_01_' + sys_name + '.csv')
     L_high_res_0_01 = read('L_hr_0_01_' + sys_name + '.csv')
-    # X_high_res_0_001 = read('X_hr_0_001_' + sys_name + '.csv')
-    # L_high_res_0_001 = read('L_hr_0_001_' + sys_name + '.csv')
-t_end = 3
+    X_high_res_0_001 = read('X_hr_0_001_' + sys_name + '.csv')
+    L_high_res_0_001 = read('L_hr_0_001_' + sys_name + '.csv')
+# t_end = 3
 tt = np.linspace(0, t_end, X.shape[0])
     
 
@@ -93,7 +106,7 @@ tt = np.linspace(0, t_end, X.shape[0])
 
 # %%
 differentiation_method = ps.FiniteDifference(order=2)
-optimizer = ps.SR3(threshold=0.05)
+optimizer = ps.SR3(threshold=th)
 
 
 # %%
@@ -126,10 +139,10 @@ if NN:
     model.print()
     p_ident_NN_0_01 = model.coefficients()
 
-    # print("NN 0.001s")
-    # model.fit(X_high_res_0_001, x_dot=L_high_res_0_001, t=dt, multiple_trajectories=False) 
-    # model.print()
-    # p_ident_NN_0_001 = model.coefficients()
+    print("NN 0.001s")
+    model.fit(X_high_res_0_001, x_dot=L_high_res_0_001, t=dt, multiple_trajectories=False) 
+    model.print()
+    p_ident_NN_0_001 = model.coefficients()
 
 
 # %%
@@ -171,8 +184,8 @@ if NN:
     print("\nNN Sample interval = 0.01s :")
     calc_param_ident_error(p_nom, p_ident_NN_0_01)
 
-    # print("\nNN Sample interval = 0.001s :")
-    # calc_param_ident_error(p_nom, p_ident_NN_0_001)
+    print("\nNN Sample interval = 0.001s :")
+    calc_param_ident_error(p_nom, p_ident_NN_0_001)
 
 # %%
 def export_to_csv(l=5):
