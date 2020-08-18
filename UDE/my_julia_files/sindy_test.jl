@@ -55,7 +55,7 @@ function wp(du, u, p, t)
 end
 print("---------------------------------------------------------------------")
 # Define the experimental parameter
-system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 3  # 1 = volterra, 2 = lorenz, 3 = roessler
 tspan = (0.0f0,3.0f0)
 dt = .1
 train = false
@@ -65,6 +65,7 @@ NN_th = 0.1
 th = 0.2
 multiple_trajectories = false
 prior_knowledge = false
+solver = Vern7()
 if (system == 1) # volterra
     sys = lotka
     order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
@@ -87,7 +88,7 @@ elseif (system == 2)#lorenz
     name = "lorenz"
 elseif (system == 3)#roessler
     tspan = (0.0, 3.0)
-    dt = 0.01
+    dt = .01
     sys = roessler
     order = 2
     u0 = Float64[1, 1, 1]
@@ -107,12 +108,13 @@ elseif system == 4 # wagen pendel
     n = 4
     dt = 0.1
     multiple_trajectories = false
+    solver = DP5()
 end
 
 # Datenerzeugung-------------------------------------------------------
 function create_data(u0)
     prob = ODEProblem(sys, u0, tspan, p_)
-    X = solve(prob, DP5(), abstol=1e-12, reltol=1e-12, saveat = dt)#für wp dp5, vorher stand hier Vern7
+    X = solve(prob, solver, abstol=1e-12, reltol=1e-12, saveat = dt)#für wp dp5, vorher stand hier Vern7
 
 
     if (system == 1)
@@ -132,7 +134,7 @@ function create_data(u0)
                 -p_[1]/p_[2]*sin.(X[1,:])';
                 Float32.(zeros(size(X[1,:])))']
     end
-    x_dot = calc_centered_difference(X,dt)
+    x_dot = calc_centered_difference(X, dt)
     return X, DX_, x_dot
 end
 
@@ -375,14 +377,8 @@ end
 
 # Sindy so wie man es erwarten würde --------------------------
 # Matrizenformat hier wie in Python / bzw wie man es erwarten würde
-function sindy_naive(X, Ẋ, basis, λ = th)
-    Θ = basis(X)' # Library eingesetzt
-    Ẋ = Ẋ' # Ableitungen
-    # Ξ = inv(Θ'*Θ)*Θ'*Ẋ # initial guess
-    Ξ = Θ \ Ẋ
-    for i ∈ (1:length(Ξ))
-        Ξ[i] *= (abs(Ξ[i])<λ ? 0 : 1) # kleine coeff nullsetzen
-    end
+function calc_Ξ_select(Ξ, Θ, Ẋ)
+    # select relevnt columns of Θ for MKQ
     Ξ_select = []
     for i ∈ (1:size(Ξ)[2])
         a = []
@@ -396,6 +392,11 @@ function sindy_naive(X, Ẋ, basis, λ = th)
         # append!(Ξ_select, inv(Θ_select'*Θ_select)*Θ_select'*Ẋ_select)
         append!(Ξ_select, Θ_select \ Ẋ_select)
     end
+    return Ξ_select
+end
+
+function reshape_Ξ(Ξ, Ξ_select)
+    # reshape Ξ to original size for output purpose
     count = 0
     for i ∈ (1:size(Ξ)[2])
         a = []
@@ -406,11 +407,37 @@ function sindy_naive(X, Ẋ, basis, λ = th)
             end
         end
     end
+    return Ξ
+end
+
+function sindy_naive(X, Ẋ, basis, λ = th)
+    Θ = basis(X)' # Library eingesetzt
+    Ẋ = Ẋ' # Ableitungen
+    # Ξ = inv(Θ'*Θ)*Θ'*Ẋ # initial guess
+    Ξ = Θ \ Ẋ
     for i ∈ (1:length(Ξ))
         Ξ[i] *= (abs(Ξ[i])<λ ? 0 : 1) # kleine coeff nullsetzen
     end
-    return SparseIdentificationResult(Ξ, basis, 1, opt, true, Ẋ', X)
+    iters = 0
+    for k ∈ 1:maxiter
+        Ξ_select = calc_Ξ_select(Ξ, Θ, Ẋ)
+        Ξ = reshape_Ξ(Ξ, Ξ_select)
+
+        done = true
+        for i ∈ (1:length(Ξ))
+            if Ξ[i] != 0 && abs(Ξ[i])<λ
+                Ξ[i] *=  0  # kleine coeff nullsetzen
+                done = false
+            end
+        end
+        iters += 1
+        done ? break : nothing
+    end
+    println("converged after ", iters, " iterations")
+    @time sir = SparseIdentificationResult(Ξ, basis, 1, opt, true, Ẋ', X)
+    return sir
 end
+
 function sindy_naive_I(X, Ẋ, basis, λ = 0.2)
     λ = 0.2
     Θ = basis(X)' # Library eingesetzt
@@ -468,7 +495,7 @@ if NN
     Ψ_naive_NN_0_01 = sindy_naive(X_high_res_0_01, L_high_res_0_01, basis)
     print_equations(Ψ_naive_NN_0_01, show_parameter = true)
     p_naive_ident_high_res_0_01 = Ψ_naive_NN_0_01.coeff
-Chole
+
     println("\n Sindy naive NN 0.001s ")
     Ψ_naive_NN_0_001 = sindy_naive(X_high_res_0_001, L_high_res_0_001, basis)
     print_equations(Ψ_naive_NN_0_001, show_parameter = true)
@@ -478,19 +505,18 @@ end
 function calc_param_ident_error(p_n, p_i)
     digits = 5
     s = 0
-    i = 0
     t = 0
     msg = ""
     for a ∈ (1:length(p_n))
         if p_n[a] != 0
-            i += 1
             s += ((p_n[a] - p_i[a]) / p_n[a])^2
         elseif p_i[a] != 0
+            s += ((p_n[a] - p_i[a]) / p_i[a])^2
             msg = "*"
         end
         t += (p_n[a] - p_i[a])^2
     end
-    rel_error = round(sqrt(s/i), digits=digits)
+    rel_error = round(sqrt(s/length(p_n)), digits=digits)
     abs_error = round(sqrt(t/length(p_n)), digits=digits)
     println("   RMS absoluter Fehler: ", abs_error)
     println("   RMS relativer Fehler: ", rel_error, msg)

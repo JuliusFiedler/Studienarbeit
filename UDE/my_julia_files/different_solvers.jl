@@ -110,11 +110,11 @@ elseif system == 4 # wagen pendel
     multiple_trajectories = false
     solver = DP5()
 end
-
+Vern7()
 # Datenerzeugung-------------------------------------------------------
 dt = 0.01
 X_wp_DP5 = solve(ODEProblem(wp, Float32[1, 1, 0.5, 0], (0.0f0,5.0f0), Float32[9.81, 0.26890449]), DP5(), abstol=1e-12, reltol=1e-12, saveat = dt)
-X_wp_Vern7 = solve(ODEProblem(wp, Float32[1, 1, 0.5, 0], (0.0f0,5.0f0), Float32[9.81, 0.26890449]), Vern7(), abstol=1e-12, reltol=1e-12, saveat = dt)
+X_wp_Vern7 = solve(ODEProblem(wp, Float32[1, 1, 0.5, 0], (0.0f0,5.0f0), Float32[9.81, 0.26890449]), Vern7(), abstol=1e-9, reltol=1e-9, saveat = dt)
 
 X_roessler_DP5 = solve(ODEProblem(roessler, Float64[1, 1, 1], (0.0f0,5.0f0),Float64[0.2, 0.1, 5.3]), DP5(), abstol=1e-12, reltol=1e-12, saveat = dt)
 X_roessler_Vern7 = solve(ODEProblem(roessler, Float64[1, 1, 1], (0.0f0,5.0f0),Float64[0.2, 0.1, 5.3]), Vern7(), abstol=1e-12, reltol=1e-12, saveat = dt)
@@ -131,45 +131,8 @@ display(plot!(X_wp_Vern7, title = "X WP", label = "Vern7"))
 display(plot(X_roessler_DP5, title = "X Roessler", label = "DP5"))
 display(plot!(X_roessler_Vern7, title = "X Roessler", label = "Vern7"))
 
-display(plot(x_dot_wp_DP5', title = "Ẋ WP", label = "DP5"))
-display(plot!(x_dot_wp_Vern7', title = "Ẋ WP", label = "Vern7"))
+display(plot(x_dot_wp_DP5', title = "Zentraldifferenz WP", label = "DP5"))
+display(plot!(x_dot_wp_Vern7', title = "Zentraldifferenz WP", label = "Vern7"))
 
-display(plot(x_dot_roessler_Vern7', title = "Ẋ Roessler", label = "Vern7"))
-display(plot!(x_dot_roessler_DP5', title = "Ẋ Roessler", label = "DP5"))
-
-
-function create_data(u0)
-    prob = ODEProblem(sys, u0, tspan, p_)
-    X = solve(prob, solver, abstol=1e-12, reltol=1e-12, saveat = dt)#für wp dp5, vorher stand hier Vern7
-
-
-    if (system == 1)
-        DX_ =   [p_[1]*(X[1,:])'+p_[2]*(X[1,:].*X[2,:])';
-                p_[3]*(X[1,:].*X[2,:])'+p_[4]*(X[2,:])']
-    elseif (system == 2)
-        DX_ =   [p_[1] * (-(X[1,:])' + (X[2,:])');
-                p_[2] * (X[1,:])' - (X[2,:])' - (X[1,:])' .* (X[3,:])';
-                -p_[3] * (X[3,:])' + (X[1,:])' .* (X[2,:])']
-    elseif (system == 3)
-        DX_ =   [ -(X[2,:])' - (X[3,:])';
-                (X[1,:])' + p_[1] * (X[2,:])';
-                p_[2] .+ (X[1,:])' .* (X[3,:])' - p_[3] * (X[3,:])']
-    elseif system == 4
-        DX_ = [ X[3,:]';
-                X[4,:]';
-                -p_[1]/p_[2]*sin.(X[1,:])';
-                Float32.(zeros(size(X[1,:])))']
-    end
-    x_dot = calc_centered_difference(X, dt)
-    return X, DX_, x_dot
-end
-
-
-
-
-
-display(plot(DX_', label = "exakte Ableitung", title = "Ableitungen"))
-display(plot!(x_dot', label = "Zentraldifferenz", title = "Ableitungen"))
-
-display(plot(x_dot'.-DX_', title = "Absoluter Fehler Zentraldifferenz vs exakte Ableitung"))
-display(plot(broadcast(abs, (x_dot'.-DX_')./DX_'), title = "relativer Fehler Zentraldifferenz vs exakte Ableitung"))
+display(plot(x_dot_roessler_Vern7', title = "Zentraldifferenz Roessler", label = "Vern7"))
+display(plot!(x_dot_roessler_DP5', title = "Zentraldifferenz Roessler", label = "DP5"))

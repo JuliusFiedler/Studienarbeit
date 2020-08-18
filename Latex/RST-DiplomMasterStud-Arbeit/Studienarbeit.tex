@@ -457,6 +457,33 @@ problem bei verkettung: sin(2x), parameter innerhalb von funktionen nicht in lib
 bei wp: pysindy kann mittels choslesky zerlegung nicht reguläre matrix invertieren???\\
 bei wp: durch mehrere 0 spalten in library pseudoinverse nicht mehr positiv definit, behoben durch +I, allerdings dann ergebnisse schlechter\\
 test17\\
+\section{Wagen-Pendel}
+\subsection{mit Reibung}
+\begin{align}
+\dot{\vec{x}} &= \begin{pmatrix}
+	x_1  \\
+	x_2  \\
+	x_3  \\ 
+	x_4	
+\end{pmatrix} 	=	\begin{pmatrix}
+						\varphi \\
+						x  \\
+						\dot{\varphi}  \\ 
+						\dot{x}
+					\end{pmatrix} = f(\vec{x}) + g(\vec{x}) u\\
+&=\begin{pmatrix}
+	\dot{\varphi}  \\
+	\dot{x}  \\
+	-\frac{(m_1+m_2)R(\dot{\varphi}) + m_2^2s_2^2\dot{\varphi}^2\sin\varphi\cos\varphi + (m_1+m_2)gm_2s_2\sin\varphi}{m_2s_2^2(m_1 + m_2\sin^2\varphi)}\\
+	\frac{R(\dot{\varphi})\cos\varphi + gm_2s_2\sin\varphi\cos\varphi + m_2s_2^2\dot{\varphi}^2\sin\varphi}{s_2(m_1+m_2\sin^2\varphi)}   
+\end{pmatrix}		 +		 \begin{pmatrix}
+								0  \\
+								0  \\
+								-\frac{m_2s_2\cos\varphi}{m_2s_2^2(m_1 + m_2\sin^2\varphi)}\\
+								\frac{s_2}{s_2(m_1+m_2\sin^2\varphi)}   
+							\end{pmatrix} F
+\end{align}
+
 \section{errors}
 Ude:\\
 $AssertionError: length(b) == length(variables(b)) in unknown_sys:$\\
