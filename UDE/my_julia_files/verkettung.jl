@@ -342,9 +342,12 @@ function verkettung(f, v, d, fraction = false)
             push!(temp, frac(comb[i], m1+m2*sin(u[1])^2)...)
         end
         # push!(h, temp...)
+        # t = Operation[]
+        # push!(t, u...)
+        # push!(t, temp...)
         push!(temp, u...)
     end
-    # return h
+    # return t
     return temp
 end
 
@@ -429,10 +432,62 @@ Vt = copy(sing.Vt)
 for i ∈ 1:length(S)
     S[i] *= S[i] < 0.1 ? 0 : 1
 end
-SVD
-Sd = Diagonal(ones(eltype(S), length(S))).*S
 
+Sd = Diagonal(ones(eltype(S), length(S))).*S
+Ad = Diagonal(Diagonal(ones(eltype(S), length(S))).*u[1])
+P = (U*Sd)[:,1:28]*Vt[1:28,:]
 a = 0
+for i ∈ 1:r
+     if norm(P[:,i]-basis(X)'[:,i],2) > 0.1
+         println(i)
+     end
+end
+is = []
+Θ = copy(basis(X)')
+P=[]
+function select_lin_dep(Θ)
+    for j ∈ 1:(size(Θ)[2]-r)
+        P = []
+        for i ∈ 1:size(Θ)[2]
+            P = cat(Θ[:,1:i-1], Θ[:,i+1:end], dims = 2)
+            println(size(P))
+            if rank(P) == r # diese Spalten sind linear abhängig
+                push!(is, j-1+i)
+                println(i)
+                break
+            end
+        end
+        Θ = copy(P)
+    end
+end
+select_lin_dep(Θ)
+
+is = []
+rang_abfall = 0
+function sel_lin_indep(Θ, rang_abfall, h)
+    is = []
+    for i ∈ 2:size(Θ)[2]
+        r_ = rank(Θ[:, 1:i])
+        if r_ < i - rang_abfall
+            push!(is, i)
+            rang_abfall += 1
+        end
+    end
+    deleteat!(h, is)
+    return h
+end
+b = Basis(sel_lin_indep(Θ, 0, h), u)
+sindy_naive(X, DX_, b, 0.2)
+
+
+
+for i ∈ 1:size(Θ)[2]
+    P = cat(Θ[:,1:i-1], Θ[:,i+1:end], dims = 2)
+    if rank(P) == r # diese Spalten sind linear abhängig
+        push!(is, i)
+        println(i)
+    end
+end
 
 for k ∈ 2:2
     c = collect(combinations(1:length(basis.basis), k))
@@ -451,11 +506,23 @@ for k ∈ 2:2
         end
     end
 end
+
+Diagonal(Ad)
+
+
+
+
+
+
+
+
+
+
 # x = Sym("x")
 # SymPy.subs
 # f(x) = sin(x)
-# u₁= Sym("u₁")
-# u₃= Sym("u₃")
+u₁= Sym("u₁")
+u₃= Sym("u₃")
 # f3_ = lambdify(f3)
 # primitive Library ########################################################
 # bb = [sin(u[1]), sin(u[1])*cos(u[1]), u[3]^2*sin(u[1]), u[3]^2*sin(u[1])*cos(u[1]) ]
