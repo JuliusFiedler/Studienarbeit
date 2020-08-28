@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  14 AUG 2020 13:48
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  28 AUG 2020 11:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2701,7 +2701,7 @@ lmr8.pfb><f:/texlive/2013/texmf-dist/fonts/type1/public/lm/lmri12.pfb><f:/texli
 ve/2013/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><f:/texlive/2013/texmf-dist
 /fonts/type1/public/lm/lmsy8.pfb><f:/texlive/2013/texmf-dist/fonts/type1/public
 /amsfonts/symbols/msbm10.pfb>
-Output written on Studienarbeit.pdf (21 pages, 612711 bytes).
+Output written on Studienarbeit.pdf (21 pages, 612709 bytes).
 PDF statistics:
  285 PDF objects out of 1000 (max. 8388607)
  231 compressed objects within 3 object streams
