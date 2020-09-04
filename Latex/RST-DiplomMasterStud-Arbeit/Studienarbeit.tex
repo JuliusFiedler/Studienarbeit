@@ -5,15 +5,13 @@
 
 % bib-Datei mit den Literaturangaben
 % ==================================
-\addbibresource{Literatur-Arbeit.bib}
+\addbibresource{Literaturverzeichnis.bib}
 
-% Paket zum Erzeugen von Blindtext 
-% ================================
-% (ist nur für dieses Beispieldokument sinnvoll)
-\usepackage{blindtext}
+
 \usepackage{physics}
 \usepackage{amsmath}
 \usepackage{csvsimple}
+\usepackage{mathtools}
 
 
 % Zwei Parameter zum Verändern des Layouts
@@ -152,7 +150,42 @@
 
 \pagenumbering{arabic}
 % ...oder man schreibt direkt in dieser Datei (weniger übersichtlich)
+
+
+% Ab hier Reinschrift
+\chapter{Der SINDy-Algorithmus}
+
+\section{Idee}
+\input{Sindy_einleitung.tex}
+\section{Funktionsweise der Methode}
+\input{Funktionsweise_Sindy.tex}
+Der SINDy-Algorithmus wurde sowohl in Python durch die Bibliothek PySindy \cite{Silva2020} als auch in Julia durch die Bibliothek DataDrivenDiffEq implementiert. Im Verlauf dieser Arbeit ist ein vereinfachter SINDy-Algorithmus entstanden, der mit den existierenden Implementationen verglichen werden soll.
+\section{Lösen des Minimierungsproblems}
+\input{MKQ.tex}
+%\section{Grenzen der Methode} 
+
+\chapter{Vergleich der Implementationen}
+\input{Vergleich_einleitung.tex}
+
+
+
+
+
+
+
+
+
+
+
 \chapter{Notizen}
+inhaltlich noch zu verarbeitende Punkte:
+identification with prior knowledge
+reibung
+rauschen
+vergleichsparameter: tspan, dt, u0, (lambda), multra, p?
+NN
+
+
 
 \section{UDE}
 
@@ -340,14 +373,47 @@ Fasst man alle $\xi_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}
 \begin{equation}
 \dot{X} \approx \Theta(X)\Xi.
 \end{equation}
-In der Praxis sollte dieses Gleichungssystem überbestimmt sein. Das bedeutet, dass die Anzahl der Messzeitpunkte $m$ (die Anzahl der Zeilen) größer ist als die Anzahl der Einträge in $\Xi\in\mathbb{R}^{L\times n}$ (Anzahl der Unbekannten). Um das SINDy-Problem zu lösen, wird die Methode der kleinsten Quadrate angewendet. Durch aufstellen der Pseudo-Inversen ergibt sich 
+\cite{Silva2020}
+In der Praxis sollte dieses Gleichungssystem überbestimmt sein. Das bedeutet, dass die Anzahl der Messzeitpunkte $m$ (die Anzahl der Zeilen) größer ist als die Anzahl der Einträge in $\Xi\in\mathbb{R}^{L\times n}$ (Anzahl der Unbekannten). Um das SINDy-Problem zu lösen, wird die Methode der kleinsten Quadrate angewendet. Durch aufstellen der Pseudo-Inversen ergibt sich
+
 \begin{equation}
-\Xi = \left(\Theta(X)^T\Theta(X)\right)^{-1}\Theta(X)^T\dot{X} %stimmt das  auch für Matrizen?
+\dot{X} \approx \Theta(X)\Xi
 \end{equation}
-Im Programm implementiert: mit
+Intuitively, I would solve this by using the pseudo-inverese 
 \begin{equation}
-\Xi_\text{neu} = \left(\Theta(X)^T\Theta(X) + I \right)^{-1} \left(\Theta(X)^T\dot{X} + \Xi_{\text{alt}} \right)
+\Xi = \left(\Theta(X)\right)^+\dot{X}.
 \end{equation}
+With $\Theta(X)$ having full collumn rank, we get
+\begin{equation}
+\Xi = \left(\Theta(X)^T\Theta(X)\right)^{-1}\Theta(X)^T\dot{X}.\label{eq:intuitiv}
+\end{equation}
+But in the code implemented is the following equation: 
+
+\begin{equation}
+\Xi_\text{new} = \left(\Theta(X)^T\Theta(X) + I \right)^{-1} \left(\Theta(X)^T\dot{X} + \Xi_{\text{old}} \right)\label{eq:code}
+\end{equation}
+with the first coefficient matrix being
+\begin{equation}
+\Xi_\text{old, 0} = \left(\Theta^T\Theta\right)^{-1}\Theta^T \dot{X}.
+\end{equation}
+What is the reasoning behind using \ref{eq:code} over the more intuitive \ref{eq:intuitiv}? (I do understand the motivation behind repeating the calculation and successively eliminating small coefficients, but why do you use this formula?)
+
+Additionally I noted that using
+\begin{equation}
+\Theta^T\dot{X} \approx \Theta^T\Theta\Xi_\text{old}
+\end{equation}
+we can simplify \ref{eq:code}
+\begin{equation}
+\begin{aligned}
+\Xi_\text{new} &= \left(\Theta^T\Theta + I \right)^{-1} \left(\Theta^T\Theta\Xi_\text{old} + \Xi_\text{old} \right)\\
+&\approx\left(\Theta^T\Theta + I \right)^{-1} \left(\Theta^T\Theta+I\right)\Xi_\text{old} \\
+&\approx\Xi_\text{old}
+\end{aligned}
+\end{equation}
+
+which seems odd to me.
+
+
 iterieren und am Ende
 %\begin{equation}
 %\dot{X}[:,i] = \Theta_k(X) \xi_i
@@ -497,10 +563,11 @@ nützliche Befehle: %$Juno.@enter SInDy(X[:, :], DX_[:, :], basis, λ, opt = opt
 % ==================================
 
 % Ein Literatureintrag, der nicht referenziert wird, aber im Verzeichnis erscheinen soll
-\nocite{Mik57de}
+
 
 % Literaturverzeichnis ausgeben
 \printbibliography
+
 
 \end{document}
 

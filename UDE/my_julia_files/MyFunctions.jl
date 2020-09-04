@@ -14,7 +14,7 @@ export calc_centered_difference
 export SIR
 export sindy_naive, sindy_mpl
 export calc_param_ident_error
-export wp, wp_fric
+export wp, wp_fric, lotka, lorenz, roessler, wp_lin
 export create_data
 export mul_tra!
 
@@ -23,9 +23,12 @@ function calc_centered_difference(x_, dt=0.1)
     x = x_'
     x_dot_ = similar(x)
     t = dt
+    # in general
     x_dot_[2:end-1, :] = (x[3:end, :] - x[1:end-2, :]) / (2 * t)
+    # start
     x_dot_[1, :] = (-11 / 6 * x[1, :] + 3 * x[2, :]
     - 3 / 2 * x[3, :] + x[4, :] / 3) / t
+    # end
     x_dot_[end, :] = (11 / 6 * x[end, :] - 3 * x[end-1, :]
     + 3 / 2 * x[end-2, :] - x[end-3, :] / 3) / t
     return x_dot_'
@@ -206,16 +209,61 @@ function wp(du, u, p, t)
     du[4] = (m2*(g*cos(u[1]) + u[3]^2*s2)*sin(u[1]))/(m1 + m2*sin(u[1])^2)
 end
 
+function lotka(du, u, p, t)
+    α, β, γ, δ = p
+    du[1] = α*u[1] + β*u[2]*u[1]
+    du[2] = γ*u[1]*u[2]  + δ*u[2]
+end
+
+function lorenz(du, u, p, t)
+    α, β, γ = p
+    du[1] = α * (-u[1] + u[2])
+    du[2] = β * u[1] - u[2] - u[1] * u[3]
+    du[3] = -γ * u[3] + u[1] * u[2]
+end
+
+function roessler(du, u, p, t)
+    α, β, γ = p
+    du[1] = -u[2] - u[3]
+    du[2] = u[1] + α * u[2]
+    du[3] = β + u[1] * u[3] - γ * u[3]
+end
+
+function wp_lin(du, u, p, t)
+    g, s2 = p
+    du[1] = u[3]
+    du[2] = u[4]
+    du[3] = -g/s2*sin(u[1])
+    du[4] = 0
+end
+
 function create_data(sys, u0, tspan, p_, dt = 0.1)
-    m1, m2, g, s2 = p_
     prob = ODEProblem(sys, u0, tspan, p_)
-    X = solve(prob, DP5(), abstol=1e-9, reltol=1e-9, saveat = dt)
-    if sys == wp
+    X = solve(prob, Vern7(), abstol=1e-9, reltol=1e-9, saveat = dt)
+    if sys == lotka
+        DX_ =   [p_[1]*(X[1,:])'+p_[2]*(X[1,:].*X[2,:])';
+                p_[3]*(X[1,:].*X[2,:])'+p_[4]*(X[2,:])']
+    elseif sys == lorenz
+        DX_ =   [p_[1] * (-(X[1,:])' + (X[2,:])');
+                p_[2] * (X[1,:])' - (X[2,:])' - (X[1,:])' .* (X[3,:])';
+                -p_[3] * (X[3,:])' + (X[1,:])' .* (X[2,:])']
+    elseif sys == roessler
+        DX_ =   [ -(X[2,:])' - (X[3,:])';
+                (X[1,:])' + p_[1] * (X[2,:])';
+                p_[2] .+ (X[1,:])' .* (X[3,:])' - p_[3] * (X[3,:])']
+    elseif sys == wp
+        m1, m2, g, s2 = p_
         DX_ =  [ X[3,:]';
                 X[4,:]';
                 -(g .*m1 + g .*m2 .+ m2.*X[3,:]'.^2 .*s2 .*cos.(X[1,:]')).*sin.(X[1,:]') ./(s2 .*(m1 .+ m2 .*sin.(X[1,:]') .^2));
                 (m2 .*(g .*cos.(X[1,:]') .+ X[3,:]' .^2 .*s2) .*sin.(X[1,:]')) ./(m1 .+ m2 .*sin.(X[1,:]') .^2)]
+    elseif sys == wp_lin
+        DX_ = [ X[3,:]';
+                X[4,:]';
+                -p_[1]/p_[2]*sin.(X[1,:])';
+                Float32.(zeros(size(X[1,:])))']
     elseif sys == wp_fric
+        m1, m2, g, s2 = p_
         DX_ =  [ X[3,:]';
                 X[4,:]';
                 -((g .*m1 + g .*m2 .+ m2.*X[3,:]'.^2 .*s2 .*cos.(X[1,:]')).*sin.(X[1,:]') .+(m1+m2).*(R(X[3,:]))' /(m2.*s2))./(s2 .*(m1 .+ m2 .*sin.(X[1,:]') .^2));

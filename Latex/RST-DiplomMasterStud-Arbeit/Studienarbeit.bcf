@@ -1961,10 +1961,12 @@
   <!-- CITATION DATA -->
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">Literatur-Arbeit.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">Literaturverzeichnis.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">Mik57de</bcf:citekey>
+    <bcf:citekey order="1">Brunton2016</bcf:citekey>
+    <bcf:citekey order="2">Silva2020</bcf:citekey>
+    <bcf:citekey order="3">Silva2020</bcf:citekey>
   </bcf:section>
   <bcf:sortlist section="0" type="entry" label="nty">
   <bcf:sorting>

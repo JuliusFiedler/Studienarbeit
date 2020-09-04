@@ -1,0 +1,8 @@
+
+Sparse Identification of Nonlinear Dynamics (SINDy) ist eine Methode, um aus den Messdaten eines Systems auf dessen Systemdifferentialgleichungen zu schließen. Die zugrundeliegende Annahme ist, dass die zu identifizierende Funktion in einem geeigneten Raum an Basisfunktionen \textit{dünn besetzt} ist. Betrachtet man beispielsweise die Funktion
+\begin{equation}
+\diff{x}{t} = f(x) = \begin{bmatrix} f_1(x)\\ f_2(x)\\ \end{bmatrix}
+=\begin{bmatrix} 1+2x_1+x_1x_2^2 \\ x_1^3-3x_2\\ \end{bmatrix},
+\end{equation}
+so ist leicht zu erkennen, dass $f$ in Bezug auf die Basis von Polynomen aus zwei Variablen (z.B. $f_1(x)=\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}a_{ij}x_1^ix_2^j$) dünn besetzt ist. Nur eine sehr geringe Zahl der Koeffizienten $a_{ij}$ ist ungleich null. 
+Die dem Algorithmus zur Verfügung gestellten Basisfunktionen werden zu einer Bibliothek zusammengefasst. Hieraus werden mittels Regression diejenigen Ansatzfunktionen ausgewählt, deren Linearkombination die Funktion $f$ am besten repräsentiert. Es ist einsichtig, dass die Auswahl der Bibliotheksfunktionen eine entscheidende Rolle für den Erfolg der Methode spielt. Daher ist es günstig, wenn man bereits weiß, welche Funktionsklassen zu identifizieren sind, um die Bibliothek geeignet auszulegen. Wie der Methodenname suggeriert, können mit SINDy auch nichtlineare Funktionen identifiziert werden. 

@@ -1,0 +1,28 @@
+% Encoding: UTF-8
+
+@Article{Silva2020,
+  author      = {Brian M. de Silva and Kathleen Champion and Markus Quade and Jean-Christophe Loiseau and J. Nathan Kutz and Steven L. Brunton},
+  title       = {PySINDy: A Python package for the Sparse Identification of Nonlinear Dynamics from Data},
+  abstract    = {PySINDy is a Python package for the discovery of governing dynamical systems models from data. In particular, PySINDy provides tools for applying the sparse identification of nonlinear dynamics (SINDy) (Brunton et al. 2016) approach to model discovery. In this work we provide a brief description of the mathematical underpinnings of SINDy, an overview and demonstration of the features implemented in PySINDy (with code examples), practical advice for users, and a list of potential extensions to PySINDy. Software is available at https://github.com/dynamicslab/pysindy.},
+  date        = {2020-04-17},
+  eprint      = {2004.08424},
+  eprintclass = {math.DS},
+  eprinttype  = {arXiv},
+  file        = {:http\://arxiv.org/pdf/2004.08424v1:PDF},
+  keywords    = {math.DS, physics.comp-ph},
+}
+
+@Article{Brunton2016,
+  author    = {Steven L. Brunton and Joshua L. Proctor and J. Nathan Kutz},
+  journal   = {Proceedings of the National Academy of Sciences},
+  title     = {Discovering governing equations from data by sparse identification of nonlinear dynamical systems},
+  year      = {2016},
+  month     = {mar},
+  number    = {15},
+  pages     = {3932--3937},
+  volume    = {113},
+  doi       = {10.1073/pnas.1517384113},
+  publisher = {Proceedings of the National Academy of Sciences},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}

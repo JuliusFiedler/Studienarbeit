@@ -199,26 +199,26 @@ end
 function soll(t)
     return -g*(m1+m2)/s2 .*sin.(t) .*inv.(3.34f0 .+ 0.8512f0 .* sin.(t) .^ 2)
 end
-
-
-r = rank(basis(X)')
-sing = svd(basis(X)')
-U = copy(sing.U)
-S = copy(sing.S)
-Vt = copy(sing.Vt)
-for i ∈ 1:length(S)
-    S[i] *= S[i] < 0.1 ? 0 : 1
-end
-
-Sd = Diagonal(ones(eltype(S), length(S))).*S
-Ad = Diagonal(Diagonal(ones(eltype(S), length(S))).*u[1])
-P = (U*Sd)[:,1:28]*Vt[1:28,:]
-a = 0
-for i ∈ 1:r
-     if norm(P[:,i]-basis(X)'[:,i],2) > 0.1
-         println(i)
-     end
-end
+#
+#
+# r = rank(basis(X)')
+# sing = svd(basis(X)')
+# U = copy(sing.U)
+# S = copy(sing.S)
+# Vt = copy(sing.Vt)
+# for i ∈ 1:length(S)
+#     S[i] *= S[i] < 0.1 ? 0 : 1
+# end
+#
+# Sd = Diagonal(ones(eltype(S), length(S))).*S
+# Ad = Diagonal(Diagonal(ones(eltype(S), length(S))).*u[1])
+# P = (U*Sd)[:,1:28]*Vt[1:28,:]
+# a = 0
+# for i ∈ 1:r
+#      if norm(P[:,i]-basis(X)'[:,i],2) > 0.1
+#          println(i)
+#      end
+# end
 # is = []
 # Θ = copy(basis(X)')
 # P=[]

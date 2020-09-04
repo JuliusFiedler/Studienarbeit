@@ -1,5 +1,5 @@
-cd(@__DIR__)
-using Pkg; Pkg.activate("."); Pkg.instantiate()
+# cd(@__DIR__)
+# using Pkg; Pkg.activate("."); Pkg.instantiate()
 
 using OrdinaryDiffEq
 using ModelingToolkit
@@ -14,48 +14,12 @@ using DiffEqBase
 using Combinatorics
 using Random
 
-function calc_centered_difference(x_, dt=0.1)
-    x = x_'
-    x_dot_ = similar(x)
-    t = dt
-    x_dot_[2:end-1, :] = (x[3:end, :] - x[1:end-2, :]) / (2 * t)
-    x_dot_[1, :] = (-11 / 6 * x[1, :] + 3 * x[2, :]
-    - 3 / 2 * x[3, :] + x[4, :] / 3) / t
-    x_dot_[end, :] = (11 / 6 * x[end, :] - 3 * x[end-1, :]
-    + 3 / 2 * x[end-2, :] - x[end-3, :] / 3) / t
-    return x_dot_'
-end
+include("MyFunctions.jl")
+@time using .MyFunctions
 
-function lotka(du, u, p, t)
-    α, β, γ, δ = p
-    du[1] = α*u[1] + β*u[2]*u[1]
-    du[2] = γ*u[1]*u[2]  + δ*u[2]
-end
-
-function lorenz(du, u, p, t)
-    α, β, γ = p
-    du[1] = α * (-u[1] + u[2])
-    du[2] = β * u[1] - u[2] - u[1] * u[3]
-    du[3] = -γ * u[3] + u[1] * u[2]
-end
-
-function roessler(du, u, p, t)
-    α, β, γ = p
-    du[1] = -u[2] - u[3]
-    du[2] = u[1] + α * u[2]
-    du[3] = β + u[1] * u[3] - γ * u[3]
-end
-
-function wp(du, u, p, t)
-    g, s2 = p
-    du[1] = u[3]
-    du[2] = u[4]
-    du[3] = -g/s2*sin(u[1])
-    du[4] = 0
-end
 print("---------------------------------------------------------------------")
 # Define the experimental parameter
-system = 3  # 1 = volterra, 2 = lorenz, 3 = roessler
+system = 1  # 1 = volterra, 2 = lorenz, 3 = roessler
 tspan = (0.0f0,3.0f0)
 dt = .1
 train = false
@@ -63,9 +27,10 @@ NN = false
 maxiter = 30
 NN_th = 0.1
 th = 0.2
-multiple_trajectories = false
+multiple_trajectories = true
+no_tr = 10
 prior_knowledge = false
-solver = Vern7()
+
 if (system == 1) # volterra
     sys = lotka
     order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
@@ -91,7 +56,7 @@ elseif (system == 3)#roessler
     dt = .01
     sys = roessler
     order = 2
-    u0 = Float64[1, 1, 1]
+    u0 = Float64[1, 1, -1]
     p_ = Float64[0.2, 0.1, 5.3]
     p_nom = Array{Float64}([0.0 0.0 p_[2]; 0.0 1 0.0; -1 p_[1] 0.0; -1 0.0 -p_[3]; 0.0 0.0 0.0; 0.0 0.0 0.0; 0.0 0.0 1; 0.0 0.0 0.0; 0.0 0.0 0.0; 0.0 0.0 0.0])
     n = 3
@@ -112,33 +77,8 @@ elseif system == 4 # wagen pendel
 end
 
 # Datenerzeugung-------------------------------------------------------
-function create_data(u0)
-    prob = ODEProblem(sys, u0, tspan, p_)
-    X = solve(prob, solver, abstol=1e-12, reltol=1e-12, saveat = dt)#für wp dp5, vorher stand hier Vern7
 
-
-    if (system == 1)
-        DX_ =   [p_[1]*(X[1,:])'+p_[2]*(X[1,:].*X[2,:])';
-                p_[3]*(X[1,:].*X[2,:])'+p_[4]*(X[2,:])']
-    elseif (system == 2)
-        DX_ =   [p_[1] * (-(X[1,:])' + (X[2,:])');
-                p_[2] * (X[1,:])' - (X[2,:])' - (X[1,:])' .* (X[3,:])';
-                -p_[3] * (X[3,:])' + (X[1,:])' .* (X[2,:])']
-    elseif (system == 3)
-        DX_ =   [ -(X[2,:])' - (X[3,:])';
-                (X[1,:])' + p_[1] * (X[2,:])';
-                p_[2] .+ (X[1,:])' .* (X[3,:])' - p_[3] * (X[3,:])']
-    elseif system == 4
-        DX_ = [ X[3,:]';
-                X[4,:]';
-                -p_[1]/p_[2]*sin.(X[1,:])';
-                Float32.(zeros(size(X[1,:])))']
-    end
-    x_dot = calc_centered_difference(X, dt)
-    return X, DX_, x_dot
-end
-
-X, DX_, x_dot = create_data(u0)
+X, DX_, x_dot = create_data(sys, u0, tspan, p_, dt)
 
 function prior_k(X, DX_, x_dot, system)
     if system == 1
@@ -160,29 +100,9 @@ if prior_knowledge
     p_nom = p_k_nom
 end
 
-function mul_tra!(X, DX_, x_dot, u0)
-    min_u, = findmin(u0)
-    max_u, = findmax(u0)
-    len = length(u0)
-    no_tr = 10
-    A = similar(X)
-    A .= X
-    for i ∈ (1:no_tr)
-        Random.seed!(i)
-        u0_ = rand(Float32, len) .*(max_u - min_u) .+ min_u
-        X_, DX__, x_dot_ = create_data(u0_)
-        A_ = similar(X_)
-        A_ .= X_
-        A = cat(A, A_, dims = 2)
-        DX_ = cat(DX_, DX__, dims = 2)
-        x_dot = cat(x_dot, x_dot_, dims = 2)
-    end
-    X = A
-    return X, DX_, x_dot
-end
 
 if multiple_trajectories
-    X, DX_, x_dot = mul_tra!(X, DX_, x_dot, u0)
+    X, DX_, x_dot = mul_tra!(sys, X, DX_, x_dot, u0, tspan, p_, dt, no_tr)
 end
 
 display(plot(DX_', label = "exakte Ableitung", title = "Ableitungen"))
@@ -191,9 +111,11 @@ display(plot!(x_dot', label = "Zentraldifferenz", title = "Ableitungen"))
 display(plot(x_dot'.-DX_', title = "Absoluter Fehler Zentraldifferenz vs exakte Ableitung"))
 display(plot(broadcast(abs, (x_dot'.-DX_')./DX_'), title = "relativer Fehler Zentraldifferenz vs exakte Ableitung"))
 
-CSV.write(string("X_",name,".csv"), DataFrame(X'))
-CSV.write(string("DX__",name,".csv"), DataFrame(DX_')) # exakt
-CSV.write(string("x_dot_",name,".csv"), DataFrame(x_dot')) #Zentraldifferenz
+if false
+    CSV.write(string("X_",name,".csv"), DataFrame(X'))
+    CSV.write(string("DX__",name,".csv"), DataFrame(DX_')) # exakt
+    CSV.write(string("x_dot_",name,".csv"), DataFrame(x_dot')) #Zentraldifferenz
+end
 
 max_error = 0
 NN_params = []
@@ -377,151 +299,25 @@ end
 
 # Sindy so wie man es erwarten würde --------------------------
 # Matrizenformat hier wie in Python / bzw wie man es erwarten würde
-function calc_Ξ_select(Ξ, Θ, Ẋ)
-    # select relevnt columns of Θ for MKQ
-    Ξ_select = []
-    for i ∈ (1:size(Ξ)[2])
-        a = []
-        for j ∈ (1:size(Ξ)[1])
-            if !iszero(Ξ[j, i])
-                append!(a, j)
-            end
-        end
-        Θ_select = Θ[:, a]
-        Ẋ_select = Ẋ[:, i]
-        # append!(Ξ_select, inv(Θ_select'*Θ_select)*Θ_select'*Ẋ_select)
-        append!(Ξ_select, Θ_select \ Ẋ_select)
-    end
-    return Ξ_select
-end
 
-function reshape_Ξ(Ξ, Ξ_select)
-    # reshape Ξ to original size for output purpose
-    count = 0
-    for i ∈ (1:size(Ξ)[2])
-        a = []
-        for j ∈ (1:size(Ξ)[1])
-            if !iszero(Ξ[j, i])
-                count += 1
-                Ξ[j, i] = Ξ_select[count]
-            end
-        end
-    end
-    return Ξ
-end
-
-function sindy_naive(X, Ẋ, basis, λ = th)
-    Θ = basis(X)' # Library eingesetzt
-    Ẋ = Ẋ' # Ableitungen
-    # Ξ = inv(Θ'*Θ)*Θ'*Ẋ # initial guess
-    Ξ = Θ \ Ẋ
-    for i ∈ (1:length(Ξ))
-        Ξ[i] *= (abs(Ξ[i])<λ ? 0 : 1) # kleine coeff nullsetzen
-    end
-    iters = 0
-    for k ∈ 1:maxiter
-        Ξ_select = calc_Ξ_select(Ξ, Θ, Ẋ)
-        Ξ = reshape_Ξ(Ξ, Ξ_select)
-
-        done = true
-        for i ∈ (1:length(Ξ))
-            if Ξ[i] != 0 && abs(Ξ[i])<λ
-                Ξ[i] *=  0  # kleine coeff nullsetzen
-                done = false
-            end
-        end
-        iters += 1
-        done ? break : nothing
-    end
-    println("converged after ", iters, " iterations")
-    @time sir = SparseIdentificationResult(Ξ, basis, 1, opt, true, Ẋ', X)
-    return sir
-end
-
-function sindy_naive_I(X, Ẋ, basis, λ = 0.2)
-    λ = 0.2
-    Θ = basis(X)' # Library eingesetzt
-    Ẋ = Ẋ' # Ableitungen
-    I = Diagonal(ones(eltype(Ẋ), size(Θ)[2]))
-    Ξ = inv(Θ' * Θ + I) * Θ' * Ẋ # initial guess
-    for i ∈ (1:length(Ξ))
-        Ξ[i] *= (abs(Ξ[i])<λ ? 0 : 1) # kleine coeff nullsetzen
-    end
-    print(Ξ)
-    Ξ_select = []
-    for i ∈ (1:size(Ξ)[2])
-        a = []
-        for j ∈ (1:size(Ξ)[1])
-            if !iszero(Ξ[j, i])
-                append!(a, j)
-            end
-        end
-        Θ_select = Θ[:, a]
-        Ẋ_select = Ẋ[:, i]
-        # I = Diagonal(ones(eltype(Ẋ), size(Θ_select)[2]))
-        append!(Ξ_select, inv(Θ_select'*Θ_select )*Θ_select'*Ẋ_select)
-    end
-    count = 0
-    for i ∈ (1:size(Ξ)[2])
-        a = []
-        for j ∈ (1:size(Ξ)[1])
-            if !iszero(Ξ[j, i])
-                count += 1
-                Ξ[j, i] = Ξ_select[count]
-            end
-        end
-    end
-    return Ξ
-    # return SparseIdentificationResult(Ξ, basis, 1, opt, true, Ẋ', X)
-end
 println("System: ", name)
 println("\n Sindy naive nominal")
-@time Ψ_naive_nom = sindy_naive(X, DX_, basis)
-print_equations(Ψ_naive_nom, show_parameter = true)
-p_naive_ident_nominal = Ψ_naive_nom.coeff
+@time p_naive_ident_nominal = sindy_naive(X, DX_, basis)
 
 println("\n Sindy naive zentral ")
-Ψ_naive_zentral = sindy_naive(X, x_dot, basis)
-print_equations(Ψ_naive_zentral, show_parameter = true)
-p_naive_ident_zentral = Ψ_naive_zentral.coeff
+p_naive_ident_zentral = sindy_naive(X, x_dot, basis)
 
 if NN
     println("\n Sindy naive NN 0.1s ")
-    Ψ_naive_NN_0_1 = sindy_naive(X, L, basis)
-    print_equations(Ψ_naive_NN_0_1, show_parameter = true)
-    p_naive_ident_NN_0_1 = Ψ_naive_NN_0_1.coeff
+    p_naive_ident_NN_0_1 = sindy_naive(X, L, basis)
 
     println("\n Sindy naive NN 0.01s ")
-    Ψ_naive_NN_0_01 = sindy_naive(X_high_res_0_01, L_high_res_0_01, basis)
-    print_equations(Ψ_naive_NN_0_01, show_parameter = true)
-    p_naive_ident_high_res_0_01 = Ψ_naive_NN_0_01.coeff
+    p_naive_ident_high_res_0_01 = sindy_naive(X_high_res_0_01, L_high_res_0_01, basis)
 
     println("\n Sindy naive NN 0.001s ")
-    Ψ_naive_NN_0_001 = sindy_naive(X_high_res_0_001, L_high_res_0_001, basis)
-    print_equations(Ψ_naive_NN_0_001, show_parameter = true)
-    p_naive_ident_high_res_0_001 = Ψ_naive_NN_0_001.coeff
+    p_naive_ident_high_res_0_001 = sindy_naive(X_high_res_0_001, L_high_res_0_001, basis)
 end
 # Auswertung --------------------------------------------------
-function calc_param_ident_error(p_n, p_i)
-    digits = 5
-    s = 0
-    t = 0
-    msg = ""
-    for a ∈ (1:length(p_n))
-        if p_n[a] != 0
-            s += ((p_n[a] - p_i[a]) / p_n[a])^2
-        elseif p_i[a] != 0
-            s += ((p_n[a] - p_i[a]) / p_i[a])^2
-            msg = "*"
-        end
-        t += (p_n[a] - p_i[a])^2
-    end
-    rel_error = round(sqrt(s/length(p_n)), digits=digits)
-    abs_error = round(sqrt(t/length(p_n)), digits=digits)
-    println("   RMS absoluter Fehler: ", abs_error)
-    println("   RMS relativer Fehler: ", rel_error, msg)
-    return [abs_error, string(rel_error, msg)]
-end
 println("System: ", name)
 println("\nOG Sindy")
 println("\nNominalableitung:")

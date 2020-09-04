@@ -18,7 +18,7 @@ import pandas as pd
 
 # %%
 # System auswählen
-system = 4 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
+system = 2 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
 # NN auswerten?
 NN = False
 
@@ -77,14 +77,14 @@ def read(name):
     A = np.array(A.values)
     A = np.delete(A, 0, axis= 0)
     A = np.array(A, dtype=np.float64)
-    for x in A:
-        for y in range(len(x)):
-            for z in range(len(A)):
-                A[z][y] = float(A[z][y])
+    # for x in A:
+    #     for y in range(len(x)):
+    #         for z in range(len(A)):
+    #             A[z][y] = float(A[z][y])
     print(A.shape)
     
-    tt = np.linspace(0, t_end, A.shape[0])
-    plt.plot(tt, A)
+    # tt = np.linspace(0, t_end, A.shape[0])
+    # plt.plot(tt, A)
     return A
 
 # %%
@@ -118,9 +118,37 @@ for i in range(1, poly_oder+1):
 polys.insert(0, 1)
 print(polys)
 print(len(polys))
+# %%
+def calc_param_ident_error(p_n, p_i):
+    assert p_n.shape == p_i.shape
+    s = 0
+    i = 0
+    k = 0
+    t = 0
+    msg = ""
+    for x in p_n:
+        for y in range(len(x)):
+            for z in range(len(p_n)):
+                if p_n[z][y]!=0:
+                    i += 1
+                    s += ((p_n[z][y] - p_i[z][y]) / p_n[z][y])**2
+                elif p_i[z][y] != 0:
+                    s += ((p_n[z][y] - p_i[z][y]) / p_i[z][y])**2
+                    msg = "*"
+                    k += 1
+                else:
+                    k += 1
+                t += (p_n[z][y] - p_i[z][y])**2
+    rel_error = round(np.sqrt(s/(p_n.size)), 9)
+    # abs_error = round(np.sqrt(t/(i+k)), 5)
+    # print("   RMS absoluter Fehler: " + str(abs_error))
+    print(s)
+    print(p_n.size)
+    print("   RMS relativer Fehler: " + str(rel_error) + msg)
+    return [ str(rel_error) + msg] #str(abs_error),
 
 # %%
-#Verkettung
+# Chaining
 def mult(x):
     temp = 1
     for i in range(len(x)):
@@ -168,6 +196,12 @@ def make_sparse(Xi, lam=0.2):
                     Xi[i][j] = 0                    
     return Xi, was_sparse_already
 # %%
+def make_sparse_2(Xi, lam=0.2):
+    A = np.copy(Xi)
+    A[abs(Xi)<lam] = 0
+    was_sparse_already = not (A-Xi).any()                
+    return A, was_sparse_already
+# %%
 def calc_Xi_select(Xi, theta, DX):
     Xi_select = []
     for i in range(Xi.shape[1]):
@@ -175,12 +209,18 @@ def calc_Xi_select(Xi, theta, DX):
         for j in range(Xi.shape[0]):
             if Xi[j][i] != 0:
                 a = np.append(a, j)
-        # print(a)
         theta_select = theta[:, a]
         DX_select = DX[:, i]
         Xi_i = np.linalg.lstsq(theta_select, DX_select, rcond=None)[0]
-        # print(Xi_i)
-        # print(Xi_select)
+        Xi_select = np.append(Xi_select, Xi_i)
+    return Xi_select
+# %%
+def calc_Xi_select_2(Xi, theta, DX):
+    Xi_select = []
+    for i in range(Xi.shape[1]):
+        theta_select = theta[:, np.nonzero(Xi[:, i])[0]]
+        DX_select = DX[:, i]
+        Xi_i = np.linalg.lstsq(theta_select, DX_select, rcond=None)[0]
         Xi_select = np.append(Xi_select, Xi_i)
     return Xi_select
 # %%
@@ -193,11 +233,12 @@ def reshape_Xi(Xi, Xi_select):
                 count += 1
     return Xi
 # %%
-# def reshape_Xi(Xi, Xi_select):
-#     count = 0
-#     non_zero_r, non_zero_c = np.nonzero(Xi)
-
-#     return Xi
+def reshape_Xi_2(Xi, Xi_select):
+    indices = np.argwhere(Xi.T)
+    indices[:, [0, 1]] = indices[:, [1, 0]]
+    for i in range(indices.shape[0]):
+        Xi[indices[i, 0], indices[i, 1]] = Xi_select[i]
+    return Xi
 # %%
 def SIR(Xi, h):
     for i in range(Xi.shape[1]):
@@ -228,34 +269,38 @@ def sindy_simple(X, DX, h, u, lam=0.2, maxiter=30):
     
     # initial guess
     Xi = np.linalg.lstsq(theta, DX, rcond=None)[0]
-    # kleine koeff nullen
-    Xi, _ = make_sparse(Xi, lam)
+    # set small coef to 0
+    Xi, _ = make_sparse_2(Xi, lam)
+    # iterate
     iters = 0
     for i in range(maxiter):
-        Xi_select = calc_Xi_select(Xi, theta, DX)
-        Xi = reshape_Xi(Xi, Xi_select)
-        Xi, wsa = make_sparse(Xi, lam)
+        Xi_select = calc_Xi_select_2(Xi, theta, DX)
+        Xi = reshape_Xi_2(Xi, Xi_select)
+        Xi, wsa = make_sparse_2(Xi, lam)
         iters += 1
         if wsa:
             break
     print("converged after " + str(iters) + " iterations")
-    SIR(Xi, h)
+    # SIR(Xi, h)
     return Xi
 
 # %%
-# für akademisceh systeme
+# simple systems
 %time p_simple_ident_nom = sindy_simple(X, DX_, polys, variables, th)
+%time SIR(p_simple_ident_nom, polys)
 calc_param_ident_error(p_nom, p_simple_ident_nom.T)
 %time p_simple_ident_zen = sindy_simple(X, x_dot, polys, variables, th)
+%time SIR(p_simple_ident_zen, polys)
 calc_param_ident_error(p_nom, p_simple_ident_zen.T)
 # %%
-# für wp
+# cart-pendulum
 basis = verkettung()
 theta = library(basis, variables, X)
 # for i in range(1, theta.shape[1]):
 #     print(np.linalg.matrix_rank(theta[:, 0:i]))
 better_basis = sel_lin_indep(theta, basis)
 %time p_simple_ident = sindy_simple(X, DX_, basis, variables, 0.5)
+%time SIR(p_simple_ident_nom, basis)
 
 # %%
 # a = 1.3
@@ -270,7 +315,8 @@ better_basis = sel_lin_indep(theta, basis)
 # %%
 differentiation_method = ps.FiniteDifference(order=2)
 optimizer = ps.SR3(threshold=th)
-
+# %%
+feature_library = ps.PolynomialLibrary(degree=5)
 
 # %%
 model = ps.SINDy(
@@ -308,30 +354,6 @@ if NN:
     p_ident_NN_0_001 = model.coefficients()
 
 
-# %%
-def calc_param_ident_error(p_n, p_i):
-    s = 0
-    i = 0
-    k = 0
-    t = 0
-    msg = ""
-    for x in p_n:
-        for y in range(len(x)):
-            for z in range(len(p_n)):
-                if p_n[z][y]!=0:
-                    i += 1
-                    s += ((p_n[z][y] - p_i[z][y]) / p_n[z][y])**2
-                elif p_i[z][y] != 0:
-                    msg = "*"
-                    k += 1
-                else:
-                    k += 1
-                t += (p_n[z][y] - p_i[z][y])**2
-    rel_error = round(np.sqrt(s/i), 5)
-    abs_error = round(np.sqrt(t/(i+k)), 5)
-    print("   RMS absoluter Fehler: " + str(abs_error))
-    print("   RMS relativer Fehler: " + str(rel_error) + msg)
-    return [str(abs_error), str(rel_error) + msg]
 
 # %%
 print("\nNominalableitung:")
