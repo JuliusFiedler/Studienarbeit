@@ -12,4 +12,17 @@
   keywords    = {math.DS, physics.comp-ph},
 }
 
+@Article{Brunton2016,
+  author    = {Steven L. Brunton and Joshua L. Proctor and J. Nathan Kutz},
+  journal   = {Proceedings of the National Academy of Sciences},
+  title     = {Discovering governing equations from data by sparse identification of nonlinear dynamical systems},
+  year      = {2016},
+  month     = {mar},
+  number    = {15},
+  pages     = {3932--3937},
+  volume    = {113},
+  doi       = {10.1073/pnas.1517384113},
+  publisher = {Proceedings of the National Academy of Sciences},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

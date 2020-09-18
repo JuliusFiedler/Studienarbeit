@@ -1,0 +1,4 @@
+lorenz,dt=1,,dt=0.1,,dt=0.01,,dt=0.01,,dt=0.001,
+,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral
+PySINDy,0.0,0.005694488
+SINDy simple,0.0,0.005694488

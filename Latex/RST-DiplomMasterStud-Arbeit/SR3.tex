@@ -1,0 +1,9 @@
+Als Weiterentwicklung der klassischen MKQ gibt es die von Tikhonov vorgeschlagene regularisierte MKQ. Deren Minimierungsproblem lautet
+\begin{equation}
+\min_x \frac{1}{2}\norm{Ax-b}^2+\lambda R(Cx), \label{eq:tikhonov}
+\end{equation}
+wobei $R(\cdot)$ die Regularisierungsfunktion ist (z.B. die $\ell_2$-Norm), $C$ eine lineare Abbildung und $\lambda$ der Regularisierungsparameter ist. Durch die Relaxation?? von \ref{eq:tikhonov} unter Nutzung der Hilfsgröße $w$ erhält man 
+\begin{equation}
+\min_{x,w} \frac{1}{2}\norm{Ax-b}^2+\lambda R(w) + \frac{1}{2\eta} \norm{Cx-w}^2
+\end{equation}
+mit dem Relaxationsparameter $\eta$.

@@ -53,24 +53,29 @@ p_\text{R}=\left(\begin{array}{c}
 \end{array}\right).
 \end{equation}
 
-Ausschlaggebend für die Güte des jeweiligen Algorithmus ist an erster Stelle die Genauigkeit des Ergebnisses, an zweiter Stelle die Rechenzeit. Um die Genauigkeit des Algorithmus vergleichen zu können, wird ein Fehler $\epsilon_r$  definiert. $P\in\mathbb{R}^{L\times n}$ bezeichnet die nominalen und $Q\in\mathbb{R}^{L\times n}$ die identifizierten Parameter eines Systems.
+Ausschlaggebend für die Güte des jeweiligen Algorithmus ist an erster Stelle die Genauigkeit des Ergebnisses, an zweiter Stelle die Rechenzeit. Um die Genauigkeit des Algorithmus vergleichen zu können, wird ein Fehler $\epsilon_r$  definiert. Dieser ist an das quadratische Mittel des relativen Fehlers angelehnt. $P\in\mathbb{R}^{L\times n}$ bezeichnet die nominalen und $Q\in\mathbb{R}^{L\times n}$ die identifizierten Parameter eines Systems. Dann sei
 \begin{equation}
 R \in\mathbb{R}^{L\times n} , \quad R_{ij}= \begin{cases}
-\frac{P_{ij}-Q_{ij}}{P_{ij}} & P_{ij} \neq 0\\
-\frac{P_{ij}-Q_{ij}}{Q_{ij}} & P_{ij} = 0 \wedge Q_{ij} \neq 0\\
+|\frac{P_{ij}-Q_{ij}}{P_{ij}}| & P_{ij} \neq 0\\
+|Q_{ij}| & P_{ij} = 0 \wedge |Q_{ij}| < 1\\
+1 & P_{ij} = 0 \wedge |Q_{ij}| >= 1\\
 0 & \text{sonst}
 \end{cases}, \quad  1 \leq i \leq L, \quad 1\leq j \leq n
 \end{equation}
 \begin{equation}
-\epsilon_r = \frac{1}{\sqrt{Ln}}\norm{R}_2
+\epsilon_r = \frac{1}{\sqrt{k}}\norm{R}_2,
 \end{equation} 
+wobei $k$ die Anzahl der von Null verschiedenen Elemente von $P$ ist. Für richtig identifizierte Ansatzfunktionen wird somit der relative Fehler zwischen Nominalparameter und identifiziertem Parameter berechnet, während bei falsch identifizierten Ansatzfunktionen der Fehler, bis hin zu einer Grenze, vom identifizierten Parameter abhängt. Dadurch werden kleine Koeffizienten vor falschen Funktion weniger stark bestraft, da diese einen geringeren Einfluss auf das Ergebnis haben. 
+
 Für jedes System werden die zeitlichen Verläufe der Zustände durch einen Differentialgleichungslöser numerisch %??? 
 ermittelt. Die Ableitungsverläufe werden sowohl exakt vorgegeben, als auch über die Zentraldifferenz angenähert. Dabei wird der Einfluss folgender Parameter auf das Identifikationsergebnis untersucht:
 \begin{itemize}
 \item die Simulationszeit $t$ des DGL-Lösers
 \item die Schrittweite $dt$ des DGL-Lösers
-\item die Verwendung mehrerer Datenreihen auf einmal 
+\item die Anzahl der gleichzeitig analysierten Datenreihen 
 \item die Gestaltung der Bibliothek aus Ansatzfunktionen
+\item das verwendete Optimierungsverfahren zur Lösung des Approximationsproblems
+\item die Stärke des Rauschens in den Daten
 \end{itemize}
 
 

@@ -161,14 +161,21 @@
 \input{Funktionsweise_Sindy.tex}
 Der SINDy-Algorithmus wurde sowohl in Python durch die Bibliothek PySindy \cite{Silva2020} als auch in Julia durch die Bibliothek DataDrivenDiffEq implementiert. Im Verlauf dieser Arbeit ist ein vereinfachter SINDy-Algorithmus entstanden, der mit den existierenden Implementationen verglichen werden soll.
 \section{Lösen des Minimierungsproblems}
+Das Lösen des Gleichungssystems \ref{eq:Minimierungsproblem} ist mathematisch gesehen die Kernaufgabe des Algorithmus. Das Gleichungssystem besitzt $m\cdot n$ Gleichungen und $L\cdot n$ Unbekannte. In der Regel ist dieses Gleichungssystem überbestimmt, da die Anzahl der Ansatzfunktionen überschaubar sein sollte, während die Zahl der Messungen deutlich größer sein sollte. Es existieren verschiedene Optimierungsverfahren, um dieses Problem der Form
+\begin{equation}
+Ax=b
+\end{equation}
+zu lösen. In dieser Arbeit wurde hauptsächlich mit einer rekursiven Methode der kleinsten Quadrate (MKQ) gearbeitet. Sparse Relaxed Regularized Regression (SR3) wird zum Vergleich herangezogen. Der in dieser Arbeit entwickelte vereinfachte Algorithmus verwendet die erste Methode. 
+\subsection{Rekursive Methode der kleinsten Quadrate}
 \input{MKQ.tex}
 %\section{Grenzen der Methode} 
-
+\subsection{SR3}
+%\input{SR3.tex}
 \chapter{Vergleich der Implementationen}
 \input{Vergleich_einleitung.tex}
 
 
-
+%\csvautotabular{images/errors_volterra_tspan_variation.csv} 
 
 
 
@@ -178,11 +185,11 @@ Der SINDy-Algorithmus wurde sowohl in Python durch die Bibliothek PySindy \cite{
 
 
 \chapter{Notizen}
-inhaltlich noch zu verarbeitende Punkte:
+inhaltlich noch zu verarbeitende Punkte: 
 identification with prior knowledge
 reibung
 rauschen
-vergleichsparameter: tspan, dt, u0, (lambda), multra, p?
+vergleichsparameter: tspan, dt, u0, (lambda), multra, p?, order
 NN
 
 

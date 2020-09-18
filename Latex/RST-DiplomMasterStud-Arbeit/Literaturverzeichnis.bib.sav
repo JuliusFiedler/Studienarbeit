@@ -25,4 +25,20 @@
   publisher = {Proceedings of the National Academy of Sciences},
 }
 
+@Article{desilva2020,
+  author    = {Brian de Silva and Kathleen Champion and Markus Quade and Jean-Christophe Loiseau and J. Kutz and Steven Brunton},
+  journal   = {Journal of Open Source Software},
+  title     = {PySINDy: A Python package for the sparse identification of nonlinear dynamical systems from data},
+  year      = {2020},
+  number    = {49},
+  pages     = {2104},
+  volume    = {5},
+  doi       = {10.21105/joss.02104},
+  publisher = {The Open Journal},
+  url       = {https://doi.org/10.21105/joss.02104},
+}
+
+@Article{,
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

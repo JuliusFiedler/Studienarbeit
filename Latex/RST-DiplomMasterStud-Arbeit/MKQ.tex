@@ -1,11 +1,19 @@
-Das Lösen des Gleichungssystems \ref{eq:Minimierungsproblem} ist mathematisch gesehen die Kernaufgabe des Algorithmus. Das Gleichungssystem besitzt $m\cdot n$ Gleichungen und $L\cdot n$ Unbekannte. In der Regel ist dieses Gleichungssystem überbestimmt, da die Anzahl der Ansatzfunktionen überschaubar sein sollte, während die Zahl der Messungen deutlich größer sein sollte.  Damit kann die Lösung über die Moore-Penrose-Inverse von $\Theta(X)$ berechnet werden. 
+Eine weit verbreitete Strategie zur Lösung überbestimmter Gleichungssysteme der Form
+\begin{equation}
+\dot{X} = \Theta\Xi
+\end{equation} ist die Methode der kleinsten Quadrate. Dabei wird die Moore-Penrose-Inverse von $\Theta$ berechnet
+\begin{equation}
+\Theta^{+} = (\Theta^T\Theta)^{-1}\Theta^T.
+\end{equation}
+Die Moore-Penrose-Lösung
 \begin{equation}
 \Xi = \Theta^+\dot{X}
 \end{equation}
-Diese minimiert den Fehler
+minimiert dabei den Fehler
 \begin{equation}
 \epsilon = \norm{\Theta(X)\Xi-\dot{X}}_2. \label{eq:Fehler_MKQ}
 \end{equation} 
+Der Algorithmus beginnt mit dieser Näherungslösung für die Koeffizientenmatrix $\Xi$.
 Um die Forderung nach einer dünnbesetzten Matrix umzusetzen, werden anschließend alle Koeffizienten, deren Betrag unter einem festgelegten Grenzwert liegt, zu Null gesetzt.
 \begin{equation}
 \Xi_\text{dünn, ij} = \begin{cases} 0 & |\Xi_\text{ij}| < \lambda\\
@@ -34,7 +42,7 @@ Für jede Zeile der DGL wählt man diejenigen Spalten der Bibliotheksmatrix aus,
 \hat{\Xi}_i = \xi_i \in\mathbb{R}^{l} = \Theta_\text{a}^+\dot{X}_i \label{eq:xi_select}
 \end{equation}
 \end{subequations}
-Die Spalten $\hat{\Xi}_i$ können zu einer Matrix $\hat{\Xi}$ zusammengesetzt werden. Anschließend muss diese auf  $\Xi\in\mathbb{R}^{L\times n}$ vergrößert und an den entsprechenden Stellen mit Nullen aufgefüllt werden: 
+Die Spalten $\hat{\Xi}_i$ können zu einer Matrix $\hat{\Xi}$ zusammengesetzt werden. Anschließend muss diese auf  $\Xi_\text{neu}\in\mathbb{R}^{L\times n}$ vergrößert und an den entsprechenden Stellen mit Nullen aufgefüllt werden: 
 \begin{equation}
 \Xi_\text{neu, ij} = \begin{cases}
 						0 & |\Xi_\text{ij}| < \lambda\\

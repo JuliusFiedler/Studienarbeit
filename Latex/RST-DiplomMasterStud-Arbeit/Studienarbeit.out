@@ -5,14 +5,16 @@
 \BOOKMARK [1][-]{section.1.1}{Idee}{chapter.1}% 5
 \BOOKMARK [1][-]{section.1.2}{Funktionsweise der Methode}{chapter.1}% 6
 \BOOKMARK [1][-]{section.1.3}{L\366sen des Minimierungsproblems}{chapter.1}% 7
-\BOOKMARK [0][-]{chapter.2}{Vergleich der Implementationen}{}% 8
-\BOOKMARK [0][-]{chapter.3}{Notizen}{}% 9
-\BOOKMARK [1][-]{section.3.1}{UDE}{chapter.3}% 10
-\BOOKMARK [2][-]{subsection.3.1.1}{8.7.20}{section.3.1}% 11
-\BOOKMARK [2][-]{subsection.3.1.2}{9.7.20}{section.3.1}% 12
-\BOOKMARK [1][-]{section.3.2}{Sindy}{chapter.3}% 13
-\BOOKMARK [2][-]{subsection.3.2.1}{Funktionsweise der Methode}{section.3.2}% 14
-\BOOKMARK [2][-]{subsection.3.2.2}{Vergleich von SINDY-Implementierungen in Python \(PySindy\) und Julia \(DiffEqLibrary\)}{section.3.2}% 15
-\BOOKMARK [1][-]{section.3.3}{Wagen-Pendel}{chapter.3}% 16
-\BOOKMARK [2][-]{subsection.3.3.1}{mit Reibung}{section.3.3}% 17
-\BOOKMARK [1][-]{section.3.4}{errors}{chapter.3}% 18
+\BOOKMARK [2][-]{subsection.1.3.1}{Rekursive Methode der kleinsten Quadrate}{section.1.3}% 8
+\BOOKMARK [2][-]{subsection.1.3.2}{SR3}{section.1.3}% 9
+\BOOKMARK [0][-]{chapter.2}{Vergleich der Implementationen}{}% 10
+\BOOKMARK [0][-]{chapter.3}{Notizen}{}% 11
+\BOOKMARK [1][-]{section.3.1}{UDE}{chapter.3}% 12
+\BOOKMARK [2][-]{subsection.3.1.1}{8.7.20}{section.3.1}% 13
+\BOOKMARK [2][-]{subsection.3.1.2}{9.7.20}{section.3.1}% 14
+\BOOKMARK [1][-]{section.3.2}{Sindy}{chapter.3}% 15
+\BOOKMARK [2][-]{subsection.3.2.1}{Funktionsweise der Methode}{section.3.2}% 16
+\BOOKMARK [2][-]{subsection.3.2.2}{Vergleich von SINDY-Implementierungen in Python \(PySindy\) und Julia \(DiffEqLibrary\)}{section.3.2}% 17
+\BOOKMARK [1][-]{section.3.3}{Wagen-Pendel}{chapter.3}% 18
+\BOOKMARK [2][-]{subsection.3.3.1}{mit Reibung}{section.3.3}% 19
+\BOOKMARK [1][-]{section.3.4}{errors}{chapter.3}% 20
