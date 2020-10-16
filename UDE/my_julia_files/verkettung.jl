@@ -9,7 +9,11 @@
 @time using Random
 
 include("MyFunctions.jl")
-@time using .MyFunctions
+@time using .MyFunctions: calc_centered_difference, SIR, sindy_naive, sindy_mpl,
+calc_param_ident_error, calc_param_ident_error_div_by_ev,
+wp, wp_fric, lotka, lorenz, roessler, wp_lin,
+create_data,
+mul_tra!
 
 println("------------------------------------------------------------")
 
@@ -19,10 +23,10 @@ tspan = (0.0f0,5.0f0)
 # u0 = Float32[-3, 3, 0.5 ,0.5]
 u0 = Float32[-10, 10, 0.5 ,0.5]
 prob = ODEProblem(wp, u0, tspan, p_)
-dt = 0.1
+dt = 0.001
 m1, m2, g, s2 = p_
 multiple_trajectories = true
-no_tr = 20
+no_tr = 5
 
 
 X, DX_, x_dot = create_data(wp, u0, tspan, p_, dt)
@@ -33,6 +37,11 @@ if multiple_trajectories
     Xf, DX_f, x_dotf = mul_tra!(wp_fric, X, DX_, x_dot, u0, tspan, p_, dt, no_tr)
 end
 
+display(plot(DX_', label = "exakte Ableitung", title = "Ableitungen"))
+display(plot!(x_dot', label = "Zentraldifferenz", title = "Ableitungen"))
+
+display(plot(x_dot'.-DX_', title = "Absoluter Fehler Zentraldifferenz vs exakte Ableitung"))
+display(plot(broadcast(abs, (x_dot'.-DX_')./DX_'), title = "relativer Fehler Zentraldifferenz vs exakte Ableitung"))
 
 # x_dot_l = calc_centered_difference(t_solution,dt)
 
@@ -132,6 +141,9 @@ end
 p_39_nom = Float32[-0.0 -0.0 -0.0 -0.0; -0.0 -0.0 -0.0 0.0; 0.0 0.0 -0.0 m2*g; -0.0 -0.0 -0.0 0.0; 0.0 0.0 0.0 0.0; -0.0 -0.0 -0.0 -0.0; 0.0 0.0 0.0 0.0; -0.0 0.0 0 -0.0; -0.0 0.0 -0.0 0.0; 0.0 -0.0 0.0 0.0; 0.0 -0.0 0 0.0; -0.0 0.0 -0.0 0.0;
 0.0 -0.0 -0.0 m2*s2; 0.0 -0.0 -0.0 -0.0; 0.0 0.0 -0.0 0.0; 0.0 -0.0 0.0 -0.0; -0.0 -0.0 0.0 0.0; -0.0 -0.0 -0.0 0.0; 0.0 0.0 -0.0 0; -0.0 -0.0 0.0 -0.0; 0.0 0.0 -0.0 -0.0; 0.0 0.0 0.0 0.0; 0.0 -0.0 -0.0 -0.0; -0.0 -0.0 0.0 0; -0.0 0.0 0.0 -0.0;
  -0.0 0.0 -m2 0.0; 0.0 0.0 0.0 -0.0; -0.0 0.0 0.0 0.0; -0.0 -0.0 0.0 0.0; -0.0 -0.0 -0.0 -0.0; 0.0 0.0 -0.0 -0.0; -0.0 0.0 -0.0 0.0; -0.0 0.0 -g*(m1+m2)/s2 0.0; -0.0 0.0 -0.0 0.0; -0.0 0.0 0.0 0.0; -0.0 0.0 -0.0 -0.0; 0.0 -0.0 0.0 0.0; 1 0.0 -0.0 -0.0; -0.0 1 0.0 -0.0]
+p_28_nom = Float32[-0.0 0.0 -0.0 0.0; -0.0 0.0 -0.0 0.0; 1 -0.0 0.0 -0.0; 0.0 1 -0.0 -0.0; 0.0 -0.0 0.0 -0.0; -0.0 0.0 -g*(m1+m2)/s2 -0.0; -0.0 -0.0 0.0 -0.0; 0.0 -0.0 -0.0 0.0; -0.0 -0.0 -0.0 0.0; 0.0 0.0 -0.0 m2*g; 0.0 -0.0 0.0 0.0; 0.0 -0.0 0.0 0.0; 0.0 0.0 -0.0 0.0;
+0.0 0.0 0.0 0.0; 0.0 0.0 0.0 0.0; -0.0 -0.0 -0.0 -0.0; -0.0 -0.0 0.0 m2*s2; -0.0 -0.0 -0.0 0.0; 0.0 0.0 -0.0 -0.0; 0.0 0.0 0.0 -0.0; -0.0 -0.0 0.0 0.0; -0.0 -0.0 -0.0 -0.0; 0.0 0.0 0.0 -0.0; -0.0 -0.0 -0.0 -0.0; 0.0 0.0 -m2 -0.0; -0.0 0.0 -0.0 -0.0; -0.0 -0.0 0.0 -0.0; 0.0 -0.0 0.0 -0.0]
+
 
 if !@isdefined(basis)
     h = verkettung(elementarfuntionen, verkettungsarten, 4, true)
@@ -258,7 +270,11 @@ function sel_lin_indep(Θ, rang_abfall, h)
     return h_
 end
 b = Basis(sel_lin_indep(Θ, 0, h), u)
-p = sindy_naive(X, DX_, b, 0.2)
+p_28_ident = sindy_naive(X, DX_, b, 0.2)
+calc_param_ident_error(p_28_nom, p_28_ident)
+
+p_28_ident_zen = sindy_naive(X, x_dot, b, 0.2)
+calc_param_ident_error(p_28_nom, p_28_ident_zen)
 
 for i ∈ 1:size(Θ)[2]
     println(i, " r= ", rank(Θ[:,1:i]))

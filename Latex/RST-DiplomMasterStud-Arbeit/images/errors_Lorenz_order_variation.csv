@@ -1,0 +1,5 @@
+Lorenz,2,,3,,4,,5,,6,,7,,8,,Rechenzeit
+Ordnung der Polynom-Bibliothek,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
+PySINDy,0.0,0.01089,0.0,0.01089,0.0,0.01089,0.61269,0.61261,1.0,1.0,1.0,1.0,1.0,1.0,0.041048
+SINDy simple,0.0,0.01089,0.0,0.01089,0.0,0.01089,0.0,0.65027,0.40159,0.40181,1.0,1.0,1.0,1.0,0.035908
+DiffEq,0.0,0.01089,0.0,0.01089,0.0,0.01089,0.0,0.65027,0.67206,0.82709,1.0,1.0,1.0,1.0,2.4478

@@ -1,0 +1,5 @@
+Volterra,0.0001,,0.001,,0.01,,0.1,,0.5,,1,,Rechenzeit
+Simulationsschrittweite [s],nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
+PySINDy,0.0,1e-05,0.0,0.0,0.0,0.0004,0.0,0.0024,0.95695,0.73677,0.90676,1.13859,0.008497
+SINDy simple,0.0,1e-05,0.0,0.0,0.0,0.0004,0.0,0.0024,0.0,0.41948,0.90676,0.83846,0.004497
+DiffEq,0.0,1.0e-5,0.0,0.0,0.0,0.0004,0.0,0.0024,0.0,0.41948,0.90676,0.83846,0.034652

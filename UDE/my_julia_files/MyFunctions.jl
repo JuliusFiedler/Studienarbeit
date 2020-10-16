@@ -13,7 +13,7 @@ module MyFunctions
 export calc_centered_difference
 export SIR
 export sindy_naive, sindy_mpl
-export calc_param_ident_error
+export calc_param_ident_error, calc_param_ident_error_div_by_ev
 export wp, wp_fric, lotka, lorenz, roessler, wp_lin
 export create_data
 export mul_tra!
@@ -166,10 +166,45 @@ function sindy_mpl(X, Ẋ, basis, λ = 0.2, maxiter = 30)
     return Ξ
 end
 
-function calc_param_ident_error(p_n, p_i)
+function calc_param_ident_error(p_no, p_i)
     digits = 5
+    if size(p_no) != size(p_i)
+        p_n = zeros(size(p_i))
+        a, b = size(p_no)
+        p_n[1:a, 1:b] = p_no
+    else
+        p_n = p_no
+    end
     s = 0
-    t = 0
+    i = 0
+    msg = ""
+    for a ∈ (1:length(p_n))
+        if p_n[a] != 0
+            s += ((p_n[a] - p_i[a]) / p_n[a])^2
+            i += 1
+        elseif abs(p_i[a]) <= 1 && p_i[a] != 0
+            s += (p_i[a])^2
+            msg = "*"
+        elseif abs(p_i[a]) > 1
+            s += 1
+            msg = "*"
+        end
+    end
+    rel_error = round(sqrt(s/i), digits=digits)
+    println("   RMS relativer Fehler: ", rel_error, msg)
+    return string(rel_error, msg)
+end
+
+function calc_param_ident_error_div_by_ev(p_no, p_i)
+    digits = 5
+    if size(p_no) != size(p_i)
+        p_n = zeros(size(p_i))
+        a, b = size(p_no)
+        p_n[1:a, 1:b] = p_no
+    else
+        p_n = p_no
+    end
+    s = 0
     msg = ""
     for a ∈ (1:length(p_n))
         if p_n[a] != 0
@@ -178,14 +213,12 @@ function calc_param_ident_error(p_n, p_i)
             s += ((p_n[a] - p_i[a]) / p_i[a])^2
             msg = "*"
         end
-        t += (p_n[a] - p_i[a])^2
     end
     rel_error = round(sqrt(s/length(p_n)), digits=digits)
-    abs_error = round(sqrt(t/length(p_n)), digits=digits)
-    println("   RMS absoluter Fehler: ", abs_error)
     println("   RMS relativer Fehler: ", rel_error, msg)
-    return [abs_error, string(rel_error, msg)]
+    return string(rel_error, msg)
 end
+
 
 function R(u)
     d1 = 0.1

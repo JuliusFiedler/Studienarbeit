@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{csvsimple}
 \usepackage{mathtools}
+\usepackage{todonotes}
 
 
 % Zwei Parameter zum Verändern des Layouts
@@ -154,18 +155,14 @@
 
 % Ab hier Reinschrift
 \chapter{Der SINDy-Algorithmus}
-
-\section{Idee}
+\todo{DGL einführen}
+\section{Idee} \todo{Kapitelüberschrift}
 \input{Sindy_einleitung.tex}
 \section{Funktionsweise der Methode}
 \input{Funktionsweise_Sindy.tex}
-Der SINDy-Algorithmus wurde sowohl in Python durch die Bibliothek PySindy \cite{Silva2020} als auch in Julia durch die Bibliothek DataDrivenDiffEq implementiert. Im Verlauf dieser Arbeit ist ein vereinfachter SINDy-Algorithmus entstanden, der mit den existierenden Implementationen verglichen werden soll.
+%Der SINDy-Algorithmus wurde sowohl in Python durch die Bibliothek PySindy \cite{Silva2020} als auch in Julia durch die Bibliothek DataDrivenDiffEq implementiert. Im Verlauf dieser Arbeit ist ein vereinfachter SINDy-Algorithmus entstanden, der mit den existierenden Implementationen verglichen werden soll.
 \section{Lösen des Minimierungsproblems}
-Das Lösen des Gleichungssystems \ref{eq:Minimierungsproblem} ist mathematisch gesehen die Kernaufgabe des Algorithmus. Das Gleichungssystem besitzt $m\cdot n$ Gleichungen und $L\cdot n$ Unbekannte. In der Regel ist dieses Gleichungssystem überbestimmt, da die Anzahl der Ansatzfunktionen überschaubar sein sollte, während die Zahl der Messungen deutlich größer sein sollte. Es existieren verschiedene Optimierungsverfahren, um dieses Problem der Form
-\begin{equation}
-Ax=b
-\end{equation}
-zu lösen. In dieser Arbeit wurde hauptsächlich mit einer rekursiven Methode der kleinsten Quadrate (MKQ) gearbeitet. Sparse Relaxed Regularized Regression (SR3) wird zum Vergleich herangezogen. Der in dieser Arbeit entwickelte vereinfachte Algorithmus verwendet die erste Methode. 
+\input{Loesen_des_Minimierungsproblems.tex}
 \subsection{Rekursive Methode der kleinsten Quadrate}
 \input{MKQ.tex}
 %\section{Grenzen der Methode} 
@@ -173,7 +170,7 @@ zu lösen. In dieser Arbeit wurde hauptsächlich mit einer rekursiven Methode de
 %\input{SR3.tex}
 \chapter{Vergleich der Implementationen}
 \input{Vergleich_einleitung.tex}
-
+\includegraphics[width=1\textwidth]{images/errors_volterra_tspan_variation.png}
 
 %\csvautotabular{images/errors_volterra_tspan_variation.csv} 
 
@@ -192,7 +189,21 @@ rauschen
 vergleichsparameter: tspan, dt, u0, (lambda), multra, p?, order
 NN
 
+verwendete Parameter:
+default: \\
+dt =0.01\\
+tspan = 3s\\
+opt = LSTSQ/STRRidge\\
+notr = 1\\
+poly order = 2\\
+lambda = 0.2/0.05\\
+u0 = [0.44249296,4.6280594], [-8, 8, 27], [1, -1, -1]\\
+noise = 0\\
 
+no tr variation:
+volterra: dt= 0.1, tspan = 3s
+lorenz: dt = 0.01, tspan = 0.25s
+roessler dt = 0.01, tspan = 0.1s
 
 \section{UDE}
 

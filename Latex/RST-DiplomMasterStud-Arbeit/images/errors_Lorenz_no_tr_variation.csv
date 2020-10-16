@@ -1,0 +1,5 @@
+Lorenz,1,,2,,3,,4,,5,,6,,7,,8,,9,,10,,12,,15,,20,,Rechenzeit
+gleichzeitig bearbeitete Trajektorien,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
+PySINDy,0.0,9.44696,0.0,0.45088,0.0,0.13534,0.0,0.00416,0.0,0.00618,0.0,0.01369,0.0,0.18287,0.0,0.26217,0.0,0.252,0.0,0.26325,0.0,0.20929,0.0,0.22319,0.0,0.22674,0.010217
+SINDy simple,0.0,668.40318,0.0,0.59419,0.0,0.13534,0.0,0.00416,0.0,0.00618,0.0,0.01369,0.0,0.18287,0.0,0.26217,0.0,0.252,0.0,0.26325,0.0,0.20929,0.0,0.22319,0.0,0.22674,0.005312
+DiffEq,0.0,668.40318,0.0,0.59419,0.0,0.13534,0.0,0.00416,0.0,0.00618,0.0,0.01369,0.0,0.18287,0.0,0.26217,0.0,0.252,0.0,0.26325,0.0,0.20929,0.0,0.22319,0.0,0.22674,0.089628

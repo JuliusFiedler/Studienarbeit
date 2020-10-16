@@ -1,0 +1,5 @@
+Lorenz,1,,2,,3,,4,,5,,Rechenzeit
+Simulationszeit [s],nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
+PySINDy,0.0,0.00633,0.0,0.00743,0.0,0.01089,0.0,0.01283,0.0,0.01228,0.008592
+SINDy simple,0.0,0.00633,0.0,0.00743,0.0,0.01089,0.0,0.01283,0.0,0.01228,0.005994
+DiffEq,0.0,0.00633,0.0,0.00743,0.0,0.01089,0.0,0.01283,0.0,0.01228,0.131457

@@ -1,0 +1,5 @@
+Volterra,0.25,,0.5,,0.75,,1,,1.5,,2,,3,,4,,5,,Rechenzeit
+Simulationszeit [s],nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
+PySINDy,0.70711,0.70711,0.53577,0.53573,0.53948,0.53944,0.54269,0.54265,0.0,0.00045,0.0,0.00044,0.0,0.0004,0.0,0.00021,0.0,0.00027,0.006218
+SINDy simple,0.0,19.28669,0.0,0.53573,0.0,0.00049,0.0,0.00047,0.0,0.00045,0.0,0.00044,0.0,0.0004,0.0,0.00021,0.0,0.00027,0.003775
+DiffEq,0.53084,0.00044,0.0,0.53573,0.0,0.00049,0.0,0.00047,0.0,0.00045,0.0,0.00044,0.0,0.0004,0.0,0.00021,0.0,0.00027,19.453631

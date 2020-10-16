@@ -9,12 +9,12 @@ Das Lotka-Volterra-System
 \end{equation}
 mit den Nominalparametern
 \begin{equation}
-p_\text{LV}=\left(\begin{array}{c}
-		\alpha\\\beta\\\gamma\\\delta
-\end{array}\right) 
-= \left(\begin{array}{c}
-		1.3\\ -0.9\\ 0.8\\ -1.8
-\end{array}\right).
+p_\text{V}=	\begin{pmatrix*}[c]
+				\alpha&\beta&\gamma&\delta
+				\end{pmatrix*} = 
+				\begin{pmatrix*}[c]
+					1.3& -0.9& 0.8& -1.8
+				\end{pmatrix*}
 \end{equation}
 
 Das Lorenz-System
@@ -27,12 +27,12 @@ Das Lorenz-System
 \end{equation}
 mit den Nominalparametern
 \begin{equation}
-p_\text{L}=\left(\begin{array}{c}
-		\alpha\\\beta\\\gamma
-\end{array}\right) 
-= \left(\begin{array}{c}
-		10\\ 28\\ \frac{8}{3}
-\end{array}\right).
+p_\text{L}=	\begin{pmatrix*}[c]
+				\alpha&\beta&\gamma
+				\end{pmatrix*} = 
+				\begin{pmatrix*}[c]
+					10& 28& \frac{8}{3}
+				\end{pmatrix*}
 \end{equation}
 
 Das Rössler-System
@@ -45,37 +45,35 @@ Das Rössler-System
 \end{equation}
 mit den Nominalparametern
 \begin{equation}
-p_\text{R}=\left(\begin{array}{c}
-		\alpha\\\beta\\\gamma
-\end{array}\right) 
-= \left(\begin{array}{c}
-		0.2\\ 0.1\\ 5.3
-\end{array}\right).
+p_\text{R}=	\begin{pmatrix*}[c]
+				\alpha&\beta&\gamma
+				\end{pmatrix*} = 
+				\begin{pmatrix*}[c]
+					0.2& 0.1& 5.3
+				\end{pmatrix*}
 \end{equation}
-
-Ausschlaggebend für die Güte des jeweiligen Algorithmus ist an erster Stelle die Genauigkeit des Ergebnisses, an zweiter Stelle die Rechenzeit. Um die Genauigkeit des Algorithmus vergleichen zu können, wird ein Fehler $\epsilon_r$  definiert. Dieser ist an das quadratische Mittel des relativen Fehlers angelehnt. $P\in\mathbb{R}^{L\times n}$ bezeichnet die nominalen und $Q\in\mathbb{R}^{L\times n}$ die identifizierten Parameter eines Systems. Dann sei
+Ausschlaggebend für die Güte des jeweiligen Algorithmus ist an erster Stelle die Genauigkeit des Ergebnisses, an zweiter Stelle die Rechenzeit. Um die Genauigkeit des Algorithmus vergleichen zu können, wird ein Fehler $\varepsilon_r$  definiert. Dieser ist an das quadratische Mittel des relativen Fehlers angelehnt. $P\in\mathbb{R}^{L\times n}$ bezeichnet die nominale und $Q\in\mathbb{R}^{L\times n}$ die identifizierte Koeffizientenmatrix eines Systems. Dann sei
 \begin{equation}
 R \in\mathbb{R}^{L\times n} , \quad R_{ij}= \begin{cases}
 |\frac{P_{ij}-Q_{ij}}{P_{ij}}| & P_{ij} \neq 0\\
 |Q_{ij}| & P_{ij} = 0 \wedge |Q_{ij}| < 1\\
-1 & P_{ij} = 0 \wedge |Q_{ij}| >= 1\\
+1 & P_{ij} = 0 \wedge |Q_{ij}| \geq 1\\
 0 & \text{sonst}
 \end{cases}, \quad  1 \leq i \leq L, \quad 1\leq j \leq n
 \end{equation}
 \begin{equation}
-\epsilon_r = \frac{1}{\sqrt{k}}\norm{R}_2,
+\varepsilon_r = \frac{1}{\sqrt{k}}\norm{R}_2,
 \end{equation} 
 wobei $k$ die Anzahl der von Null verschiedenen Elemente von $P$ ist. Für richtig identifizierte Ansatzfunktionen wird somit der relative Fehler zwischen Nominalparameter und identifiziertem Parameter berechnet, während bei falsch identifizierten Ansatzfunktionen der Fehler, bis hin zu einer Grenze, vom identifizierten Parameter abhängt. Dadurch werden kleine Koeffizienten vor falschen Funktion weniger stark bestraft, da diese einen geringeren Einfluss auf das Ergebnis haben. 
 
-Für jedes System werden die zeitlichen Verläufe der Zustände durch einen Differentialgleichungslöser numerisch %??? 
-ermittelt. Die Ableitungsverläufe werden sowohl exakt vorgegeben, als auch über die Zentraldifferenz angenähert. Dabei wird der Einfluss folgender Parameter auf das Identifikationsergebnis untersucht:
+Für jedes System werden die zeitlichen Verläufe der Zustandskomponenten durch einen Differentialgleichungslöser numerisch ermittelt. Die Ableitungsverläufe werden sowohl exakt vorgegeben, als auch über die Zentraldifferenz angenähert. Die exakten Ableitungsverläufe dienen hier nur der Evaluation und sind im Praxisfall auf Grund von Messfehlern oft nicht gegeben. Es wird der Einfluss folgender Parameter auf das Identifikationsergebnis untersucht:
 \begin{itemize}
-\item die Simulationszeit $t$ des DGL-Lösers
-\item die Schrittweite $dt$ des DGL-Lösers
-\item die Anzahl der gleichzeitig analysierten Datenreihen 
-\item die Gestaltung der Bibliothek aus Ansatzfunktionen
-\item das verwendete Optimierungsverfahren zur Lösung des Approximationsproblems
-\item die Stärke des Rauschens in den Daten
+\item die Simulationszeit $t$ des DGL-Lösers,
+\item die Schrittweite $dt$ des DGL-Lösers,
+\item die Anzahl der gleichzeitig analysierten Datenreihen ,
+\item die Gestaltung der Bibliothek aus Ansatzfunktionen,
+\item das verwendete Optimierungsverfahren zur Lösung des Approximationsproblems,
+\item die Stärke des Rauschens in den Daten.
 \end{itemize}
 
 

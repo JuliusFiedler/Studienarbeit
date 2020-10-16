@@ -1,0 +1,5 @@
+Roessler,1,,2,,3,,4,,5,,6,,7,,8,,9,,10,,12,,15,,20,,Rechenzeit
+gleichzeitig bearbeitete Trajektorien,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
+PySINDy,0.03105,5166807453.7383,0.0,18.9785,1.45926,1.416,0.0,0.08399,0.0,0.01357,0.0,0.00581,0.0,0.00214,0.0,0.00155,0.0,0.0007,0.0,0.00064,0.0,0.00046,0.0,0.00046,0.0,0.0005,0.00811
+SINDy simple,0.0,409496371.4939,0.0,413.42893,0.0,0.46667,0.0,0.00047,0.0,0.00044,0.0,0.00054,0.0,0.00049,0.0,0.00049,0.0,0.00049,0.0,0.00048,0.0,0.00046,0.0,0.00046,0.0,0.0005,0.004497
+DiffEq,0.0,4.0857576335182e8,0.0,413.42893,0.0,0.46667,0.0,0.00047,0.0,0.00044,0.0,0.00054,0.0,0.00049,0.0,0.00049,0.0,0.00049,0.0,0.00048,0.0,0.00046,0.0,0.00046,0.0,0.0005,0.059067

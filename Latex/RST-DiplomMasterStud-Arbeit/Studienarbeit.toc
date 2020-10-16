@@ -22,28 +22,28 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {2}Vergleich der Implementationen}{6}{chapter.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}Notizen}{8}{chapter.3}
+\contentsline {chapter}{\numberline {3}Notizen}{9}{chapter.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.1}UDE}{8}{section.3.1}
+\contentsline {section}{\numberline {3.1}UDE}{9}{section.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1.1}8.7.20}{9}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.1}8.7.20}{10}{subsection.3.1.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1.2}9.7.20}{9}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.2}9.7.20}{10}{subsection.3.1.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\nonumberline ude + sindy}{9}{section*.6}
+\contentsline {subsubsection}{\nonumberline ude + sindy}{10}{section*.14}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\nonumberline ude reibung}{11}{section*.7}
+\contentsline {subsubsection}{\nonumberline ude reibung}{12}{section*.15}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\nonumberline Pysindy reibung}{12}{section*.10}
+\contentsline {subsubsection}{\nonumberline Pysindy reibung}{13}{section*.18}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}Sindy}{15}{section.3.2}
+\contentsline {section}{\numberline {3.2}Sindy}{16}{section.3.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.1}Funktionsweise der Methode}{15}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.1}Funktionsweise der Methode}{16}{subsection.3.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2.2}Vergleich von SINDY-Implementierungen in Python (PySindy) und Julia (DiffEqLibrary)}{18}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.2}Vergleich von SINDY-Implementierungen in Python (PySindy) und Julia (DiffEqLibrary)}{19}{subsection.3.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.3}Wagen-Pendel}{21}{section.3.3}
+\contentsline {section}{\numberline {3.3}Wagen-Pendel}{22}{section.3.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3.1}mit Reibung}{21}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.1}mit Reibung}{22}{subsection.3.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.4}errors}{21}{section.3.4}
+\contentsline {section}{\numberline {3.4}errors}{22}{section.3.4}

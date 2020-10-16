@@ -1,3 +1,4 @@
+Der folgende Abschnitt orientiert sich an der Beschreibung des SINDy-Algorithmus in \cite{Brunton2016}. 
 Sei $f\left(x(t)\right) = \diff{x(t)}{t}$ das zu identifizierende Differentialgleichungssystem mit dem Zustandsvektor $x(t) = [x_1(t), x_2(t), ... , x_n(t)]^T \in\mathbb{R}^n$.
 Für die Anwendung von SINDy benötigt man die Messdaten aller Zustandsgrößen zu den Zeitpunkten $t_1, t_2, ..., t_m$. Zusätzlich müssen die zeitlichen Ableitungen der Zustände an den gegebenen Zeitpunkten gegeben sein, entweder durch direkte Messung oder durch numerische Approximation. Die Daten werden wie folgt angeordnet: 
 \begin{align}
@@ -16,7 +17,7 @@ X &= \begin{bmatrix}
 	\end{bmatrix}  \in \mathbb{R}^{m\times n}.
 \end{align}
 Nun muss man die Bibliothek $\Theta$ an Funktionen konstruieren, durch welche $f$ dargestellt werden soll. 
-Die Spalten der Bibliotheksmatrix repräsentieren die gewählten Ansatzfunktionen, angewendet auf die Datenmatrix $X$ 
+Die Spalten der Bibliotheksmatrix repräsentieren die gewählten Ansatzfunktionen, angewendet auf die Datenmatrix $X$
 \begin{equation}
 \Theta(X) = \begin{bmatrix}
 		\mid & \mid & & \mid \\
@@ -24,7 +25,7 @@ Die Spalten der Bibliotheksmatrix repräsentieren die gewählten Ansatzfunktione
 		\mid & \mid & & \mid 
 	\end{bmatrix}\in\mathbb{R}^{m\times L}.
 \end{equation} 
-Wählt man beispielsweise für $\theta_1$ die Sinusfunktion und für $\theta_2$ Monome zweiten Grades so ergeben sich 
+Dabei steht $\ell$ für die Anzahl von verschiedenen Typen von Ansatzfunktionen und $L$ für die Gesamtzahl der Spalten von $\Theta$, welche sich aus der Wahl der Ansatzfunktionen ergibt. Wählt man beispielsweise für $\theta_1$ die Sinusfunktion und für $\theta_2$ Monome zweiten Grades so ergeben sich 
 \begin{align}
 \theta_1(X) &= \begin{bmatrix}
 		\mid 	  & \mid     		  &          & \mid             \\
@@ -35,15 +36,14 @@ Wählt man beispielsweise für $\theta_1$ die Sinusfunktion und für $\theta_2$ 
 		\mid & \mid & & \mid & \mid & & \mid \\
 		x_1(t)^2 & x_1(t)x_2(t) & \dots & x_2(t)^2 & x_2(t)x_3(t) & \dots & x_n^2(t) \\
 		\mid & \mid & & \mid & \mid & & \mid
-	\end{bmatrix},	
+	\end{bmatrix}.
 \end{align}
-wobei die Rechenoperationen alle elementweise zu lesen sind. \\
 Gesucht sind nun Linearkombinationen von Bibliotheksfunktionen, sodass gilt
 \begin{equation}
 f_i(x) = \Theta(x^T)\xi_i.
 \end{equation}
-Fasst man alle $\xi_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}$ zusammen, so ergibt sich das zu lösende Problem zu 
+Fasst man alle $\xi_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}$ zusammen, so ergibt sich das zu lösende Minimierungsproblem zu 
 \begin{equation}
 \dot{X} \approx \Theta(X)\Xi. \label{eq:Minimierungsproblem}
 \end{equation}
-\cite{Brunton2016}\\
+

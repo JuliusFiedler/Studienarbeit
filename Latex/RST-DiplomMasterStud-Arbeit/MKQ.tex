@@ -1,57 +1,62 @@
 Eine weit verbreitete Strategie zur Lösung überbestimmter Gleichungssysteme der Form
 \begin{equation}
 \dot{X} = \Theta\Xi
-\end{equation} ist die Methode der kleinsten Quadrate. Dabei wird die Moore-Penrose-Inverse von $\Theta$ berechnet
+\end{equation} ist die Methode der kleinsten Quadrate. Dabei wird die Moore-Penrose-Inverse \todo{Quelle}von $\Theta$ berechnet
 \begin{equation}
-\Theta^{+} = (\Theta^T\Theta)^{-1}\Theta^T.
+\Theta^{+} := (\Theta^T\Theta)^{-1}\Theta^T.
 \end{equation}
 Die Moore-Penrose-Lösung
 \begin{equation}
 \Xi = \Theta^+\dot{X}
 \end{equation}
-minimiert dabei den Fehler
+minimiert dabei den Fehler \todo{Quelle}
 \begin{equation}
-\epsilon = \norm{\Theta(X)\Xi-\dot{X}}_2. \label{eq:Fehler_MKQ}
+\varepsilon := \norm{\Theta\Xi-\dot{X}}_2. \label{eq:Fehler_MKQ} 
 \end{equation} 
 Der Algorithmus beginnt mit dieser Näherungslösung für die Koeffizientenmatrix $\Xi$.
-Um die Forderung nach einer dünnbesetzten Matrix umzusetzen, werden anschließend alle Koeffizienten, deren Betrag unter einem festgelegten Grenzwert liegt, zu Null gesetzt.
+Um die Forderung nach einer dünnbesetzten Matrix umzusetzen, werden anschließend alle Koeffizienten, deren Betrag unter einem festgelegten Grenzwert $\lambda$ liegt, zu Null gesetzt.
 \begin{equation}
-\Xi_\text{dünn, ij} = \begin{cases} 0 & |\Xi_\text{ij}| < \lambda\\
+\Xi^\text{d}_\text{ij} := \begin{cases} 0 & |\Xi_\text{ij}| < \lambda\\
 \Xi_\text{ij} & \text{sonst} 
 \end{cases} ,\quad 1 \leq i \leq L, \quad 1\leq j \leq n \label{eq:make_sparse}
 \end{equation}
-Jeder nicht negative Koeffizient $\Xi_\text{dünn, ij}$ repräsentiert eine im Differentialgleichungssystem vorkommende Ansatzfunktion. Allerdings sind die Koeffizienten $\Xi_\text{dünn}$ fehlerhaft, da sie auf Basis der nicht vorkommenden Funktionen berechnet wurden. Es bietet sich an, die Koeffizientenmatrix $\Xi$ erneut zu berechnen, unter Nutzung des Wissens über welche Ansatzfunktionen in der Differentialgleichung (DGL) vorkommen.
+Jeder von Null verschiedene Koeffizient $\Xi^\text{d}_\text{ij}$ repräsentiert eine im Differentialgleichungssystem vorkommende Ansatzfunktion. Allerdings sind die Koeffizienten in $\Xi^\text{d}$ noch ungenau, da sie unter Berücksichtigung aller Ansatzfunktionen der Bibliothek berechnet wurden, also auch derer, die nicht in der DGL vorkommen.\todo{Ausdruck} Es bietet sich an, die Koeffizientenmatrix $\Xi$ erneut zu berechnen, unter Nutzung des Wissens darüber, welche Ansatzfunktionen nicht in der Differentialgleichung vorkommen.
 
-Für jede Zeile der DGL wählt man diejenigen Spalten der Bibliotheksmatrix aus, die für Funktionen stehen, die nach \ref{eq:make_sparse} in dieser Zeile vorkommen. Dann kann man die Koeffizientenmatrix spaltenweise wie folgt berechnen (der Index a steht für Auswahl, die Indices der $\theta$ sind willkürlich gewählt):
+Jeder Null-Koeffizient einer Spalte $k$ der Koeffizientenmatrix $\Xi^\text{d}$ repräsentiert eine Ansatzfunktion, die in der $k$-ten Zeile des DGL-Systems nicht vorkommt. Die neue Koeffizientenmatrix kann spaltenweise berechnet werden, indem man die Bibliothek um die für diese Zeile nicht relevanten Ansatzfunktionen verkleinert. Damit wird statt der Originalbibliothek $\Theta \in\mathbb{R}^{m\times L}$ die verkleinerte Bibliothek $\Theta_\text{v} \in\mathbb{R}^{m\times h_k},\text{ } h_k\leq L$ verwendet. (Der Fall $h=L$ kann auftreten, wenn in einer Spalte jeder Koeffizient von Null verschieden ist, in einer anderen Spalte aber noch mindestens eine Null vorkommt.) \todo{Verwirrt die Anmerkung h=L mehr, als dass sie hilft?} Die neue Koeffizientenmatrix wird wie folgt berechnet (die Indizes der $\theta$ sind willkürlich gewählt und repräsentieren diejenigen Ansatzfunktionen, deren Koeffizienten nicht Null sind):
+
+
+%Für jede Zeile der DGL wählt man diejenigen Spalten der Bibliotheksmatrix aus, die für Funktionen stehen, die nach \eqref{eq:make_sparse} in dieser Zeile vorkommen. Dann kann man die Koeffizientenmatrix spaltenweise wie folgt berechnen (der Index a steht für Auswahl, die Indizes der $\theta$ sind willkürlich gewählt, ):
 \begin{subequations}
 \begin{equation}
-\dot{X}_i = 	\left(\begin{array}{c} 
+\dot{X}_k = 	\left(\begin{array}{c} 
       					 \mid \\
-      					 \dot{x}_i(t)\\ 
+      					 \dot{x}_k(t)\\ 
       					 \mid 
     				\end{array}\right) \in \mathbb{R}^{m}
 \end{equation}
 \begin{equation}
-\Theta_\text{a}(X) = \begin{bmatrix}
+\Theta_\text{v}(X) := \begin{bmatrix}
 		\mid & \mid &  \mid &\\
 		\theta_2(X) & \theta_5(X) & \theta_7(X) &\dots\\
 		\mid & \mid &  \mid &
-	\end{bmatrix}\in\mathbb{R}^{m\times l}.
+	\end{bmatrix}\in\mathbb{R}^{m\times h_k}.
 \end{equation}
 \begin{equation}
-\hat{\Xi}_i = \xi_i \in\mathbb{R}^{l} = \Theta_\text{a}^+\dot{X}_i \label{eq:xi_select}
+\hat{\Xi}_k := \Theta_\text{v}^+\dot{X}_k = \xi_k  \in\mathbb{R}^{h_k} \label{eq:xi_select}
 \end{equation}
 \end{subequations}
-Die Spalten $\hat{\Xi}_i$ können zu einer Matrix $\hat{\Xi}$ zusammengesetzt werden. Anschließend muss diese auf  $\Xi_\text{neu}\in\mathbb{R}^{L\times n}$ vergrößert und an den entsprechenden Stellen mit Nullen aufgefüllt werden: 
+Um die neue Koeffizientenmatrix $\Xi^\text{n}$ erzeugen zu können, müssen die Spalten $\hat{\Xi}_k\in\mathbb{R}^{h_k}$ erst auf die einheitliche Größe $\Xi^\text{n}_k\in\mathbb{R}^{L}$ gebracht werden:
 \begin{equation}
-\Xi_\text{neu, ij} = \begin{cases}
-						0 & |\Xi_\text{ij}| < \lambda\\
-						\hat{\Xi}_\text{kj}, 1\leq k \leq l  & \text{sonst}
+\Xi^\text{n}_\text{$k$, i} = \begin{cases}
+						0 & \Xi^\text{d}_\text{ik}=0\\
+						\hat{\Xi}_\text{$k$, g}  & \text{sonst}
 
-\end{cases}. \label{eq:reshape} % ist das mathematisch sauber?
+\end{cases}\text{ mit }1\leq g \leq h_k. \label{eq:reshape} 
 \end{equation}
-Allerdings besteht die Möglichkeit, dass $\Xi_\text{neu}$ durch die erneute Berechnung Einträge unterhalb des Grenzwertes besitzt.
-Daher werden die Schritte \ref{eq:make_sparse}, \ref{eq:xi_select} und \ref{eq:reshape} solange wiederholt, bis in \ref{eq:make_sparse} $\Xi_\text{dünn} = \Xi$ gilt, also bis die Koeffizientenmatrix nicht mehr verändert wird. Es werden somit iterativ immer mehr Ansatzfunktionen ausgeschlossen. Damit gilt am Ende
+Die Spalten $\Xi^\text{n}_k$ können nun durch Hintereinanderreihung zur Matrix $\Xi^\text{n}$ zusammengesetzt werden. 
+
+Allerdings besteht die Möglichkeit, dass $\Xi^\text{n}$ durch die erneute Berechnung Einträge besitzt, deren Beträge unterhalb des Grenzwertes $\lambda$ liegen.
+Daher werden die Schritte \eqref{eq:make_sparse}, \eqref{eq:xi_select} und \eqref{eq:reshape} mit $\Xi^\text{n}$ anstelle von $\Xi$ solange wiederholt, bis in \eqref{eq:make_sparse} $\Xi^\text{d} = \Xi^\text{n}$ gilt, also bis der Algorithmus die Koeffizientenmatrix nicht mehr verändert. Es werden somit iterativ immer mehr Ansatzfunktionen ausgeschlossen. Damit gilt am Ende
 \begin{subequations}
 \begin{equation}
 \dot{X} \approx \Theta(X)\Xi
@@ -60,7 +65,7 @@ und somit
 \begin{equation}
 \dot{x} = f(x) \approx \Xi^T\left(\Theta(x^T)\right)^T,
 \end{equation}
-wobei $\Xi$ dünn besetzt ist.
+wobei $\Xi$ dünn\todo{spezifizieren, Ausnahmen} besetzt ist.
 
 \end{subequations}
 
