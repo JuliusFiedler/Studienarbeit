@@ -48,41 +48,192 @@
       \verb 10.1073/pnas.1517384113
       \endverb
     \endentry
-    \entry{Silva2020}{article}{}
-      \name{labelname}{6}{}{%
-        {{hash=10faf7621b59830a33148f65e83d72f9}{Silva}{S\bibinitperiod}{Brian\bibnamedelima M.}{B\bibinitperiod\bibinitdelim M\bibinitperiod}{de}{d\bibinitperiod}{}{}}%
-        {{hash=5a26ce56fbd25782a5dbdd8b76cfc09f}{Champion}{C\bibinitperiod}{Kathleen}{K\bibinitperiod}{}{}{}{}}%
-        {{hash=89ef2827f75f9f5a5e29125b3c3fd641}{Quade}{Q\bibinitperiod}{Markus}{M\bibinitperiod}{}{}{}{}}%
-        {{hash=a8503ec722f9e64000c65e748137d1b6}{Loiseau}{L\bibinitperiod}{Jean-Christophe}{J\bibinithyphendelim C\bibinitperiod}{}{}{}{}}%
-        {{hash=4f73b95c79a45c60c52d1f79b00b6be1}{Kutz}{K\bibinitperiod}{J.\bibnamedelimi Nathan}{J\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
-        {{hash=94caaf7d8290a7bc6b32bd10bf645c8f}{Brunton}{B\bibinitperiod}{Steven\bibnamedelima L.}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+    \entry{Courrieu2008}{article}{}
+      \name{labelname}{1}{}{%
+        {{hash=447432143aa8f72ff351543859462fdd}{Courrieu}{C\bibinitperiod}{Pierre}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{6}{}{%
-        {{hash=10faf7621b59830a33148f65e83d72f9}{Silva}{S\bibinitperiod}{Brian\bibnamedelima M.}{B\bibinitperiod\bibinitdelim M\bibinitperiod}{de}{d\bibinitperiod}{}{}}%
-        {{hash=5a26ce56fbd25782a5dbdd8b76cfc09f}{Champion}{C\bibinitperiod}{Kathleen}{K\bibinitperiod}{}{}{}{}}%
-        {{hash=89ef2827f75f9f5a5e29125b3c3fd641}{Quade}{Q\bibinitperiod}{Markus}{M\bibinitperiod}{}{}{}{}}%
-        {{hash=a8503ec722f9e64000c65e748137d1b6}{Loiseau}{L\bibinitperiod}{Jean-Christophe}{J\bibinithyphendelim C\bibinitperiod}{}{}{}{}}%
-        {{hash=4f73b95c79a45c60c52d1f79b00b6be1}{Kutz}{K\bibinitperiod}{J.\bibnamedelimi Nathan}{J\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
-        {{hash=94caaf7d8290a7bc6b32bd10bf645c8f}{Brunton}{B\bibinitperiod}{Steven\bibnamedelima L.}{S\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      \name{author}{1}{}{%
+        {{hash=447432143aa8f72ff351543859462fdd}{Courrieu}{C\bibinitperiod}{Pierre}{P\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{1fdf167c1a6ed47815e1620b2abab8e8}
-      \strng{fullhash}{89a4bc4f1ea01ed019fb109a31b649c9}
-      \field{sortinit}{S}
-      \field{labeltitle}{PySINDy: A Python package for the Sparse Identification of Nonlinear Dynamics from Data}
-      \field{abstract}{PySINDy is a Python package for the discovery of governing dynamical systems models from data. In particular, PySINDy provides tools for applying the sparse identification of nonlinear dynamics (SINDy) (Brunton et al. 2016) approach to model discovery. In this work we provide a brief description of the mathematical underpinnings of SINDy, an overview and demonstration of the features implemented in PySINDy (with code examples), practical advice for users, and a list of potential extensions to PySINDy. Software is available at https://github.com/dynamicslab/pysindy.}
-      \field{day}{17}
-      \field{eprintclass}{math.DS}
+      \strng{namehash}{447432143aa8f72ff351543859462fdd}
+      \strng{fullhash}{447432143aa8f72ff351543859462fdd}
+      \field{sortinit}{C}
+      \field{labeltitle}{Fast Computation of Moore-Penrose Inverse Matrices}
+      \field{abstract}{Many neural learning algorithms require to solve large least square systems in order to obtain synaptic weights. Moore-Penrose inverse matrices allow for solving such systems, even with rank deficiency, and they provide minimum-norm vectors of synaptic weights, which contribute to the regularization of the input-output mapping. It is thus of interest to develop fast and accurate algorithms for computing Moore-Penrose inverse matrices. In this paper, an algorithm based on a full rank Cholesky factorization is proposed. The resulting pseudoinverse matrices are similar to those provided by other algorithms. However the computation time is substantially shorter, particularly for large systems.}
+      \field{day}{30}
+      \field{eprintclass}{cs.NE}
       \field{eprinttype}{arXiv}
+      \field{journaltitle}{Neural Information Processing - Letters and Reviews 8, 2 (2005) 25-29}
       \field{month}{04}
-      \field{title}{PySINDy: A Python package for the Sparse Identification of Nonlinear Dynamics from Data}
-      \field{year}{2020}
+      \field{title}{Fast Computation of Moore-Penrose Inverse Matrices}
+      \field{year}{2008}
       \verb{eprint}
-      \verb 2004.08424
+      \verb 0804.4809
       \endverb
       \verb{file}
-      \verb :http\://arxiv.org/pdf/2004.08424v1:PDF
+      \verb :http\://arxiv.org/pdf/0804.4809v1:PDF
       \endverb
-      \keyw{math.DS,physics.comp-ph}
+      \keyw{cs.NE}
+    \endentry
+    \entry{Knoll2016}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=35d1d417de38149260d719585465e1a9}{Knoll}{K\bibinitperiod}{Carsten}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=35d1d417de38149260d719585465e1a9}{Knoll}{K\bibinitperiod}{Carsten}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Dresden}%
+      }
+      \list{publisher}{1}{%
+        {Carsten Knoll}%
+      }
+      \strng{namehash}{35d1d417de38149260d719585465e1a9}
+      \strng{fullhash}{35d1d417de38149260d719585465e1a9}
+      \field{sortinit}{K}
+      \field{labeltitle}{Regelungstheoretische Analyse- und Entwurfsansätze für unteraktuierte mechanische Systeme}
+      \field{isbn}{9783741858994}
+      \field{title}{Regelungstheoretische Analyse- und Entwurfsansätze für unteraktuierte mechanische Systeme}
+      \field{year}{2016}
+    \endentry
+    \entry{Krishnamoorthy2011}{article}{}
+      \name{labelname}{2}{}{%
+        {{hash=cef0000c645b494ac78288000868528f}{Krishnamoorthy}{K\bibinitperiod}{Aravindh}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=9ad3aef9808bff4f52d15efa531322f9}{Menon}{M\bibinitperiod}{Deepak}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{2}{}{%
+        {{hash=cef0000c645b494ac78288000868528f}{Krishnamoorthy}{K\bibinitperiod}{Aravindh}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=9ad3aef9808bff4f52d15efa531322f9}{Menon}{M\bibinitperiod}{Deepak}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{0821cbfef14eb033ab58153aba087344}
+      \strng{fullhash}{0821cbfef14eb033ab58153aba087344}
+      \field{sortinit}{K}
+      \field{labeltitle}{Matrix Inversion Using Cholesky Decomposition}
+      \field{abstract}{In this paper we present a method for matrix inversion based on Cholesky decomposition with reduced number of operations by avoiding computation of intermediate results; further, we use fixed point simulations to compare the numerical accuracy of the method.}
+      \field{day}{17}
+      \field{eprintclass}{cs.MS}
+      \field{eprinttype}{arXiv}
+      \field{month}{11}
+      \field{title}{Matrix Inversion Using Cholesky Decomposition}
+      \field{year}{2011}
+      \verb{eprint}
+      \verb 1111.4144
+      \endverb
+      \verb{file}
+      \verb :http\://arxiv.org/pdf/1111.4144v2:PDF
+      \endverb
+      \keyw{cs.MS}
+    \endentry
+    \entry{Martinsson2015}{article}{}
+      \name{labelname}{4}{}{%
+        {{hash=6784940298ce7e745f88fc73bc8c07b7}{Martinsson}{M\bibinitperiod}{Per-Gunnar}{P\bibinithyphendelim G\bibinitperiod}{}{}{}{}}%
+        {{hash=e5aaab1b3f4aa04fd1c27da6182e0ad3}{Quintana-Orti}{Q\bibinithyphendelim O\bibinitperiod}{Gregorio}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=88287e6a75f1c4963116ed7b1c7aed66}{Heavner}{H\bibinitperiod}{Nathan}{N\bibinitperiod}{}{}{}{}}%
+        {{hash=8dd17c11b3389c9a68672f7930d93ddc}{Geijn}{G\bibinitperiod}{Robert}{R\bibinitperiod}{van\bibnamedelima de}{v\bibinitperiod\bibinitdelim d\bibinitperiod}{}{}}%
+      }
+      \name{author}{4}{}{%
+        {{hash=6784940298ce7e745f88fc73bc8c07b7}{Martinsson}{M\bibinitperiod}{Per-Gunnar}{P\bibinithyphendelim G\bibinitperiod}{}{}{}{}}%
+        {{hash=e5aaab1b3f4aa04fd1c27da6182e0ad3}{Quintana-Orti}{Q\bibinithyphendelim O\bibinitperiod}{Gregorio}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=88287e6a75f1c4963116ed7b1c7aed66}{Heavner}{H\bibinitperiod}{Nathan}{N\bibinitperiod}{}{}{}{}}%
+        {{hash=8dd17c11b3389c9a68672f7930d93ddc}{Geijn}{G\bibinitperiod}{Robert}{R\bibinitperiod}{van\bibnamedelima de}{v\bibinitperiod\bibinitdelim d\bibinitperiod}{}{}}%
+      }
+      \strng{namehash}{d3dc65b44297210755124be340754c62}
+      \strng{fullhash}{3e11ea0de611bc0e15da46b685f92b90}
+      \field{sortinit}{M}
+      \field{labeltitle}{Householder QR Factorization with Randomization for Column Pivoting (HQRRP). FLAME Working Note 78}
+      \field{abstract}{A fundamental problem when adding column pivoting to the Householder QR factorization is that only about half of the computation can be cast in terms of high performing matrix-matrix multiplications, which greatly limits the benefits that can be derived from so-called blocking of algorithms. This paper describes a technique for selecting groups of pivot vectors by means of randomized projections. It is demonstrated that the asymptotic flop count for the proposed method is $2mn^2 - (2/3)n^3$ for an $m\times n$ matrix, identical to that of the best classical unblocked Householder QR factorization algorithm (with or without pivoting). Experiments demonstrate acceleration in speed of close to an order of magnitude relative to the {\sc geqp3} function in LAPACK, when executed on a modern CPU with multiple cores. Further, experiments demonstrate that the quality of the randomized pivot selection strategy is roughly the same as that of classical column pivoting. The described algorithm is made available under Open Source license and can be used with LAPACK or libflame.}
+      \field{day}{08}
+      \field{eprintclass}{math.NA}
+      \field{eprinttype}{arXiv}
+      \field{month}{12}
+      \field{title}{Householder QR Factorization with Randomization for Column Pivoting (HQRRP). FLAME Working Note 78}
+      \field{year}{2015}
+      \verb{eprint}
+      \verb 1512.02671
+      \endverb
+      \verb{file}
+      \verb :http\://arxiv.org/pdf/1512.02671v2:PDF
+      \endverb
+      \keyw{math.NA,cs.NA}
+    \endentry
+    \entry{Rackauckas2020}{article}{}
+      \name{labelname}{9}{}{%
+        {{hash=c454e867cc51042dbb2c4a284006599f}{Rackauckas}{R\bibinitperiod}{Christopher}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=20505ba2d4ff3726270435a325081550}{Ma}{M\bibinitperiod}{Yingbo}{Y\bibinitperiod}{}{}{}{}}%
+        {{hash=6bc5796885472d9051bc8af919bddc0f}{Martensen}{M\bibinitperiod}{Julius}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=19af9ef181d314df09a8850cded60831}{Warner}{W\bibinitperiod}{Collin}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=2c252f48b45ea1f4139531d7fdc48549}{Zubov}{Z\bibinitperiod}{Kirill}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=754f408b6b83ad9d63aa8d58927fca26}{Supekar}{S\bibinitperiod}{Rohit}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=31827efba1c8bd6685a99f893a1b2919}{Skinner}{S\bibinitperiod}{Dominic}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=c4cd0be2fa04426ac283ca873e852e4e}{Ramadhan}{R\bibinitperiod}{Ali}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=01a6ca61fcd12a3a071ec49304df57f8}{Edelman}{E\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{9}{}{%
+        {{hash=c454e867cc51042dbb2c4a284006599f}{Rackauckas}{R\bibinitperiod}{Christopher}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=20505ba2d4ff3726270435a325081550}{Ma}{M\bibinitperiod}{Yingbo}{Y\bibinitperiod}{}{}{}{}}%
+        {{hash=6bc5796885472d9051bc8af919bddc0f}{Martensen}{M\bibinitperiod}{Julius}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=19af9ef181d314df09a8850cded60831}{Warner}{W\bibinitperiod}{Collin}{C\bibinitperiod}{}{}{}{}}%
+        {{hash=2c252f48b45ea1f4139531d7fdc48549}{Zubov}{Z\bibinitperiod}{Kirill}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=754f408b6b83ad9d63aa8d58927fca26}{Supekar}{S\bibinitperiod}{Rohit}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=31827efba1c8bd6685a99f893a1b2919}{Skinner}{S\bibinitperiod}{Dominic}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=c4cd0be2fa04426ac283ca873e852e4e}{Ramadhan}{R\bibinitperiod}{Ali}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=01a6ca61fcd12a3a071ec49304df57f8}{Edelman}{E\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{c58131c3ce606662dc0a6d52c59cadbe}
+      \strng{fullhash}{6d14e83d6f22dcd0d812a3de1d0d01a1}
+      \field{sortinit}{R}
+      \field{labeltitle}{Universal Differential Equations for Scientific Machine Learning}
+      \field{abstract}{In the context of science, the well-known adage "a picture is worth a thousand words" might well be "a model is worth a thousand datasets." Scientific models, such as Newtonian physics or biological gene regulatory networks, are human-driven simplifications of complex phenomena that serve as surrogates for the countless experiments that validated the models. Recently, machine learning has been able to overcome the inaccuracies of approximate modeling by directly learning the entire set of nonlinear interactions from data. However, without any predetermined structure from the scientific basis behind the problem, machine learning approaches are flexible but data-expensive, requiring large databases of homogeneous labeled training data. A central challenge is reconciling data that is at odds with simplified models without requiring "big data". In this work we develop a new methodology, universal differential equations (UDEs), which augments scientific models with machine-learnable structures for scientifically-based learning. We show how UDEs can be utilized to discover previously unknown governing equations, accurately extrapolate beyond the original data, and accelerate model simulation, all in a time and data-efficient manner. This advance is coupled with open-source software that allows for training UDEs which incorporate physical constraints, delayed interactions, implicitly-defined events, and intrinsic stochasticity in the model. Our examples show how a diverse set of computationally-difficult modeling issues across scientific disciplines, from automatically discovering biological mechanisms to accelerating the training of physics-informed neural networks and large-eddy simulations, can all be transformed into UDE training problems that are efficiently solved by a single software methodology.}
+      \field{day}{13}
+      \field{eprintclass}{cs.LG}
+      \field{eprinttype}{arXiv}
+      \field{month}{01}
+      \field{title}{Universal Differential Equations for Scientific Machine Learning}
+      \field{year}{2020}
+      \verb{eprint}
+      \verb 2001.04385
+      \endverb
+      \verb{file}
+      \verb :http\://arxiv.org/pdf/2001.04385v3:PDF
+      \endverb
+      \keyw{cs.LG,math.DS,q-bio.QM,stat.ML}
+    \endentry
+    \entry{desilva2020}{article}{}
+      \name{labelname}{6}{}{%
+        {{hash=c7862b532c6f6ea6cdf56b5114cf3630}{Silva}{S\bibinitperiod}{Brian}{B\bibinitperiod}{de}{d\bibinitperiod}{}{}}%
+        {{hash=5a26ce56fbd25782a5dbdd8b76cfc09f}{Champion}{C\bibinitperiod}{Kathleen}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=89ef2827f75f9f5a5e29125b3c3fd641}{Quade}{Q\bibinitperiod}{Markus}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=a8503ec722f9e64000c65e748137d1b6}{Loiseau}{L\bibinitperiod}{Jean-Christophe}{J\bibinithyphendelim C\bibinitperiod}{}{}{}{}}%
+        {{hash=2de9c682bd5fb4e95621b4ae7b13c765}{Kutz}{K\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=fc4de3bdc60cbc80017a68c97ca1a8f6}{Brunton}{B\bibinitperiod}{Steven}{S\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{6}{}{%
+        {{hash=c7862b532c6f6ea6cdf56b5114cf3630}{Silva}{S\bibinitperiod}{Brian}{B\bibinitperiod}{de}{d\bibinitperiod}{}{}}%
+        {{hash=5a26ce56fbd25782a5dbdd8b76cfc09f}{Champion}{C\bibinitperiod}{Kathleen}{K\bibinitperiod}{}{}{}{}}%
+        {{hash=89ef2827f75f9f5a5e29125b3c3fd641}{Quade}{Q\bibinitperiod}{Markus}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=a8503ec722f9e64000c65e748137d1b6}{Loiseau}{L\bibinitperiod}{Jean-Christophe}{J\bibinithyphendelim C\bibinitperiod}{}{}{}{}}%
+        {{hash=2de9c682bd5fb4e95621b4ae7b13c765}{Kutz}{K\bibinitperiod}{J.}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=fc4de3bdc60cbc80017a68c97ca1a8f6}{Brunton}{B\bibinitperiod}{Steven}{S\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {The Open Journal}%
+      }
+      \strng{namehash}{35a5f10744b23b98479ea8f537db8ce6}
+      \strng{fullhash}{18d501e0744cc06d337a83d809449d25}
+      \field{sortinit}{S}
+      \field{labeltitle}{PySINDy: A Python package for the sparse identification of nonlinear dynamical systems from data}
+      \field{journaltitle}{Journal of Open Source Software}
+      \field{number}{49}
+      \field{title}{PySINDy: A Python package for the sparse identification of nonlinear dynamical systems from data}
+      \field{volume}{5}
+      \field{year}{2020}
+      \field{pages}{2104}
+      \verb{doi}
+      \verb 10.21105/joss.02104
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.21105/joss.02104
+      \endverb
     \endentry
   \endsortlist
 \endrefsection

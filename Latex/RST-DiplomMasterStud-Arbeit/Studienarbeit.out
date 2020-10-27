@@ -1,20 +1,32 @@
 \BOOKMARK [0][-]{chapter*.2}{Verzeichnis der Formelzeichen}{}% 1
-\BOOKMARK [0][-]{chapter*.3}{Abbildungsverzeichnis}{}% 2
-\BOOKMARK [0][-]{chapter*.4}{Tabellenverzeichnis}{}% 3
-\BOOKMARK [0][-]{chapter.1}{Der SINDy-Algorithmus}{}% 4
-\BOOKMARK [1][-]{section.1.1}{Idee}{chapter.1}% 5
-\BOOKMARK [1][-]{section.1.2}{Funktionsweise der Methode}{chapter.1}% 6
-\BOOKMARK [1][-]{section.1.3}{L\366sen des Minimierungsproblems}{chapter.1}% 7
-\BOOKMARK [2][-]{subsection.1.3.1}{Rekursive Methode der kleinsten Quadrate}{section.1.3}% 8
-\BOOKMARK [2][-]{subsection.1.3.2}{SR3}{section.1.3}% 9
-\BOOKMARK [0][-]{chapter.2}{Vergleich der Implementationen}{}% 10
-\BOOKMARK [0][-]{chapter.3}{Notizen}{}% 11
-\BOOKMARK [1][-]{section.3.1}{UDE}{chapter.3}% 12
-\BOOKMARK [2][-]{subsection.3.1.1}{8.7.20}{section.3.1}% 13
-\BOOKMARK [2][-]{subsection.3.1.2}{9.7.20}{section.3.1}% 14
-\BOOKMARK [1][-]{section.3.2}{Sindy}{chapter.3}% 15
-\BOOKMARK [2][-]{subsection.3.2.1}{Funktionsweise der Methode}{section.3.2}% 16
-\BOOKMARK [2][-]{subsection.3.2.2}{Vergleich von SINDY-Implementierungen in Python \(PySindy\) und Julia \(DiffEqLibrary\)}{section.3.2}% 17
-\BOOKMARK [1][-]{section.3.3}{Wagen-Pendel}{chapter.3}% 18
-\BOOKMARK [2][-]{subsection.3.3.1}{mit Reibung}{section.3.3}% 19
-\BOOKMARK [1][-]{section.3.4}{errors}{chapter.3}% 20
+\BOOKMARK [0][-]{chapter*.4}{Verzeichnis der Abk\374rzungen}{}% 2
+\BOOKMARK [0][-]{chapter*.6}{Abbildungsverzeichnis}{}% 3
+\BOOKMARK [0][-]{chapter.1}{Einleitung}{}% 4
+\BOOKMARK [1][-]{section.1.1}{Motivation}{chapter.1}% 5
+\BOOKMARK [1][-]{section.1.2}{Pr\344zisierung der Aufgabenstellung}{chapter.1}% 6
+\BOOKMARK [0][-]{chapter.2}{Der SINDy-Algorithmus}{}% 7
+\BOOKMARK [1][-]{section.2.1}{Vorbetrachtungen}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.2}{Funktionsweise der Methode}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.3}{L\366sen des Minimierungsproblems}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.4}{Rekursive Methode der kleinsten Quadrate}{chapter.2}% 11
+\BOOKMARK [0][-]{chapter.3}{Durchf\374hrung von Tests}{}% 12
+\BOOKMARK [1][-]{section.3.1}{Vorstellung der Implementationen}{chapter.3}% 13
+\BOOKMARK [1][-]{section.3.2}{Vorstellung der Testsysteme}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.3}{Einfluss ausgew\344hlter Parameter}{chapter.3}% 15
+\BOOKMARK [2][-]{subsection.3.3.1}{Anmerkungen zur Auswertung}{section.3.3}% 16
+\BOOKMARK [2][-]{subsection.3.3.2}{Einfluss der Simulationszeit}{section.3.3}% 17
+\BOOKMARK [2][-]{subsection.3.3.3}{Einfluss der Simulationsschrittweite}{section.3.3}% 18
+\BOOKMARK [2][-]{subsection.3.3.4}{Einfluss der Gestaltung der Bibliothek}{section.3.3}% 19
+\BOOKMARK [2][-]{subsection.3.3.5}{Einfluss von verrauschten Daten}{section.3.3}% 20
+\BOOKMARK [2][-]{subsection.3.3.6}{Rechenzeit}{section.3.3}% 21
+\BOOKMARK [2][-]{subsection.3.3.7}{Zusammenfassung der Ergebnisse}{section.3.3}% 22
+\BOOKMARK [1][-]{section.3.4}{Verbesserung der Ergebnisse}{chapter.3}% 23
+\BOOKMARK [2][-]{subsection.3.4.1}{Arbeit mit mehreren Trajektorien}{section.3.4}% 24
+\BOOKMARK [2][-]{subsection.3.4.2}{Identifikation von teilweise bekannten Systemen}{section.3.4}% 25
+\BOOKMARK [0][-]{chapter.4}{Anwendung auf komplexes Beispiel - Inverses Pendel}{}% 26
+\BOOKMARK [1][-]{section.4.1}{Einleitung}{chapter.4}% 27
+\BOOKMARK [1][-]{section.4.2}{Aufbau der Bibliothek}{chapter.4}% 28
+\BOOKMARK [1][-]{section.4.3}{Bewertung der Ergebnisse}{chapter.4}% 29
+\BOOKMARK [0][-]{chapter.5}{Zusammenfassung und Ausblick}{}% 30
+\BOOKMARK [1][-]{section.5.1}{Zusammenfassung}{chapter.5}% 31
+\BOOKMARK [1][-]{section.5.2}{Ausblick}{chapter.5}% 32

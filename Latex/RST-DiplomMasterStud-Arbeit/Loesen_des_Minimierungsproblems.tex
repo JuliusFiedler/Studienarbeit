@@ -1,5 +1,2 @@
-Das Lösen des Gleichungssystems \eqref{eq:Minimierungsproblem} ist die Kernaufgabe des Algorithmus. Das Gleichungssystem besitzt $m\cdot n$ Gleichungen ($m\text{ } \hat{=}$ Anzahl Messungen) und $L\cdot n$ Unbekannte ($L\text{ } \hat{=}$ Anzahl Ansatzfunktionen). Unter der Annahme, dass die Anzahl der Messungen ausreichend groß ist, handelt es sich um ein überbestimmtes Gleichungssystem. Es existieren verschiedene Optimierungsverfahren, um dieses Problem der Form
-\begin{equation}
-Ax=b
-\end{equation}
-zu lösen. In dieser Arbeit wurde hauptsächlich mit einer rekursiven Methode der kleinsten Quadrate (MKQ) gearbeitet. Sparse Relaxed Regularized Regression (SR3) wird zum Vergleich herangezogen. Der in dieser Arbeit entwickelte vereinfachte Algorithmus verwendet die erste Methode. \todo{Quelle?}
+Das Lösen des Gleichungssystems \eqref{eq:Minimierungsproblem} ist die Kernaufgabe des Algorithmus. Das Gleichungssystem besitzt $m\cdot n$ Gleichungen ($m\text{ } \hat{=}$ Anzahl Messungen) und $L\cdot n$ Unbekannte ($L\text{ } \hat{=}$ Anzahl Ansatzfunktionen). Unter der Annahme, dass die Anzahl der Messungen ausreichend groß ist, handelt es sich um ein überbestimmtes Gleichungssystem. 
+Brunton et. al. \cite{Brunton2016}  schlägt einen sequentiellen Algorithmus (\textit{Sequentially Thresholded Least Squares algorithm} STLSQ) vor. Eine Abwandlung davon wurde im Verlauf dieser Arbeit in \textit{Python} entwickelt und wird im Folgenden vorgestellt.

@@ -145,7 +145,7 @@ def create_poly_library(poly_order = 2):
     print(len(polys))
     return variables, polys
 # %%
-def calc_param_ident_error(p_no, p_i):
+def calc_param_ident_error(p_no, p_i, supress_print=False):
     if p_no.shape != p_i.shape:
         p_n = np.zeros_like(p_i)
         a, b = p_no.shape
@@ -166,7 +166,8 @@ def calc_param_ident_error(p_no, p_i):
         msg = "*"
     #print(s1, s2, s3, s)
     # print(p_n.size)
-    print("   RMS relativer Fehler: " + str(rel_error) + msg )
+    if not supress_print:
+        print("   RMS relativer Fehler: " + str(rel_error) + msg )
     return rel_error #return str(rel_error) + msg
 # %%
 def calc_param_ident_error_div_by_ev(p_no, p_i):
@@ -373,7 +374,7 @@ model = ps.SINDy(
 )
 dt= t_end/(X.shape[0]-1)
 print("PySINDy nominal")
-%time model.fit(X, x_dot=DX_, t=dt, multiple_trajectories=False) 
+model.fit(X, x_dot=DX_, t=dt, multiple_trajectories=False) 
 %time model.print()
 %time p_ident_nominal = model.coefficients().T
 calc_param_ident_error(p_nom, p_ident_nominal)
@@ -401,7 +402,7 @@ if NN:
     p_ident_NN_0_001 = model.coefficients()
 # %%
 # import data, set parameters
-system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
+system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
 para = "noise"
 poly_order = 2
 dt =  0.01 
@@ -431,6 +432,7 @@ model = ps.SINDy(
     differentiation_method = ps.FiniteDifference(order=2),
     feature_library = ps.PolynomialLibrary(degree=poly_order),
     optimizer = ps.STLSQ(threshold=th),
+    # optimizer = ps.SR3(threshold=th),
     feature_names=feature_names
 )
 variables, polys = create_poly_library(poly_order)
@@ -438,6 +440,7 @@ Xs, DX_s, x_dots=read_block("Data_"+sys_name+"_"+para+"_variation.csv", n)
 
 # %%
 # calc models, add errors to array
+Mask = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1]
 errors = np.zeros((2, 2*len(Xs)))
 errors = np.array(errors, dtype=str)
 times = np.array(np.zeros((2,1)))
@@ -448,6 +451,14 @@ for i in range(len(Xs)):
 print(errors)
 av_time = times/(len(Xs)*2)
 print(times)
+
+# %%
+errors = np.array(errors, dtype = float)
+plt.plot(errors[0, np.equal(Mask[0:int((errors.shape[1]))], 1) ], 'k', label = "PySINDy")
+plt.plot(errors[1, np.equal(Mask[0:int((errors.shape[1]))], 1) ], 'r--', label = "Simple")
+plt.yscale("log")
+plt.legend()
+plt.show()
 # %%
 def do_sindys(X, DX_, x_dot, variables, polys, th, dt, p_nom):
     errors = []
@@ -503,7 +514,7 @@ x_dot = read('x_dot_' + sys_name + '.csv')
 DX_ = read('DX__' + sys_name + '.csv')
 # %%
 para = "order"
-orders = [ 2, 3, 4, 5 , 6, 7, 8]
+orders = [2,8]# [ 2, 3, 4, 5 , 6, 7, 8,15]
 errors = np.zeros((2, 2*len(orders)))
 errors = np.array(errors, dtype=str)
 times = np.array(np.zeros((2,1)))
@@ -538,7 +549,7 @@ if NN:
 def export_to_csv(errors, av_time, file_identifier):
       
     # row 1:
-    heads1 = [ 2, 3, 4, 5 , 6, 7, 8]   # parameter values as numbers if possible
+    heads1 = [ 1,2,3,4,5]   # parameter values as numbers if possible
     row_head1 = [sys_name]
     for i in range(len(heads1)):
         row_head1.append(heads1[i])
@@ -546,7 +557,7 @@ def export_to_csv(errors, av_time, file_identifier):
     row_head1.append("Rechenzeit")
     # row 2:
     heads2 = ["nominal", "zentral"]
-    row_head2 = ["Ordnung der Polynom-Bibliothek"]    # parameter name
+    row_head2 = ["Simulationszeit [s]"]    # parameter name
     for i in range(len(heads1)):
         row_head2.append(heads2[0])
         row_head2.append(heads2[1])
@@ -618,18 +629,177 @@ def make_graph(name):
     axs[0].legend()
     axs[0].set(ylabel="relativer Fehler", title='System: '+ sys +', Nominalableitungen')
     axs[0].set_yscale("linear")
-    # axs[0].set_xscale("log")
+    axs[0].set_xscale("log")
 
     axs[1].plot(H, PSz, 'k', label=r'PySINDy')
     axs[1].plot(H, SSz, 'r--', label=r'SINDy vereinfacht')
     axs[1].plot(H, JSz, 'gD', label=r'SINDy aus DiffEq')
     axs[1].set(xlabel=str(x_axes), ylabel="relativer Fehler", title='System: '+ sys +', Zentraldifferenz')
     axs[1].set_yscale("log")
-    # axs[1].set_xscale("log")
+    axs[1].set_xscale("log")
 
     fig.show()
 
 
   
 # %%
+def time_plot(name, title):
+    SMALL_SIZE = 16
+    MEDIUM_SIZE = 18
+    BIGGER_SIZE = 20
 
+    plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+    plt.rc('axes', titlesize=BIGGER_SIZE)    # fontsize of the axes title
+    plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+    plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+    path = 'C:\\Users\\Julius\\Documents\\Studium_Elektrotechnik\\Studienarbeit\\github\\Studienarbeit\\Latex\\RST-DiplomMasterStud-Arbeit\\images\\'
+    A = pd.read_csv(path + name + ".csv", sep=',',header=None)
+    A = np.array(A.values) 
+    H = np.array(A[0,1:-1], dtype=np.float64)
+    Mask = np.logical_not(np.isnan(H)) # nominals 
+    H = H[Mask]
+
+    sys = A[0][0]
+    x_axes = A[1][0]
+    A = np.delete(A, [0, 1], axis= 0)
+    A = np.delete(A, 0, axis= 1)
+    A = np.array(A, dtype=np.float64)
+
+    Times = A[:, -1]
+    figure, ax = plt.subplots(figsize=(7, 7))
+    x = ["PySINDy", "SINDy\n vereinfacht", "SINDy\n aus DiffEq"]
+    y_pos = np.arange(len(x))
+    plt.ylabel("Rechenzeit [s]")
+    plt.bar(y_pos, Times, align= "center", color= ["k", "r", "g"])
+    ax.set_xticks(range(len(x)))
+    ax.set_xticklabels(x)
+    # ax.set_yscale("log")
+    plt.title("durchschnittliche Rechenzeit\n"+sys+"-System\n"+title)
+    figure.show()
+    # print(x_axes, sys)
+
+# %%
+def simulate(system, p_i, p_nom, dt):
+    p1 = p_i.T[p_i.T!=0]
+    if system == 1:
+        u0 = [0.44249296,4.6280594]
+        def sys_ident(x, t):
+            dgl1 = [ p1[0] * x[0] + p1[1] * x[0] * x[1],
+                     p1[2] * x[1] + p1[3] * x[0] * x[1]]
+            return dgl1
+        p2 = p_nom.T[p_nom.T!=0]
+        def sys(x, t):
+            dgl2 = [p2[0] * x[0] + p2[1] * x[0] * x[1],
+                    p2[2] * x[1] + p2[3] * x[0] * x[1]]
+            return dgl2
+    elif system == 2:
+        u0 = [-8, 8, 27]
+        def sys_ident(x, t):
+            dgl1 = [ p1[0] * x[0] + p1[1] * x[1],
+                    p1[2] * x[0] + p1[3] * x[1] + p1[4] * x[0] * x[2],
+                    p1[5] * x[2] + p1[6] * x[0] * x[1]]
+            return dgl1
+        p2 = p_nom.T[p_nom.T!=0]
+        def sys(x, t):
+            dgl2 = [ p2[0] * x[0] + p2[1] * x[1],
+                    p2[2] * x[0] + p2[3] * x[1] + p2[4] * x[0] * x[2],
+                    p2[5] * x[2] + p2[6] * x[0] * x[1]]
+            return dgl2
+    elif system == 3:
+        u0 = [1, -1, -1]
+        def sys_ident(x, t):
+            dgl1 = [p1[0]*x[1] + p1[1]* x[2],
+                    p1[2]*x[0] + p1[3] * x[1],
+                    p1[4] + p1[5]* x[2] + p1[6]*x[0] * x[2] ]
+            return dgl1
+        p2 = p_nom.T[p_nom.T!=0]
+        def sys(x, t):
+            dgl2 = [p2[0]*x[1] + p2[1]* x[2],
+                    p2[2]*x[0] + p2[3] * x[1],
+                    p1[4] + p1[5]* x[2] + p1[6]*x[0] * x[2] ]
+            return dgl2
+    
+    tt = np.arange(0, 15, dt)
+    x_ori = odeint(sys, u0, tt)
+    x_ident = odeint(sys_ident, u0, tt)
+
+    SMALL_SIZE = 16
+    MEDIUM_SIZE = 18
+    BIGGER_SIZE = 20
+
+    plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+    plt.rc('axes', titlesize=BIGGER_SIZE)    # fontsize of the axes title
+    plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+    plt.rc('figure', titlesize=BIGGER_SIZE) 
+    
+    
+
+    fig, axs = plt.subplots(x_ori.shape[1], 1, sharex=True, figsize=(7, 9))
+    for i in range(x_ori.shape[1]):
+        # top = np.max([np.max(x_ori[:,i]), np.max(x_ident[:,i])])
+
+        # bot = np.min([np.min(x_ori[:,i]), np.min(x_ident[:,i])])
+        # axs[i].set_ylim(top= top*1.7, bottom = bot)
+        axs[i].plot(tt, x_ori[:, i], 'k', label='Originalsystem')
+        axs[i].plot(tt, x_ident[:, i], 'r--', label='identifiziertes System')
+        axs[i].legend(loc=0)
+        axs[i].set(xlabel='t', ylabel='$x_{}$'.format(i+1))
+        
+
+    fig2, axs2 = plt.subplots(2, 1, sharex=True, figsize=(7, 9))
+    colors = ["b", "m--", "g:"]
+    for i in range(x_ori.shape[1]):
+        axs2[0].plot(tt, np.abs(x_ori[:, i] - x_ident[:, i]), colors[i], label='absoluter Fehler in $x_{}$'.format(i+1))
+        axs2[0].legend()
+        axs2[0].set(xlabel='t', ylabel="absoluter Fehler")
+        
+        axs2[1].plot(tt, np.abs(x_ori[:, i] - x_ident[:, i])/x_ori[:, i], colors[i], label='relativer Fehler in $x_{}$'.format(i+1))
+        axs2[1].legend()
+        axs2[1].set(xlabel='t', ylabel='relativer Fehler')
+        axs2[1].set_yscale("log")
+        
+        
+    # fig3, axs3 = plt.subplots(x_ori.shape[1], 1, sharex=True, figsize=(7, 9))
+    # for i in range(x_ori.shape[1]):
+        
+
+    plt.show()
+
+# %%
+def wrong_coef(p_nom, rel_err):
+    max_i = 1000
+    p, e = 0, 0
+    n_level = 1
+    for i in range(0, max_i):
+        p = np.random.normal(size=p_nom.shape) * n_level * (p_nom != 0) + p_nom
+        e = calc_param_ident_error(p_nom, p, True)
+        if e < rel_err:
+            break
+        else:
+            n_level *= 0.99
+    print(e)
+    return p, e
+
+# %%
+e = 10e-2
+np.random.seed(seed=1)
+plt.plot(np.random.normal(0,e,100))
+plt.show()
+np.random.seed(seed=1)
+plt.plot(np.random.normal(0,1,100)*e)
+plt.show()
+
+# %%
+names = ["volterra", "lorenz", "roessler"]
+paras = ["tspan", "dt", "order", "no_tr", "noise"]
+for na in names:
+    for p in paras:
+        time_plot("errors_"+na+"_"+p+"_variation")
+# %%

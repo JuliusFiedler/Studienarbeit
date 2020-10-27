@@ -1,5 +1,5 @@
 Roessler,0,,1e-06,,3e-06,,1e-05,,3e-05,,0.0001,,0.0003,,0.001,,0.003,,0.01,,0.1,,Rechenzeit
-Rauschstaerke,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
+Standardabweichung der Normalverteilung,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,nominal,zentral,Durchschnitt
 PySINDy,0.0,0.00109,7e-05,0.00126,0.00024,0.0019,0.0006,0.01003,0.0025,0.05957,0.01465,0.13227,0.06438,0.34789,0.40309,1.17805,0.72004,2.46599,0.68656,12.65091,3.10056,29.14529,0.00836
 SINDy simple,0.0,0.00017,0.0,0.00028,0.0,0.00031,2e-05,0.00114,0.00015,2.15034,1.32824,3.47922,0.00096,7.73382,0.00273,13.97176,0.72744,6.94813,0.69106,12.65489,3.10056,29.14551,0.004995
 DiffEq,0.0,0.00017,0.0,0.00028,0.0,0.00031,2.0e-5,0.00114,0.00015,2.15034,1.32824,3.47922,0.00096,7.73382,0.00273,13.97176,0.72744,6.94813,0.69106,12.65489,3.10056,29.14551,0.074489

@@ -1,28 +1,28 @@
 Eine weit verbreitete Strategie zur Lösung überbestimmter Gleichungssysteme der Form
 \begin{equation}
-\dot{X} = \Theta\Xi
-\end{equation} ist die Methode der kleinsten Quadrate. Dabei wird die Moore-Penrose-Inverse \todo{Quelle}von $\Theta$ berechnet
+\dot{X} = \Theta\Xi \label{eq:Axeqb}
+\end{equation} ist die Methode der kleinsten Quadrate. Dabei wird die Moore-Penrose-Inverse \cite{Courrieu2008} von $\Theta$ berechnet
 \begin{equation}
 \Theta^{+} := (\Theta^T\Theta)^{-1}\Theta^T.
 \end{equation}
 Die Moore-Penrose-Lösung
 \begin{equation}
-\Xi = \Theta^+\dot{X}
+\Xi = \Theta^+\dot{X} \label{eq:MPL}
 \end{equation}
-minimiert dabei den Fehler \todo{Quelle}
+minimiert dabei den Fehler 
 \begin{equation}
 \varepsilon := \norm{\Theta\Xi-\dot{X}}_2. \label{eq:Fehler_MKQ} 
 \end{equation} 
 Der Algorithmus beginnt mit dieser Näherungslösung für die Koeffizientenmatrix $\Xi$.
 Um die Forderung nach einer dünnbesetzten Matrix umzusetzen, werden anschließend alle Koeffizienten, deren Betrag unter einem festgelegten Grenzwert $\lambda$ liegt, zu Null gesetzt.
 \begin{equation}
-\Xi^\text{d}_\text{ij} := \begin{cases} 0 & |\Xi_\text{ij}| < \lambda\\
-\Xi_\text{ij} & \text{sonst} 
+\Xi^\text{d}_{ij} := \begin{cases} 0, & |\Xi_{ij}| < \lambda\\
+\Xi_{ij}, & \text{sonst} 
 \end{cases} ,\quad 1 \leq i \leq L, \quad 1\leq j \leq n \label{eq:make_sparse}
 \end{equation}
-Jeder von Null verschiedene Koeffizient $\Xi^\text{d}_\text{ij}$ repräsentiert eine im Differentialgleichungssystem vorkommende Ansatzfunktion. Allerdings sind die Koeffizienten in $\Xi^\text{d}$ noch ungenau, da sie unter Berücksichtigung aller Ansatzfunktionen der Bibliothek berechnet wurden, also auch derer, die nicht in der DGL vorkommen.\todo{Ausdruck} Es bietet sich an, die Koeffizientenmatrix $\Xi$ erneut zu berechnen, unter Nutzung des Wissens darüber, welche Ansatzfunktionen nicht in der Differentialgleichung vorkommen.
+Jeder von Null verschiedene Koeffizient $\Xi^\text{d}_{ij}$ repräsentiert eine im Differentialgleichungssystem vorkommende Ansatzfunktion. Allerdings sind die Koeffizienten in $\Xi^\text{d}$ noch ungenau, da sie unter Berücksichtigung aller Ansatzfunktionen der Bibliothek berechnet wurden, also auch derer, die nicht in der DGL vorkommen. Daher wird die Koeffizientenmatrix $\Xi$ neu berechnet, unter Nutzung des Wissens darüber, welche Ansatzfunktionen nicht in der Differentialgleichung vorkommen.
 
-Jeder Null-Koeffizient einer Spalte $k$ der Koeffizientenmatrix $\Xi^\text{d}$ repräsentiert eine Ansatzfunktion, die in der $k$-ten Zeile des DGL-Systems nicht vorkommt. Die neue Koeffizientenmatrix kann spaltenweise berechnet werden, indem man die Bibliothek um die für diese Zeile nicht relevanten Ansatzfunktionen verkleinert. Damit wird statt der Originalbibliothek $\Theta \in\mathbb{R}^{m\times L}$ die verkleinerte Bibliothek $\Theta_\text{v} \in\mathbb{R}^{m\times h_k},\text{ } h_k\leq L$ verwendet. (Der Fall $h=L$ kann auftreten, wenn in einer Spalte jeder Koeffizient von Null verschieden ist, in einer anderen Spalte aber noch mindestens eine Null vorkommt.) \todo{Verwirrt die Anmerkung h=L mehr, als dass sie hilft?} Die neue Koeffizientenmatrix wird wie folgt berechnet (die Indizes der $\theta$ sind willkürlich gewählt und repräsentieren diejenigen Ansatzfunktionen, deren Koeffizienten nicht Null sind):
+Jeder Null-Koeffizient einer Spalte $k$ der Koeffizientenmatrix $\Xi^\text{d}$ repräsentiert eine Ansatzfunktion, die in der $k$-ten Zeile des DGL-Systems nicht vorkommt. Die neue Koeffizientenmatrix kann spaltenweise berechnet werden, indem man die Bibliothek um die für diese Zeile nicht relevanten Ansatzfunktionen verkleinert. Damit wird statt der Originalbibliothek $\Theta \in\mathbb{R}^{m\times L}$ die verkleinerte Bibliothek $\Theta_\text{v} \in\mathbb{R}^{m\times h_k},\text{ } h_k\leq L$ verwendet. (Der Fall $h=L$ kann auftreten, wenn in einer Spalte jeder Koeffizient von Null verschieden ist, in einer anderen Spalte aber noch mindestens eine Null vorkommt.) Die neue Koeffizientenmatrix wird wie folgt berechnet (die Indizes der $\theta$ sind willkürlich gewählt und repräsentieren diejenigen Ansatzfunktionen, deren Koeffizienten nicht Null sind):
 
 
 %Für jede Zeile der DGL wählt man diejenigen Spalten der Bibliotheksmatrix aus, die für Funktionen stehen, die nach \eqref{eq:make_sparse} in dieser Zeile vorkommen. Dann kann man die Koeffizientenmatrix spaltenweise wie folgt berechnen (der Index a steht für Auswahl, die Indizes der $\theta$ sind willkürlich gewählt, ):
@@ -30,7 +30,7 @@ Jeder Null-Koeffizient einer Spalte $k$ der Koeffizientenmatrix $\Xi^\text{d}$ r
 \begin{equation}
 \dot{X}_k = 	\left(\begin{array}{c} 
       					 \mid \\
-      					 \dot{x}_k(t)\\ 
+      					 \dot{\boldsymbol{x}}_k(t)\\ 
       					 \mid 
     				\end{array}\right) \in \mathbb{R}^{m}
 \end{equation}
@@ -42,14 +42,14 @@ Jeder Null-Koeffizient einer Spalte $k$ der Koeffizientenmatrix $\Xi^\text{d}$ r
 	\end{bmatrix}\in\mathbb{R}^{m\times h_k}.
 \end{equation}
 \begin{equation}
-\hat{\Xi}_k := \Theta_\text{v}^+\dot{X}_k = \xi_k  \in\mathbb{R}^{h_k} \label{eq:xi_select}
+\hat{\Xi}_k := \Theta_\text{v}^+\dot{X}_k  \in\mathbb{R}^{h_k} \label{eq:xi_select}
 \end{equation}
 \end{subequations}
 Um die neue Koeffizientenmatrix $\Xi^\text{n}$ erzeugen zu können, müssen die Spalten $\hat{\Xi}_k\in\mathbb{R}^{h_k}$ erst auf die einheitliche Größe $\Xi^\text{n}_k\in\mathbb{R}^{L}$ gebracht werden:
 \begin{equation}
 \Xi^\text{n}_\text{$k$, i} = \begin{cases}
-						0 & \Xi^\text{d}_\text{ik}=0\\
-						\hat{\Xi}_\text{$k$, g}  & \text{sonst}
+						0, & \Xi^\text{d}_{ik}=0\\
+						\hat{\Xi}_\text{$k$, g},  & \text{sonst}
 
 \end{cases}\text{ mit }1\leq g \leq h_k. \label{eq:reshape} 
 \end{equation}
@@ -63,9 +63,9 @@ Daher werden die Schritte \eqref{eq:make_sparse}, \eqref{eq:xi_select} und \eqre
 \end{equation}
 und somit
 \begin{equation}
-\dot{x} = f(x) \approx \Xi^T\left(\Theta(x^T)\right)^T,
+\dot{\boldsymbol{x}} = \boldsymbol{f}(\boldsymbol{x}) \approx \Xi^T\left(\Theta(\boldsymbol{x}^T)\right)^T,
 \end{equation}
-wobei $\Xi$ dünn\todo{spezifizieren, Ausnahmen} besetzt ist.
+wobei $\Xi$ dünnbesetzt ist\footnote{$Xi$ ist nur dann nicht dünnbesetzt, wenn die Bibliothek sehr wenige Funktionen enthält (was in der Regel jedoch nicht gegen die Güte des Identifikationsergebnisses spricht), oder wenn der Grenzwert $\lambda$ zu klein gewählt wird und Funktionen mit sehr kleinen Koeffizienten nicht aus der DGL entfernt werden, was das Identifikationsergebnis verschlechtert.}.
 
 \end{subequations}
 

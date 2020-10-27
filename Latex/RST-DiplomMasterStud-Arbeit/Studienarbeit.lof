@@ -8,8 +8,28 @@
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2}{\ignorespaces ude fric viskos d1 03\relax }}{14}{figure.caption.16}
+\contentsline {figure}{\numberline {1}{\ignorespaces Simulation des Lotka-Volterra-Systems, relativer Fehler der identifizierten Koeffizienten $\varepsilon _\text {r} = 10 \%. $ \relax }}{8}{figure.caption.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3}{\ignorespaces ude fric viskos und haft d1 03 d2 05\relax }}{15}{figure.caption.17}
+\contentsline {figure}{\numberline {2}{\ignorespaces Simulation des Lotka-Volterra-Systems, relativer Fehler der identifizierten Koeffizienten $\varepsilon _\text {r} = 1 \%. $ \relax }}{9}{figure.caption.8}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {4}{\ignorespaces nur viskose Reibung\relax }}{16}{figure.caption.19}
+\contentsline {figure}{\numberline {3}{\ignorespaces Simulation des Lotka-Volterra-Systems, relativer Fehler der identifizierten Koeffizienten $\varepsilon _\text {r} = 0.1 \%. $ \relax }}{10}{figure.caption.9}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {4}{\ignorespaces relativer Fehler der identifizierten Parameter in Abh\IeC {\"a}ngigkeit der Simulationszeit.\relax }}{11}{figure.caption.10}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {5}{\ignorespaces relativer Fehler der identifizierten Parameter in Abh\IeC {\"a}ngigkeit der Simulationsschrittweite.\relax }}{12}{figure.caption.11}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {6}{\ignorespaces relativer Fehler der Identifizierten Parameter in Abh\IeC {\"a}ngigkeit der Ordnung der Polynom-Bibliothek.\relax }}{13}{figure.caption.12}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {7}{\ignorespaces relativer Fehler der identifizierten Parameter in Abh\IeC {\"a}ngigkeit der Rauschst\IeC {\"a}rke.\relax }}{13}{figure.caption.13}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {8}{\ignorespaces durchschnittliche Rechenzeit der unterschiedlichen Algorithmen.\relax }}{14}{figure.caption.14}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {9}{\ignorespaces relativer Fehler der identifizierten Parameter in Abh\IeC {\"a}ngigkeit der Anzahl der gleichzeitig verwendeten Trajektorien.\relax }}{16}{figure.caption.15}
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {10}{\ignorespaces Schematische Darstellung des Wagen-Pendel-Systems, mit den Massen $m_1$ und $m_2$, der Pendell\IeC {\"a}nge $s$, der Erdbeschleunigung $g$, dem Krafteingang $F$, der Position des Wagens $x$ und der Auslenkung des Pendels aus der unteren Ruhelage $\varphi $.\relax }}{17}{figure.caption.16}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {11}{\ignorespaces Simulation des Wagen-Pendel-Systems, relativer Fehler der identifizierten Koeffizienten $\varepsilon _\text {r} = 8\cdot 10^{-5}$.\relax }}{20}{figure.caption.17}
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }

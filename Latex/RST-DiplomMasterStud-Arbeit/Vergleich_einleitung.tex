@@ -1,23 +1,32 @@
-Für den Vergleich der Implementationen werden drei verschiedene Differentialgleichungssystem betrachtet, deren Parameter es zu identifizieren gilt.
+Für den Vergleich der Implementationen werden drei verschiedene Differentialgleichungssysteme betrachtet, deren Parameter es zu identifizieren gilt.
 
-Das Lotka-Volterra-System
+Das \textit{Lotka-Volterra}-System (im Folgenden auch kurz: Volterra-System) ist definiert durch
 \begin{equation}
 \begin{aligned}
 \dot{x} &= \alpha x +\beta xy\\
-\dot{y} &= \gamma y + \delta xy 
+\dot{y} &= \gamma y + \delta xy \label{eq:volterra}
 \end{aligned}
 \end{equation}
 mit den Nominalparametern
 \begin{equation}
-p_\text{V}=	\begin{pmatrix*}[c]
+\boldsymbol{p}_\text{V}=	\begin{pmatrix*}[c]
 				\alpha&\beta&\gamma&\delta
 				\end{pmatrix*} = 
 				\begin{pmatrix*}[c]
-					1.3& -0.9& 0.8& -1.8
+					1.3& -0.9&  -1.8 & 0.8
 				\end{pmatrix*}
 \end{equation}
+und den Anfangswerten
+\begin{equation}
+\begin{pmatrix*}[c]
+				x_0 & y_0
+				\end{pmatrix*} = 
+				\begin{pmatrix*}[c]
+					0.442 & 4.62
+				\end{pmatrix*}.
+\end{equation}
 
-Das Lorenz-System
+Das \textit{Lorenz}-System ist definiert durch
 \begin{equation}
 \begin{aligned}
 \dot{x} &= \alpha(y-x)\\
@@ -27,15 +36,24 @@ Das Lorenz-System
 \end{equation}
 mit den Nominalparametern
 \begin{equation}
-p_\text{L}=	\begin{pmatrix*}[c]
+\boldsymbol{p}_\text{L}=	\begin{pmatrix*}[c]
 				\alpha&\beta&\gamma
 				\end{pmatrix*} = 
 				\begin{pmatrix*}[c]
 					10& 28& \frac{8}{3}
 				\end{pmatrix*}
 \end{equation}
+und den Anfangswerten
+\begin{equation}
+\begin{pmatrix*}[c]
+				x_0 & y_0 & z_0
+				\end{pmatrix*} = 
+				\begin{pmatrix*}[c]
+				-8& 8& 27
+				\end{pmatrix*}.
+\end{equation}
 
-Das Rössler-System
+Das \textit{Rössler}-System ist definiert durch
 \begin{equation}
 \begin{aligned}
 \dot{x} &= -y-z\\
@@ -45,36 +63,39 @@ Das Rössler-System
 \end{equation}
 mit den Nominalparametern
 \begin{equation}
-p_\text{R}=	\begin{pmatrix*}[c]
+\boldsymbol{p}_\text{R}=	\begin{pmatrix*}[c]
 				\alpha&\beta&\gamma
 				\end{pmatrix*} = 
 				\begin{pmatrix*}[c]
 					0.2& 0.1& 5.3
 				\end{pmatrix*}
 \end{equation}
-Ausschlaggebend für die Güte des jeweiligen Algorithmus ist an erster Stelle die Genauigkeit des Ergebnisses, an zweiter Stelle die Rechenzeit. Um die Genauigkeit des Algorithmus vergleichen zu können, wird ein Fehler $\varepsilon_r$  definiert. Dieser ist an das quadratische Mittel des relativen Fehlers angelehnt. $P\in\mathbb{R}^{L\times n}$ bezeichnet die nominale und $Q\in\mathbb{R}^{L\times n}$ die identifizierte Koeffizientenmatrix eines Systems. Dann sei
+und den Anfangswerten
+\begin{equation}
+\begin{pmatrix*}[c]
+				x_0 & y_0 & z_0
+				\end{pmatrix*} = 
+				\begin{pmatrix*}[c]
+				1& -1& -1
+				\end{pmatrix*}.
+\end{equation}
+Ausschlaggebend für die Güte des jeweiligen Algorithmus ist an erster Stelle die Genauigkeit des Ergebnisses, an zweiter Stelle die Rechenzeit. Um die Genauigkeit des Algorithmus vergleichen zu können, wird ein Fehler $\varepsilon_\text{r}$  definiert. Dieser ist an das quadratische Mittel des relativen Fehlers angelehnt. $P\in\mathbb{R}^{L\times n}$ bezeichnet die nominale und $Q\in\mathbb{R}^{L\times n}$ die identifizierte Koeffizientenmatrix eines Systems. Dann sei
 \begin{equation}
 R \in\mathbb{R}^{L\times n} , \quad R_{ij}= \begin{cases}
-|\frac{P_{ij}-Q_{ij}}{P_{ij}}| & P_{ij} \neq 0\\
-|Q_{ij}| & P_{ij} = 0 \wedge |Q_{ij}| < 1\\
-1 & P_{ij} = 0 \wedge |Q_{ij}| \geq 1\\
-0 & \text{sonst}
+|\frac{P_{ij}-Q_{ij}}{P_{ij}}|, & P_{ij} \neq 0\\
+|Q_{ij}|, & P_{ij} = 0 \wedge |Q_{ij}| < 1\\
+1, & P_{ij} = 0 \wedge |Q_{ij}| \geq 1\\
+0, & \text{sonst}
 \end{cases}, \quad  1 \leq i \leq L, \quad 1\leq j \leq n
 \end{equation}
 \begin{equation}
-\varepsilon_r = \frac{1}{\sqrt{k}}\norm{R}_2,
+\varepsilon_\text{r} = \frac{1}{\sqrt{k}}\norm{R}_2,
 \end{equation} 
-wobei $k$ die Anzahl der von Null verschiedenen Elemente von $P$ ist. Für richtig identifizierte Ansatzfunktionen wird somit der relative Fehler zwischen Nominalparameter und identifiziertem Parameter berechnet, während bei falsch identifizierten Ansatzfunktionen der Fehler, bis hin zu einer Grenze, vom identifizierten Parameter abhängt. Dadurch werden kleine Koeffizienten vor falschen Funktion weniger stark bestraft, da diese einen geringeren Einfluss auf das Ergebnis haben. 
+wobei $k$ die Anzahl der von Null verschiedenen Elemente von $P$ ist. Für richtig identifizierte Ansatzfunktionen wird somit der relative Fehler zwischen Nominalparameter und identifiziertem Parameter berechnet, während bei falsch identifizierten Ansatzfunktionen der Fehler, bis hin zu einer Grenze, vom identifizierten Parameter abhängt. Dadurch werden kleine Koeffizienten vor falschen Funktionen weniger stark bestraft, da diese einen geringeren Einfluss auf das Ergebnis haben.
 
-Für jedes System werden die zeitlichen Verläufe der Zustandskomponenten durch einen Differentialgleichungslöser numerisch ermittelt. Die Ableitungsverläufe werden sowohl exakt vorgegeben, als auch über die Zentraldifferenz angenähert. Die exakten Ableitungsverläufe dienen hier nur der Evaluation und sind im Praxisfall auf Grund von Messfehlern oft nicht gegeben. Es wird der Einfluss folgender Parameter auf das Identifikationsergebnis untersucht:
-\begin{itemize}
-\item die Simulationszeit $t$ des DGL-Lösers,
-\item die Schrittweite $dt$ des DGL-Lösers,
-\item die Anzahl der gleichzeitig analysierten Datenreihen ,
-\item die Gestaltung der Bibliothek aus Ansatzfunktionen,
-\item das verwendete Optimierungsverfahren zur Lösung des Approximationsproblems,
-\item die Stärke des Rauschens in den Daten.
-\end{itemize}
+Die Systeme werden durch einen Differentialgleichungslöser simuliert und die zeitlichen Verläufe der Zustandskomponenten numerisch ermittelt. Die Ableitungsverläufe werden sowohl exakt vorgegeben, als auch über die Zentraldifferenz angenähert. Die exakten Ableitungsverläufe dienen hier nur der Überprüfung, ob die Methode theoretisch funktioniert und sind im Praxisfall aufgrund von Messfehlern oft nicht gegeben. Das Hauptaugenmerk wird auf der Identifikation unter Nutzung der Zentraldifferenz liegen, da diese den Praxisfall besser abbildet.
+
+
 
 
 

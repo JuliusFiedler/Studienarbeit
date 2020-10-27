@@ -1,5 +1,6 @@
-Der folgende Abschnitt orientiert sich an der Beschreibung des SINDy-Algorithmus in \cite{Brunton2016}. 
-Sei $f\left(x(t)\right) = \diff{x(t)}{t}$ das zu identifizierende Differentialgleichungssystem mit dem Zustandsvektor $x(t) = [x_1(t), x_2(t), ... , x_n(t)]^T \in\mathbb{R}^n$.
+Der folgende Abschnitt orientiert sich an der Beschreibung des SINDy-Algorithmus durch Brunton et al.\cite{Brunton2016}. 
+
+Sei $\boldsymbol{f}\left(\boldsymbol{x}(t)\right) = \diff{\boldsymbol{x}(t)}{t}$ das zu identifizierende Differentialgleichungssystem mit dem Zustandsvektor $\boldsymbol{x}(t) = [x_1(t), x_2(t), ... , x_n(t)]^T \in\mathbb{R}^n$.
 Für die Anwendung von SINDy benötigt man die Messdaten aller Zustandsgrößen zu den Zeitpunkten $t_1, t_2, ..., t_m$. Zusätzlich müssen die zeitlichen Ableitungen der Zustände an den gegebenen Zeitpunkten gegeben sein, entweder durch direkte Messung oder durch numerische Approximation. Die Daten werden wie folgt angeordnet: 
 \begin{align}
 X &= \begin{bmatrix}
@@ -16,7 +17,7 @@ X &= \begin{bmatrix}
 		\dot{x}_1(t_m) & \dot{x}_2(t_m) & \dots & \dot{x}_n(t_m)
 	\end{bmatrix}  \in \mathbb{R}^{m\times n}.
 \end{align}
-Nun muss man die Bibliothek $\Theta$ an Funktionen konstruieren, durch welche $f$ dargestellt werden soll. 
+Nun muss man die Bibliothek $\Theta$ an Funktionen konstruieren, durch welche $\boldsymbol{f}$ dargestellt werden soll. 
 Die Spalten der Bibliotheksmatrix repräsentieren die gewählten Ansatzfunktionen, angewendet auf die Datenmatrix $X$
 \begin{equation}
 \Theta(X) = \begin{bmatrix}
@@ -38,11 +39,11 @@ Dabei steht $\ell$ für die Anzahl von verschiedenen Typen von Ansatzfunktionen 
 		\mid & \mid & & \mid & \mid & & \mid
 	\end{bmatrix}.
 \end{align}
-Gesucht sind nun Linearkombinationen von Bibliotheksfunktionen, sodass gilt
+Gesucht sind nun die Koeffizienten $\boldsymbol{\xi}_i$ der Linearkombinationen von Bibliotheksfunktionen, sodass gilt
 \begin{equation}
-f_i(x) = \Theta(x^T)\xi_i.
+f_i(x) = \Theta(\boldsymbol{x}^T)\,\boldsymbol{\xi}_i.
 \end{equation}
-Fasst man alle $\xi_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}$ zusammen, so ergibt sich das zu lösende Minimierungsproblem zu 
+Fasst man alle $\boldsymbol{\xi}_i$ in eine Koeffizientenmatrix $\Xi\in\mathbb{R}^{L\times n}$ zusammen, so ergibt sich das zu lösende Minimierungsproblem zu 
 \begin{equation}
 \dot{X} \approx \Theta(X)\Xi. \label{eq:Minimierungsproblem}
 \end{equation}

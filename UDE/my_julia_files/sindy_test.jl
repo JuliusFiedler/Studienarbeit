@@ -718,7 +718,7 @@ function acc_data(exp_arr, param_arr, basis=nothing, opt=nothing, p_nom = nothin
     time = 0.0
     for i ∈ (1:size(param_arr)[1])
         # chose Parameter! #######################
-         = param_arr[i]
+        noise = param_arr[i]
         ##########################################
         X, DX_, x_dot = create_data(sys, u0, tspan, p_, dt, noise)
         if multiple_trajectories
@@ -740,18 +740,18 @@ end
 # create CSV
 
 
-system = 3  # 1 = volterra, 2 = lorenz, 3 = roessler
-tspan = (0.0f0, 3.0f0)
-dt = .01
-multiple_trajectories = false
-no_tr = 10
+system = 1  # 1 = volterra, 2 = lorenz, 3 = roessler
+tspan = (0.0f0, 1.0f0)
+dt = .1
+multiple_trajectories = true
+no_tr = 5
 opt =  STRRidge()
 maxiter = 30
 th = 0.2
 noise = 0
 if (system == 1) # volterra
     sys = lotka
-    order = 2 # order soll sein: Summe aller Exponenten in jedem Monom
+    order = 5 # order soll sein: Summe aller Exponenten in jedem Monom
     u0 = Float32[0.44249296,4.6280594]
     p_ = Float32[1.3, -0.9, 0.8, -1.8]
     p_nom = Array{Float32}([0.0 0.0; p_[1] 0.0; 0.0 p_[4]; 0.0 0.0; p_[2] p_[3]; 0.0 0.0])
@@ -809,51 +809,57 @@ end
 
 h = [polys...]
 if system == 4
-    h= [sin.(u)..., cos.(u)..., polys...]
+    h = [sin.(u)..., cos.(u)..., polys...]
 end
 basis = Basis(h, u)
 
 
 # poly order variation:
-local_path = "C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/Studienarbeit/UDE/my_julia_files/"
+if false
+    local_path = "C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/Studienarbeit/UDE/my_julia_files/"
 
-X, DX_, x_dot = create_data(sys, u0, tspan, p_, dt)
-CSV.write(string(local_path,"X_",name,".csv"), DataFrame(X'))
-CSV.write(string(local_path,"DX__",name,".csv"), DataFrame(DX_')) # exakt
-CSV.write(string(local_path,"x_dot_",name,".csv"), DataFrame(x_dot')) #Zentraldifferenz
-function poly_order_variation()
-    orders = [ 2, 3, 4, 5 , 6, 7, 8]
-    errors = []
-    time = 0
-    for ord ∈ orders
-        @variables u[1:n]
-        polys = Operation[1]
-        for i ∈ (1:ord)
-            comb = collect(with_replacement_combinations(u,i))
-            for j ∈ (1:length(comb))
-                monom = comb[j][1]
-                for k ∈ (2:length(comb[j]))
-                    monom *= comb[j][k]
+    if multiple_trajectories
+        X, DX_, x_dot = mul_tra!(sys, X, DX_, x_dot, u0, tspan, p_, dt, no_tr, noise)
+    else
+        X, DX_, x_dot = create_data(sys, u0, tspan, p_, dt)
+    end
+
+    CSV.write(string(local_path,"X_",name,".csv"), DataFrame(X'))
+    CSV.write(string(local_path,"DX__",name,".csv"), DataFrame(DX_')) # exakt
+    CSV.write(string(local_path,"x_dot_",name,".csv"), DataFrame(x_dot')) #Zentraldifferenz
+    function poly_order_variation()
+        orders = [ 2, 3, 4, 5 , 6, 7, 8]
+        errors = []
+        time = 0
+        for ord ∈ orders
+            @variables u[1:n]
+            polys = Operation[1]
+            for i ∈ (1:ord)
+                comb = collect(with_replacement_combinations(u,i))
+                for j ∈ (1:length(comb))
+                    monom = comb[j][1]
+                    for k ∈ (2:length(comb[j]))
+                        monom *= comb[j][k]
+                    end
+                    push!(polys, monom)
                 end
-                push!(polys, monom)
             end
+            h = [polys...]
+            basis = Basis(h, u)
+            e, t = do_sindy(X, DX_, x_dot, basis, opt, p_nom)
+            push!(errors, e...)
+            time += t
         end
-        h = [polys...]
-        basis = Basis(h, u)
-        e, t = do_sindy(X, DX_, x_dot, basis, opt, p_nom)
-        push!(errors, e...)
-        time += t
+        print(errors)
+        p = errors[mask(length(orders)*2,2).==1]
+        if all(p.!=0)
+            display(plot(p, yaxis=:log))
+        end
+        av_time = round(time / (size(orders)[1]*2), digits=6)
+        return errors, av_time
     end
-    print(errors)
-    p = errors[mask(length(orders)*2,2).==1]
-    if all(p.!=0)
-        display(plot(p, yaxis=:log))
-    end
-    av_time = round(time / (size(orders)[1]*2), digits=6)
-    return errors, av_time
+    errors, av_time = poly_order_variation()
 end
-errors, av_time = poly_order_variation()
-
 # tspan_variation:
 # param_arr = [(0.0f0, 1.0f0),(0.0f0, 2.0f0),(0.0f0, 3.0f0),(0.0f0, 3.9f0),(0.0f0, 5.0f0)]
 # dt_variation:
@@ -861,7 +867,7 @@ errors, av_time = poly_order_variation()
 # no_tr_variation:
 # param_arr = [1,2,3,4,5,6,7,8,9,10,12,15,20]
 # noise_variation:
-# param_arr = [0, 1e-6, 3e-6, 1e-5,3e-5, 1e-4, 3e-4, 1e-3, 3e-3, 1e-2, 1e-1]
+param_arr = [0, 1e-6, 3e-6, 1e-5,3e-5, 1e-4, 3e-4, 1e-3, 3e-3, 1e-2, 1e-1]
 
 exp_arr = zeros(5, 3*n) # beginning of export array
 # ea, errors, time = acc_data(exp_arr, param_arr)
@@ -874,7 +880,7 @@ if all(p.!=0)
 end
 av_time = round(time / (size(param_arr)[1]*2), digits=6)
 
-para = "order"
+para = "noise"
 
 # Did you check:
 # - basis
@@ -886,7 +892,15 @@ para = "order"
 if false
     CSV.write(string(path,"Data_",name,"_",para,"_variation.csv"), DataFrame(ea))
 end
-
+if false
+    X, DX_, x_dot = create_data(sys, u0, tspan, p_, dt, noise)
+    if multiple_trajectories
+        X, DX_, x_dot = mul_tra!(sys, X, DX_, x_dot, u0, tspan, p_, dt, no_tr, noise)
+    end
+end
+if false
+    do_sindy(X, DX_, x_dot, basis, opt, p_nom)
+end
 
 
 function export_to_csv(errors, times, file_identifier)
