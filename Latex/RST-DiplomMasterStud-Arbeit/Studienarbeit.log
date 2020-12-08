@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  27 OCT 2020 15:26
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.1.13)  23 NOV 2020 11:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2593,7 +2593,7 @@ Package babel Info: Redefining ngerman shorthand "|
 Package babel Info: Redefining ngerman shorthand "~
 (babel)             in language  on input line 2.
 
-Overfull \hbox (278.76706pt too wide) in paragraph at lines 6--42
+Overfull \hbox (10.69226pt too wide) in paragraph at lines 6--42
  [][] 
  []
 
@@ -3228,7 +3228,7 @@ ublic/lm/lmr6.pfb><f:/texlive/2013/texmf-dist/fonts/type1/public/lm/lmr7.pfb><f
 public/lm/lmsy10.pfb><f:/texlive/2013/texmf-dist/fonts/type1/public/lm/lmsy8.pf
 b><f:/texlive/2013/texmf-dist/fonts/type1/public/lm/lmtt12.pfb><f:/texlive/2013
 /texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Studienarbeit.pdf (31 pages, 1031346 bytes).
+Output written on Studienarbeit.pdf (31 pages, 1031322 bytes).
 PDF statistics:
  587 PDF objects out of 1000 (max. 8388607)
  496 compressed objects within 5 object streams

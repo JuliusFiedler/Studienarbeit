@@ -8,12 +8,12 @@
 @time using Combinatorics
 @time using Random
 
-include("MyFunctions.jl")
-@time using .MyFunctions: calc_centered_difference, SIR, sindy_naive, sindy_mpl,
-calc_param_ident_error, calc_param_ident_error_div_by_ev,
-wp, wp_fric, lotka, lorenz, roessler, wp_lin,
-create_data,
-mul_tra!
+# include("MyFunctions.jl")
+# @time using .MyFunctions: calc_centered_difference, SIR, sindy_naive, sindy_mpl,
+# calc_param_ident_error, calc_param_ident_error_div_by_ev,
+# wp, wp_fric, lotka, lorenz, roessler, wp_lin,
+# create_data,
+# mul_tra!
 
 println("------------------------------------------------------------")
 
@@ -26,16 +26,24 @@ prob = ODEProblem(wp, u0, tspan, p_)
 dt = 0.001
 m1, m2, g, s2 = p_
 multiple_trajectories = true
-no_tr = 5
+no_tr = 10
 
 
 X, DX_, x_dot = create_data(wp, u0, tspan, p_, dt)
-Xf, DX_f, x_dotf = create_data(wp_fric, u0, tspan, p_, dt)
+# Xf, DX_f, x_dotf = create_data(wp_fric, u0, tspan, p_, dt)
 
 if multiple_trajectories
     X, DX_, x_dot = mul_tra!(wp, X, DX_, x_dot, u0, tspan, p_, dt, no_tr)
-    Xf, DX_f, x_dotf = mul_tra!(wp_fric, X, DX_, x_dot, u0, tspan, p_, dt, no_tr)
+    # Xf, DX_f, x_dotf = mul_tra!(wp_fric, X, DX_, x_dot, u0, tspan, p_, dt, no_tr)
 end
+
+if false
+    path = "C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/Studienarbeit/UDE/my_julia_files/"
+    CSV.write(string(path, "X_Wagen-Pendel.csv"), DataFrame(X'))
+    CSV.write(string(path, "DX__Wagen-Pendel.csv"), DataFrame(DX_')) # exakt
+    CSV.write(string(path, "x_dot_Wagen-Pendel.csv"), DataFrame(x_dot')) #Zentraldifferenz
+end
+
 
 display(plot(DX_', label = "exakte Ableitung", title = "Ableitungen"))
 display(plot!(x_dot', label = "Zentraldifferenz", title = "Ableitungen"))

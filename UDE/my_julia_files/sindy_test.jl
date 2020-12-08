@@ -364,8 +364,8 @@ path = "C:/Users/Julius/Documents/Studium_Elektrotechnik/Studienarbeit/github/St
 print("---------------------------------------------------------------------")
 # Define the experimental parameter
 system = 1  # 1 = volterra, 2 = lorenz, 3 = roessler
-tspan = (0.0f0, 3.0f0)
-dt = .01
+tspan = (0.0f0, 2.0f0)
+dt = .1
 train = false
 NN = false
 maxiter = 30
@@ -416,7 +416,7 @@ elseif system == 4 # wagen pendel
     name = "Wagen-Pendel"
     n = 4
     dt = 0.1
-    multiple_trajectories = false
+    multiple_trajectories = true
     solver = DP5()
 end
 

@@ -20,7 +20,7 @@ import time
 
 # %%
 # System auswählen
-system = 3 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
+system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
 # NN auswerten?
 NN = False
 
@@ -56,6 +56,8 @@ elif system == 4:
     t_end = 5
     m1 = 3.34
     m2 = 0.8512
+    s = 0.26890449
+    g = 9.81
     library_functions = [
         lambda x : x,
         lambda x : np.sin(x),
@@ -67,10 +69,38 @@ elif system == 4:
     custom_library = ps.CustomLibrary(library_functions=library_functions, function_names=library_function_names)
     feature_library = custom_library
     feature_names=["phi", "x", "dphi","dx"]
-    p_nom = np.array([[  0.        ,   0.        ,   1,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
-       [  0.        ,   0.        ,   0.        ,   1,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
-       [  0.        ,   0.        ,   0.        ,   0.        , -9.81/0.26890449,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
-       [  0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ]]).T
+    # p_nom = np.array([[  0.        ,   0.        ,   1,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
+    #    [  0.        ,   0.        ,   0.        ,   1,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
+    #    [  0.        ,   0.        ,   0.        ,   0.        , -9.81/0.26890449,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ],
+    #    [  0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ,   0.        ]]).T
+    p_nom = np.array([ [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   1.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    1.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        , -g*(m1+m2)/ s,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    m2*g      ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    m2*s      ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,   -m2        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ],
+                    [   0.        ,    0.        ,    0.        ,    0.        ]])
 
 # %%
 # import csv file and convert to nice datatype
@@ -198,6 +228,8 @@ def mult(x):
     return temp
 def chain():
     depth = 4 
+    x1 = variables[0]
+    x3 = variables[2]
     h = [sp.sin(x1), sp.cos(x1), x3]
     # Zähler bauen
     nominator = []
@@ -326,6 +358,54 @@ def sindy_simple(X, DX, h, u, lam=0.2, maxiter=30):
     print("converged after " + str(iters) + " iterations")
     # SIR(Xi, h)
     return Xi
+# %%
+def do_sindys(X, DX_, x_dot, variables, polys, th, dt, p_nom):
+    errors = []
+    times = []
+    
+    if dt == -1:
+        dt= t_end/(X.shape[0]-1)
+    print("PySINDy nominal")
+    start_time = time.time()
+    model.fit(X, x_dot=DX_, t=dt, multiple_trajectories=False) 
+    t1 = time.time() - start_time
+    print("time " + str(t1))
+    model.print()
+    p_ident_nominal = model.coefficients().T
+    print(model.coefficients().T)
+    err_ps_nom = calc_param_ident_error(p_nom, model.coefficients().T)
+
+    print("PySINDy Zentral")
+    start_time = time.time()
+    model.fit(X, x_dot=x_dot, t=dt, multiple_trajectories=False) 
+    t2 = time.time() - start_time
+    print("time " + str(t2))
+    model.print()
+    p_ident_zentral = model.coefficients().T
+    print(model.coefficients().T)
+    err_ps_zen = calc_param_ident_error(p_nom, model.coefficients().T)
+    
+    print("SINDy simple nominal")
+    start_time = time.time()
+    p_simple_ident_nom = sindy_simple(X, DX_, polys, variables, th)
+    t3 = time.time() - start_time
+    print("time " + str(t3))
+    SIR(p_simple_ident_nom, polys)
+    err_ss_nom = calc_param_ident_error(p_nom, p_simple_ident_nom)
+    
+    print("SINDy simple zentral")
+    start_time = time.time()
+    p_simple_ident_zen = sindy_simple(X, x_dot, polys, variables, th)
+    t4 = time.time() - start_time
+    print("time " + str(t4))
+    SIR(p_simple_ident_zen, polys)
+    err_ss_zen = calc_param_ident_error(p_nom, p_simple_ident_zen)
+
+    errors = np.array([[err_ps_nom, err_ps_zen], [err_ss_nom, err_ss_zen]])
+    # errors = np.array([[], [err_ss_nom, err_ss_zen]])
+    times = np.array([[t1, t2], [t3, t4]])
+    # times = np.array([[], [t3, t4]])
+    return errors, times
 
 # %%
 # simple systems
@@ -346,8 +426,82 @@ theta = library(basis, variables, X)
 # for i in range(1, theta.shape[1]):
 #     print(np.linalg.matrix_rank(theta[:, 0:i]))
 better_basis = sel_lin_indep(theta, basis)
-%time p_simple_ident = sindy_simple(X, DX_, better_basis, variables, 0.2)
-%time SIR(p_simple_ident, better_basis)
+%time p_simple_ident_nom = sindy_simple(X, DX_, better_basis, variables, 0.2)
+%time SIR(p_simple_ident_nom, better_basis)
+calc_param_ident_error(p_nom, p_simple_ident_nom)
+
+%time p_simple_ident_zen = sindy_simple(X, x_dot, better_basis, variables, 0.2)
+%time SIR(p_simple_ident_zen, better_basis)
+calc_param_ident_error(p_nom, p_simple_ident_zen)
+
+# %%
+def sim_wp(x,t):
+    x = np.zeros(4)
+    f = np.array([1,2,3,4], dtype=object)
+    for i in range(4):
+        f[i] = np.sum((p_simple_ident_zen.T*better_basis)[i])
+    f = sp.Subs(f, ["x1","x2","x3","x4"], [x[0], x[1], x[2], x[3]])
+    f= f.doit()
+    return f
+
+# %%
+def sys_wp_nom(u, t):
+    r=[ u[2],
+        u[3],
+        -(g*m1 + g*m2 + m2*u[2]**2*s*np.cos(u[0]))*np.sin(u[0])/(s*(m1 + m2*np.sin(u[0])**2)),
+        (m2*(g*np.cos(u[0]) + u[2]**2*s)*np.sin(u[0]))/(m1 + m2*np.sin(u[0])**2)]
+    return r
+p = p_simple_ident_zen.T[p_simple_ident_zen.T!=0].T
+def sys_wp_ident(u,t):
+    r=[ p[0]*u[2],
+        p[1]* u[3],
+        (p[2] + p[3]*u[2]**2*np.cos(u[0]))*np.sin(u[0])/((m1 + m2*np.sin(u[0])**2)),
+        ((p[4]*np.cos(u[0]) + u[2]**2*p[5])*np.sin(u[0]))/(m1 + m2*np.sin(u[0])**2)]
+    return r
+tt = np.arange(0, 10, 0.001)
+x_wp_nom=odeint(sys_wp_nom, [-10, 10, 0.5 ,0.5], tt)
+x_wp_ident=odeint(sys_wp_ident, [-10, 10, 0.5 ,0.5], tt)
+SMALL_SIZE = 16
+MEDIUM_SIZE = 18
+BIGGER_SIZE = 20
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=BIGGER_SIZE)    # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE) 
+
+fig, axs = plt.subplots(x_wp_nom.shape[1], 1, sharex=True, figsize=(7, 9))
+for i in range(x_wp_nom.shape[1]):
+    # top = np.max([np.max(x_ori[:,i]), np.max(x_ident[:,i])])
+
+    # bot = np.min([np.min(x_ori[:,i]), np.min(x_ident[:,i])])
+    # axs[i].set_ylim(top= top*1.7, bottom = bot)
+    axs[i].plot(tt, x_wp_nom[:, i], 'k', label='Originalsystem')
+    axs[i].plot(tt, x_wp_ident[:, i], 'r--', label='identifiziertes System')
+    axs[i].legend(loc=0)
+    axs[i].set(xlabel='t [s]', ylabel='$x_{}$'.format(i+1))
+    
+
+fig2, axs2 = plt.subplots(2, 1, sharex=True, figsize=(7, 9))
+colors = ["b", "m--", "g:", "c-."]
+for i in range(x_wp_nom.shape[1]):
+    axs2[0].plot(tt, np.abs(x_wp_nom[:, i] - x_wp_ident[:, i]), colors[i], label='absoluter Fehler in $x_{}$'.format(i+1))
+    axs2[0].legend()
+    axs2[0].set(xlabel='t [s]', ylabel="absoluter Fehler")
+    
+    axs2[1].plot(tt, np.abs(x_wp_nom[:, i] - x_wp_ident[:, i])/x_wp_nom[:, i], colors[i], label='relativer Fehler in $x_{}$'.format(i+1))
+    axs2[1].legend()
+    axs2[1].set(xlabel='t [s]', ylabel='relativer Fehler')
+    axs2[1].set_yscale("log")
+    
+
+    
+
+plt.show()
+
 
 # %%
 # a = 1.3
@@ -403,10 +557,10 @@ if NN:
 # %%
 # import data, set parameters
 system = 1 # 1 = volterra, 2 = lorenz, 3 = roessler, 4 = wp
-para = "noise"
-poly_order = 2
-dt =  0.01 
-t_end = 3
+para = "no_tr"
+poly_order = 5
+dt =  0.1 
+t_end = 1
 th = 0.2 # coef threshold
 if (system == 1):
     sys_name = "Volterra"
@@ -436,7 +590,7 @@ model = ps.SINDy(
     feature_names=feature_names
 )
 variables, polys = create_poly_library(poly_order)
-Xs, DX_s, x_dots=read_block("Data_"+sys_name+"_"+para+"_variation.csv", n)
+Xs, DX_s, x_dots=read_block("Data_"+sys_name+"_"+para+"_variation2.csv", n)
 
 # %%
 # calc models, add errors to array
@@ -459,60 +613,12 @@ plt.plot(errors[1, np.equal(Mask[0:int((errors.shape[1]))], 1) ], 'r--', label =
 plt.yscale("log")
 plt.legend()
 plt.show()
-# %%
-def do_sindys(X, DX_, x_dot, variables, polys, th, dt, p_nom):
-    errors = []
-    times = []
-    
-    if dt == -1:
-        dt= t_end/(X.shape[0]-1)
-    print("PySINDy nominal")
-    start_time = time.time()
-    model.fit(X, x_dot=DX_, t=dt, multiple_trajectories=False) 
-    t1 = time.time() - start_time
-    print("time " + str(t1))
-    model.print()
-    p_ident_nominal = model.coefficients().T
-    print(model.coefficients().T)
-    err_ps_nom = calc_param_ident_error(p_nom, model.coefficients().T)
-
-    print("PySINDy Zentral")
-    start_time = time.time()
-    model.fit(X, x_dot=x_dot, t=dt, multiple_trajectories=False) 
-    t2 = time.time() - start_time
-    print("time " + str(t2))
-    model.print()
-    p_ident_zentral = model.coefficients().T
-    print(model.coefficients().T)
-    err_ps_zen = calc_param_ident_error(p_nom, model.coefficients().T)
-    
-    print("SINDy simple nominal")
-    start_time = time.time()
-    p_simple_ident_nom = sindy_simple(X, DX_, polys, variables, th)
-    t3 = time.time() - start_time
-    print("time " + str(t3))
-    SIR(p_simple_ident_nom, polys)
-    err_ss_nom = calc_param_ident_error(p_nom, p_simple_ident_nom)
-    
-    print("SINDy simple zentral")
-    start_time = time.time()
-    p_simple_ident_zen = sindy_simple(X, x_dot, polys, variables, th)
-    t4 = time.time() - start_time
-    print("time " + str(t4))
-    SIR(p_simple_ident_zen, polys)
-    err_ss_zen = calc_param_ident_error(p_nom, p_simple_ident_zen)
-
-    errors = np.array([[err_ps_nom, err_ps_zen], [err_ss_nom, err_ss_zen]])
-    # errors = np.array([[], [err_ss_nom, err_ss_zen]])
-    times = np.array([[t1, t2], [t3, t4]])
-    # times = np.array([[], [t3, t4]])
-    return errors, times
 
 # %%
 X = read('X_' + sys_name + '.csv')
 x_dot = read('x_dot_' + sys_name + '.csv')
 DX_ = read('DX__' + sys_name + '.csv')
-# %%
+# %% only for order variation
 para = "order"
 orders = [2,8]# [ 2, 3, 4, 5 , 6, 7, 8,15]
 errors = np.zeros((2, 2*len(orders)))
@@ -549,7 +655,7 @@ if NN:
 def export_to_csv(errors, av_time, file_identifier):
       
     # row 1:
-    heads1 = [ 1,2,3,4,5]   # parameter values as numbers if possible
+    heads1 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20]   # parameter values as numbers if possible
     row_head1 = [sys_name]
     for i in range(len(heads1)):
         row_head1.append(heads1[i])
@@ -557,7 +663,7 @@ def export_to_csv(errors, av_time, file_identifier):
     row_head1.append("Rechenzeit")
     # row 2:
     heads2 = ["nominal", "zentral"]
-    row_head2 = ["Simulationszeit [s]"]    # parameter name
+    row_head2 = ["Anzahl an Trajektorien"]    # parameter name
     for i in range(len(heads1)):
         row_head2.append(heads2[0])
         row_head2.append(heads2[1])
@@ -629,14 +735,14 @@ def make_graph(name):
     axs[0].legend()
     axs[0].set(ylabel="relativer Fehler", title='System: '+ sys +', Nominalableitungen')
     axs[0].set_yscale("linear")
-    axs[0].set_xscale("log")
+    # axs[0].set_xscale("log")
 
     axs[1].plot(H, PSz, 'k', label=r'PySINDy')
     axs[1].plot(H, SSz, 'r--', label=r'SINDy vereinfacht')
     axs[1].plot(H, JSz, 'gD', label=r'SINDy aus DiffEq')
     axs[1].set(xlabel=str(x_axes), ylabel="relativer Fehler", title='System: '+ sys +', Zentraldifferenz')
     axs[1].set_yscale("log")
-    axs[1].set_xscale("log")
+    # axs[1].set_xscale("log")
 
     fig.show()
 
@@ -750,7 +856,7 @@ def simulate(system, p_i, p_nom, dt):
         axs[i].plot(tt, x_ori[:, i], 'k', label='Originalsystem')
         axs[i].plot(tt, x_ident[:, i], 'r--', label='identifiziertes System')
         axs[i].legend(loc=0)
-        axs[i].set(xlabel='t', ylabel='$x_{}$'.format(i+1))
+        axs[i].set(xlabel='t [s]', ylabel='$x_{}$'.format(i+1))
         
 
     fig2, axs2 = plt.subplots(2, 1, sharex=True, figsize=(7, 9))
@@ -758,11 +864,11 @@ def simulate(system, p_i, p_nom, dt):
     for i in range(x_ori.shape[1]):
         axs2[0].plot(tt, np.abs(x_ori[:, i] - x_ident[:, i]), colors[i], label='absoluter Fehler in $x_{}$'.format(i+1))
         axs2[0].legend()
-        axs2[0].set(xlabel='t', ylabel="absoluter Fehler")
+        axs2[0].set(xlabel='t [s]', ylabel="absoluter Fehler")
         
         axs2[1].plot(tt, np.abs(x_ori[:, i] - x_ident[:, i])/x_ori[:, i], colors[i], label='relativer Fehler in $x_{}$'.format(i+1))
         axs2[1].legend()
-        axs2[1].set(xlabel='t', ylabel='relativer Fehler')
+        axs2[1].set(xlabel='t [s]', ylabel='relativer Fehler')
         axs2[1].set_yscale("log")
         
         
@@ -801,5 +907,5 @@ names = ["volterra", "lorenz", "roessler"]
 paras = ["tspan", "dt", "order", "no_tr", "noise"]
 for na in names:
     for p in paras:
-        time_plot("errors_"+na+"_"+p+"_variation")
+        time_plot("errors_"+na+"_"+p+"_variation", na+"_"+p)
 # %%

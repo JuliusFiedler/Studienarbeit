@@ -40,8 +40,8 @@ Ausgehend von den zeitlichen Verläufen der Zustandskomponenten und deren Ableit
 Das Wagen-Pendel-System wird im Gegensatz zu den bisher betrachteten Systemen nicht ausschließlich durch Polynome beschrieben. Das macht die Konstruktion der Bibliothek deutlich schwieriger. Der Algorithmus berechnet eine Linearkombination von Ansatzfunktionen, die das System modellieren sollen. Schreibt man die letzten beiden Zeilen von \eqref{eq:wp} als Summe
 \begin{equation}
 	\begin{pmatrix}
-		\dot{\varphi}  \\
-		\dot{x}  	
+		\ddot{\varphi}  \\
+		\ddot{x}  	
 	\end{pmatrix}
 	=\begin{pmatrix}
 		-\frac{m_2s\dot{\varphi}^2\sin\varphi\cos\varphi}{sm_1 + sm_2\sin^2\varphi} - \frac{(m_1+m_2)g\sin\varphi}{sm_1 + sm_2\sin^2\varphi}\\
@@ -51,7 +51,7 @@ Das Wagen-Pendel-System wird im Gegensatz zu den bisher betrachteten Systemen ni
 so fällt auf, dass in jeder Zeile nur zwei verschiedene Ansatzfunktionen vorkommen. Diese müssen dem Algorithmus in der Bibliothek vorgegeben werden. Es lohnt sich darauf hinzuweisen, dass es nicht ausreicht, eine Bibliothek aus den vorkommenden Elementarfunktionen ($\sin, \cos$, Zustandskomponenten, Identität) anzulegen in der Hoffnung, dass SINDy diese geeignet verknüpft. SINDy kann die vorgegeben Funktionen nur additiv durch die angesprochene Linearkombination verknüpfen. 
 Damit eine Identifikation möglich ist, muss sich jede Zeile der DGL wie folgt aus Funktionen $u_i$ und $v_i$ darstellen lassen:
 \begin{equation}
-x_i=\sum_{i}u_i(\boldsymbol{p})v_i(\boldsymbol{x}), \label{eq:right_side_decomp}
+x_i=\sum_{k}u_k(\boldsymbol{p})v_k(\boldsymbol{x}), \label{eq:right_side_decomp}
 \end{equation}
 wobei $u_i$ nicht von $\boldsymbol{x}$ und $v_i$ nicht von $\boldsymbol{p}$ abhängig sein darf. Dies ist auf Grund der Struktur der Nenner hier nicht möglich. Daher müssen die Nenner in diesem Beispiel als bekannt vorausgesetzt werden. 
 Die Zähler haben eine für die Identifikation günstige Struktur, da sie Bedingung \eqref{eq:right_side_decomp} erfüllen. Dabei werden maximal vier Elementarfunktionen miteinander multipliziert. Um die Bibliothek systematisch aufzubauen, müssten für die Zähler alle Kombinationen mit Wiederholung aus maximal vier Elementarfunktionen berücksichtigt werden. Damit ergeben sich $C^r(13,4) = 1820$\footnote{Es gibt 13 mögliche Faktoren: $\sin$ und $\cos$ von jeder Zustandskomponente, vier Zustandskomponenten, Identität.} mögliche Zähler, wodurch die Bibliothek viel zu groß ist. Um das zu verhindern müssen einschränkende Annahmen getroffen werden:
