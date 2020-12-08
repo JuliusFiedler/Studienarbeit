@@ -1,6 +1,6 @@
 # Studienarbeit
 
-relevante Dateien sind: 
+relevante Dateien sind: \\
 UDE/my_julius_files/sindy_test.jl
 UDE/my_julius_files/sindy_test.py
 UDE/my_julius_files/verkettung.jl
